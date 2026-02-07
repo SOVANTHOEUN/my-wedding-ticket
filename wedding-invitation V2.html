@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>សិរីមង្គលអាពាហ៍ពិពាហ៍ - VONG Sovanthoeun & ROENG Vila</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,700&family=Noto+Serif+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --sky:#87CEEB;--sky-lt:#B8E2F4;--sky-pale:#D6EFF9;--sky-deep:#5BAFD4;--sky-mut:#7ABDD9;
+  --silver:#C0C0C0;--silver-lt:#D3D3D3;--silver-pl:#E8E8E8;--silver-dk:#A0A0A0;
+  --white:#FFFFFF;--off:#F8FBFD;--ice:#F0F7FB;
+  --dark:#2C3E50;--txt:#34495E;--txt-lt:#7F8C9B;--txt-mut:#A0ADB8;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins','Noto Serif Khmer',sans-serif;background:var(--white);color:var(--txt);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ========== GLOBAL UTILITIES ========== */
+.khmer{font-family:'Noto Serif Khmer',serif}
+.display{font-family:'Playfair Display',serif}
+.mono{font-family:'Montserrat',sans-serif}
+
+/* ========== SCROLL ANIMATIONS ========== */
+[data-reveal]{opacity:0;transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+[data-reveal="up"]{transform:translateY(60px)}
+[data-reveal="down"]{transform:translateY(-60px)}
+[data-reveal="left"]{transform:translateX(-70px)}
+[data-reveal="right"]{transform:translateX(70px)}
+[data-reveal="scale"]{transform:scale(.82)}
+[data-reveal="fade"]{transform:none}
+[data-reveal].vis{opacity:1;transform:none}
+
+.stg>[data-child]{opacity:0;transform:translateY(30px);transition:opacity .6s ease-out,transform .6s ease-out}
+.stg.vis>[data-child]:nth-child(1){transition-delay:.06s;opacity:1;transform:none}
+.stg.vis>[data-child]:nth-child(2){transition-delay:.14s;opacity:1;transform:none}
+.stg.vis>[data-child]:nth-child(3){transition-delay:.22s;opacity:1;transform:none}
+.stg.vis>[data-child]:nth-child(4){transition-delay:.30s;opacity:1;transform:none}
+.stg.vis>[data-child]:nth-child(5){transition-delay:.38s;opacity:1;transform:none}
+.stg.vis>[data-child]:nth-child(6){transition-delay:.46s;opacity:1;transform:none}
+.stg.vis>[data-child]:nth-child(7){transition-delay:.54s;opacity:1;transform:none}
+.stg.vis>[data-child]:nth-child(8){transition-delay:.62s;opacity:1;transform:none}
+
+/* ========== AMBIENT LAYERS ========== */
+.amb{position:fixed;inset:0;pointer-events:none;z-index:100;overflow:hidden}
+.amb-dot{position:absolute;border-radius:50%;opacity:0;animation:ambFloat 5.5s ease-in-out infinite}
+@keyframes ambFloat{0%,100%{opacity:0;transform:scale(.3) translateY(0)}35%{opacity:.6}50%{opacity:.8;transform:scale(1) translateY(-18px)}70%{opacity:.4}}
+.amb-star{position:absolute;opacity:0;animation:ambStar 4.2s ease-in-out infinite}
+@keyframes ambStar{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:.55;transform:scale(1.1) rotate(180deg)}}
+.petal-layer{position:fixed;inset:0;pointer-events:none;z-index:99;overflow:hidden}
+.petal{position:absolute;top:-30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:0;animation:petalDrop 13s ease-in-out infinite}
+@keyframes petalDrop{0%{transform:translateY(-30px) rotate(0) translateX(0);opacity:0}7%{opacity:.35}50%{transform:translateY(52vh) rotate(210deg) translateX(55px);opacity:.22}100%{transform:translateY(112vh) rotate(420deg) translateX(-35px);opacity:0}}
+
+/* ========== NAV PILL ========== */
+.nav-pill{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:300;
+  display:flex;gap:2px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);
+  border:1px solid var(--silver-pl);border-radius:50px;padding:4px;
+  box-shadow:0 4px 24px rgba(0,0,0,.06);
+  opacity:0;transform:translateX(-50%) translateY(-20px);
+  transition:opacity .4s,transform .4s;
+}
+.nav-pill.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.nav-pill a{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;
+  color:var(--txt-lt);padding:8px 14px;border-radius:50px;transition:all .3s;
+  white-space:nowrap;
+}
+.nav-pill a:hover,.nav-pill a.active{background:var(--sky);color:#fff}
+
+/* ========== LANG TOGGLE ========== */
+.lang-btn{
+  position:fixed;top:20px;right:20px;z-index:300;width:44px;height:44px;
+  border-radius:50%;background:linear-gradient(135deg,var(--sky),var(--sky-deep));
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(135,206,235,.35);transition:transform .3s;
+}
+.lang-btn:hover{transform:scale(1.12)}
+.lang-btn span{font-family:'Noto Serif Khmer',serif;font-size:12px;color:#fff;font-weight:600}
+
+/* ============================================================
+   SECTION 1: HERO — SPLIT SCREEN LAYOUT
+   ============================================================ */
+.hero{
+  min-height:100vh;display:grid;
+  grid-template-columns:1fr 1fr;
+  position:relative;overflow:hidden;
+}
+
+/* Left panel - decorative */
+.hero-left{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,var(--ice) 0%,var(--sky-pale) 40%,var(--white) 100%);
+  padding:60px 40px;
+}
+
+.hero-left-inner{text-align:center;position:relative;z-index:2}
+
+/* Animated concentric rings */
+.hero-rings{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.hero-ring{
+  position:absolute;border:1px solid var(--sky-lt);border-radius:50%;opacity:.2;
+  animation:ringPulse 6s ease-in-out infinite;
+}
+.hero-ring:nth-child(1){width:70%;height:70%;animation-delay:0s}
+.hero-ring:nth-child(2){width:55%;height:55%;animation-delay:1s;border-style:dashed;opacity:.12}
+.hero-ring:nth-child(3){width:85%;height:85%;animation-delay:2s;border-color:var(--silver-lt)}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:.2}50%{transform:scale(1.04);opacity:.35}}
+
+.hero-names-vertical{display:flex;flex-direction:column;align-items:center;gap:16px}
+.hero-name-block{text-align:center}
+.hero-name-km{font-family:'Noto Serif Khmer',serif;font-size:clamp(30px,5vw,50px);font-weight:700;color:var(--dark);line-height:1.2}
+.hero-name-en{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;color:var(--txt-lt);letter-spacing:4px;text-transform:uppercase;margin-top:4px}
+.hero-amp{
+  font-family:'Playfair Display',serif;font-size:56px;font-style:italic;
+  color:var(--sky);line-height:1;
+  animation:ampPulse 2.2s ease-in-out infinite;
+  filter:drop-shadow(0 3px 12px rgba(135,206,235,.35));
+}
+@keyframes ampPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.hero-rings-icon{font-size:20px;color:var(--silver);opacity:.6;margin-top:-4px}
+
+/* Right panel - info */
+.hero-right{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  padding:60px 50px;position:relative;
+}
+
+.hero-right::before{
+  content:'';position:absolute;top:0;left:0;width:1px;height:100%;
+  background:linear-gradient(180deg,transparent,var(--silver-pl),var(--sky-lt),var(--silver-pl),transparent);
+}
+
+.hero-tag{
+  font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:5px;text-transform:uppercase;color:var(--sky-deep);margin-bottom:16px;
+}
+.hero-title-km{
+  font-family:'Noto Serif Khmer',serif;font-size:clamp(20px,3vw,28px);
+  font-weight:500;color:var(--sky-deep);margin-bottom:24px;line-height:1.5;
+}
+.hero-guest-wrap{margin-bottom:24px}
+.hero-guest-label{font-family:'Noto Serif Khmer',serif;font-size:14px;color:var(--txt-lt);margin-bottom:8px}
+.hero-guest-card{
+  display:inline-block;background:var(--white);border:1.5px solid var(--sky-lt);
+  border-radius:12px;padding:12px 36px;box-shadow:0 4px 20px rgba(135,206,235,.08);
+}
+.hero-guest-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--dark)}
+
+.hero-invite-text{
+  font-family:'Noto Serif Khmer',serif;font-size:13px;color:var(--txt);
+  line-height:2.1;margin-bottom:20px;max-width:420px;
+}
+.hero-date{
+  font-family:'Noto Serif Khmer',serif;font-size:14px;font-weight:600;
+  color:var(--sky-deep);margin-bottom:22px;
+}
+
+/* Countdown - horizontal strip */
+.cd-strip{display:flex;gap:8px;margin-bottom:24px}
+.cd-cell{
+  text-align:center;background:var(--ice);border:1px solid var(--sky-pale);
+  border-radius:14px;padding:14px 16px;min-width:64px;
+  transition:transform .3s;
+}
+.cd-cell:hover{transform:translateY(-3px)}
+.cd-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--dark);display:block;line-height:1}
+.cd-lbl{font-family:'Noto Serif Khmer',serif;font-size:9px;color:var(--txt-mut);display:block;margin-top:4px}
+
+.hero-venue{font-family:'Noto Serif Khmer',serif;font-size:12px;color:var(--txt-lt);line-height:1.8}
+.hero-venue a{color:var(--sky-deep);text-decoration:none;border-bottom:1px dotted var(--sky-lt)}
+
+/* SVG corner flourishes */
+.flourish{position:absolute;pointer-events:none;z-index:1;opacity:.18}
+.fl-tl{top:0;left:0}.fl-tr{top:0;right:0;transform:scaleX(-1)}
+.fl-bl{bottom:0;left:0;transform:scaleY(-1)}.fl-br{bottom:0;right:0;transform:scale(-1)}
+
+/* ============================================================
+   SECTION 2: SCHEDULE — HORIZONTAL TIMELINE
+   ============================================================ */
+.schedule-sec{padding:90px 0;background:var(--off);position:relative;overflow:hidden}
+.schedule-sec .wc-blob{
+  position:absolute;width:400px;height:400px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(ellipse,var(--sky-pale) 0%,transparent 70%);opacity:.2;
+}
+.schedule-sec .wc-blob:nth-child(1){top:-100px;right:-80px}
+.schedule-sec .wc-blob:nth-child(2){bottom:-120px;left:-100px;background:radial-gradient(ellipse,rgba(192,192,192,.12) 0%,transparent 70%)}
+
+.sch-header{text-align:center;padding:0 24px;margin-bottom:50px}
+.sch-title{font-family:'Noto Serif Khmer',serif;font-size:clamp(22px,4vw,32px);font-weight:600;color:var(--dark);margin-bottom:6px}
+.sch-sub{font-family:'Noto Serif Khmer',serif;font-size:13px;color:var(--txt-lt)}
+
+/* Timeline horizontal scroll on mobile, grid on desktop */
+.timeline-wrap{
+  max-width:1200px;margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+}
+.timeline-row{display:contents}
+
+.tl-card{
+  background:var(--white);border-radius:18px;padding:24px 20px;
+  border:1px solid var(--silver-pl);position:relative;
+  box-shadow:0 6px 28px rgba(135,206,235,.05);
+  transition:all .35s ease;overflow:hidden;
+}
+.tl-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--sky-lt),var(--sky),var(--sky-lt));
+  transform:scaleX(0);transition:transform .4s ease;transform-origin:left;
+}
+.tl-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(135,206,235,.1);border-color:var(--sky-lt)}
+.tl-card:hover::before{transform:scaleX(1)}
+
+.tl-icon{font-size:28px;margin-bottom:12px;display:block}
+.tl-time{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:var(--sky-deep);letter-spacing:.5px;margin-bottom:6px}
+.tl-desc{font-family:'Noto Serif Khmer',serif;font-size:12px;color:var(--txt);line-height:1.8}
+
+/* Connecting dots between cards */
+.tl-connector{display:none}
+
+/* ============================================================
+   SECTION 3: VENUE — ASYMMETRIC SPLIT
+   ============================================================ */
+.venue-sec{
+  display:grid;grid-template-columns:5fr 4fr;min-height:500px;
+  position:relative;overflow:hidden;
+}
+
+.venue-map-side{
+  background:linear-gradient(135deg,var(--ice),var(--white));
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+  position:relative;padding:40px;border-right:1px solid var(--silver-pl);
+}
+.venue-map-side::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 40% 50%,rgba(135,206,235,.06),transparent 60%);
+  pointer-events:none;
+}
+.venue-pin{font-size:56px;z-index:1}
+.venue-map-label{font-family:'Noto Serif Khmer',serif;font-size:13px;color:var(--txt-lt);z-index:1;text-align:center}
+
+.venue-info-side{
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  padding:60px 48px;background:var(--white);
+}
+.venue-tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--sky-mut);margin-bottom:12px}
+.venue-title{font-family:'Noto Serif Khmer',serif;font-size:clamp(22px,3.5vw,30px);font-weight:600;color:var(--dark);margin-bottom:8px}
+.venue-addr{font-family:'Noto Serif Khmer',serif;font-size:13px;color:var(--txt-lt);line-height:1.9;margin-bottom:28px}
+
+.venue-actions{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.btn-sky{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;
+  color:#fff;background:linear-gradient(135deg,var(--sky),var(--sky-deep));
+  border:none;border-radius:50px;padding:14px 30px;cursor:pointer;text-decoration:none;
+  transition:all .35s;box-shadow:0 4px 18px rgba(135,206,235,.35);
+}
+.btn-sky:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(135,206,235,.45)}
+
+.venue-qr{text-align:center}
+.venue-qr-label{font-family:'Noto Serif Khmer',serif;font-size:11px;color:var(--txt-lt);margin-bottom:6px}
+.venue-qr-box{
+  width:90px;height:90px;background:var(--off);border:2px solid var(--sky-lt);
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--txt-mut);
+}
+
+/* ============================================================
+   SECTION 4: GALLERY — MASONRY / STAGGERED
+   ============================================================ */
+.gallery-sec{padding:90px 24px;background:var(--off);position:relative}
+.gallery-sec .wc-blob{position:absolute;width:350px;height:350px;border-radius:50%;opacity:.2;pointer-events:none;background:radial-gradient(ellipse,var(--sky-pale),transparent 70%);right:-80px;top:10%}
+
+.gallery-header{text-align:right;max-width:1100px;margin:0 auto 44px;padding-right:20px}
+.gallery-title{font-family:'Noto Serif Khmer',serif;font-size:clamp(22px,4vw,32px);font-weight:600;color:var(--dark);margin-bottom:4px}
+.gallery-sub{font-family:'Noto Serif Khmer',serif;font-size:13px;color:var(--txt-lt)}
+
+.gallery-masonry{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(12,1fr);gap:16px;
+  grid-auto-rows:minmax(80px,auto);
+}
+.g-item{
+  border-radius:16px;overflow:hidden;
+  background:linear-gradient(135deg,var(--ice),var(--silver-pl));
+  border:1px solid var(--silver-pl);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;
+  position:relative;cursor:pointer;transition:all .4s cubic-bezier(.25,.46,.45,.94);
+}
+.g-item:hover{transform:scale(1.03);box-shadow:0 16px 44px rgba(135,206,235,.14);border-color:var(--sky-lt)}
+.g-item:nth-child(1){grid-column:1/8;grid-row:1/3}
+.g-item:nth-child(2){grid-column:8/13;grid-row:1/2}
+.g-item:nth-child(3){grid-column:8/13;grid-row:2/3}
+.g-item:nth-child(4){grid-column:1/13;grid-row:3/4}
+.g-icon{font-size:36px;opacity:.3}
+.g-label{font-family:'Montserrat',sans-serif;font-size:10px;color:var(--txt-mut);letter-spacing:1px}
+
+/* ============================================================
+   SECTION 5: GIFT — OFFSET OVERLAPPING CARDS
+   ============================================================ */
+.gift-sec{padding:90px 24px;background:var(--white);position:relative;overflow:hidden}
+.gift-sec .wc-blob{position:absolute;width:400px;height:400px;border-radius:50%;opacity:.15;pointer-events:none}
+.gift-sec .wc-blob:nth-child(1){background:radial-gradient(ellipse,var(--sky-pale),transparent 70%);left:-100px;top:30%}
+.gift-sec .wc-blob:nth-child(2){background:radial-gradient(ellipse,rgba(192,192,192,.1),transparent 70%);right:-120px;bottom:10%}
+
+.gift-layout{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+
+.gift-text-col{padding-top:20px}
+.gift-tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--sky-mut);margin-bottom:10px}
+.gift-title{font-family:'Noto Serif Khmer',serif;font-size:clamp(22px,3.5vw,30px);font-weight:600;color:var(--dark);margin-bottom:16px}
+.gift-desc{font-family:'Noto Serif Khmer',serif;font-size:13px;color:var(--txt);line-height:2.1;margin-bottom:28px}
+.gift-btn-row{display:flex;gap:12px;flex-wrap:wrap}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;
+  color:var(--sky-deep);background:transparent;border:1.5px solid var(--sky-lt);
+  border-radius:50px;padding:11px 24px;cursor:pointer;text-decoration:none;transition:all .3s;
+}
+.btn-outline:hover{background:var(--sky);color:#fff;border-color:var(--sky);transform:translateY(-2px)}
+
+.gift-cards-col{display:flex;flex-direction:column;gap:20px}
+.gift-card{
+  background:var(--white);border-radius:18px;border:1px solid var(--silver-pl);
+  padding:28px 24px;text-align:center;position:relative;overflow:hidden;
+  box-shadow:0 6px 28px rgba(0,0,0,.03);transition:all .35s;
+}
+.gift-card::after{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--sky-lt),var(--sky),var(--sky-lt))}
+.gift-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(135,206,235,.12)}
+.gift-card:nth-child(2){margin-left:30px}
+
+.gc-cur{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--sky-deep);margin-bottom:12px}
+.gc-bank{background:linear-gradient(135deg,#1B4F72,#2C6E9E);border-radius:8px;padding:7px 16px;margin-bottom:12px;display:inline-block}
+.gc-bank-text{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;color:#fff;letter-spacing:4px}
+.gc-bank-text .r{color:#E74C3C}
+.gc-scan{font-size:10px;color:var(--txt-mut);margin-bottom:12px}
+.gc-qr{width:110px;height:110px;background:var(--ice);border-radius:11px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--sky-pale);font-size:10px;color:var(--txt-mut)}
+.gc-name{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;color:var(--txt);letter-spacing:1.5px;text-transform:uppercase}
+
+/* ============================================================
+   SECTION 6: RSVP — FULL-WIDTH BANNER
+   ============================================================ */
+.rsvp-sec{
+  background:linear-gradient(135deg,var(--ice) 0%,var(--sky-pale) 50%,var(--ice) 100%);
+  padding:70px 24px;text-align:center;position:relative;overflow:hidden;
+}
+.rsvp-sec::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.5),transparent 70%);
+  pointer-events:none;
+}
+.rsvp-inner{position:relative;z-index:2}
+.rsvp-title{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,44px);font-weight:700;color:var(--dark);margin-bottom:6px}
+.rsvp-desc{font-family:'Noto Serif Khmer',serif;font-size:14px;color:var(--txt-lt);margin-bottom:28px}
+.rsvp-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Noto Serif Khmer',serif;font-size:16px;font-weight:500;
+  color:var(--dark);background:var(--white);border:1.5px solid var(--sky-lt);
+  border-radius:16px;padding:18px 50px;cursor:pointer;transition:all .35s;
+  box-shadow:0 6px 24px rgba(135,206,235,.12);
+}
+.rsvp-btn:hover{background:var(--sky);color:#fff;border-color:var(--sky);transform:translateY(-3px);box-shadow:0 10px 32px rgba(135,206,235,.3)}
+.rsvp-btn.done{background:linear-gradient(135deg,var(--sky),var(--sky-deep));color:#fff;border-color:transparent}
+
+/* ============================================================
+   SECTION 7: FOOTER — 3-COLUMN
+   ============================================================ */
+.footer{padding:60px 24px 36px;background:var(--white);border-top:1px solid var(--silver-pl)}
+.footer-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;gap:40px;align-items:center}
+.footer-left{text-align:left}
+.footer-center{text-align:center}
+.footer-right{text-align:right}
+
+.ft-blessing{font-family:'Noto Serif Khmer',serif;font-size:15px;color:var(--dark);margin-bottom:4px}
+.ft-quote{font-family:'Playfair Display',serif;font-size:14px;font-style:italic;color:var(--txt-lt)}
+.ft-icon{font-size:48px;opacity:.5;display:block;margin-bottom:6px}
+.ft-divider{width:40px;height:1px;background:linear-gradient(90deg,transparent,var(--sky-lt),transparent);margin:8px auto}
+.ft-credit{font-family:'Montserrat',sans-serif;font-size:9px;color:var(--txt-mut);letter-spacing:3px;text-transform:uppercase}
+.ft-year{font-family:'Playfair Display',serif;font-size:13px;color:var(--txt-lt);margin-bottom:4px}
+
+/* ============================================================
+   SCROLL-TO-TOP
+   ============================================================ */
+.s2t{
+  position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;
+  background:var(--white);border:1.5px solid var(--sky-lt);cursor:pointer;
+  font-size:15px;color:var(--sky-deep);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.06);z-index:50;transition:all .3s;
+  opacity:0;transform:translateY(20px);
+}
+.s2t.show{opacity:1;transform:translateY(0)}
+.s2t:hover{background:var(--sky);color:#fff;border-color:var(--sky)}
+
+/* ============================================================
+   RESPONSIVE — TABLET
+   ============================================================ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-left{padding:50px 30px 30px;min-height:50vh}
+  .hero-right{padding:40px 30px 60px;align-items:center;text-align:center}
+  .hero-right::before{width:100%;height:1px;top:0;left:0}
+  .hero-invite-text{max-width:100%}
+  .cd-strip{justify-content:center}
+
+  .timeline-wrap{grid-template-columns:repeat(2,1fr);gap:16px;padding:0 24px}
+
+  .venue-sec{grid-template-columns:1fr}
+  .venue-map-side{min-height:280px;border-right:none;border-bottom:1px solid var(--silver-pl)}
+  .venue-info-side{padding:40px 30px;align-items:center;text-align:center}
+  .venue-actions{justify-content:center}
+
+  .gallery-masonry{grid-template-columns:repeat(2,1fr);grid-auto-rows:auto}
+  .g-item{min-height:180px}
+  .g-item:nth-child(1){grid-column:auto;grid-row:auto}
+  .g-item:nth-child(2){grid-column:auto;grid-row:auto}
+  .g-item:nth-child(3){grid-column:auto;grid-row:auto}
+  .g-item:nth-child(4){grid-column:1/3;grid-row:auto}
+
+  .gift-layout{grid-template-columns:1fr;gap:30px}
+  .gift-text-col{text-align:center;padding-top:0}
+  .gift-btn-row{justify-content:center}
+  .gift-card:nth-child(2){margin-left:0}
+  .gift-cards-col{flex-direction:row;gap:16px}
+
+  .footer-inner{grid-template-columns:1fr;text-align:center;gap:24px}
+  .footer-left,.footer-right{text-align:center}
+
+  .nav-pill{display:none}
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE
+   ============================================================ */
+@media(max-width:600px){
+  .hero-left{padding:40px 20px 24px;min-height:44vh}
+  .hero-name-km{font-size:clamp(24px,8vw,36px)}
+  .hero-amp{font-size:40px}
+  .hero-right{padding:30px 20px 50px}
+  .hero-title-km{font-size:clamp(17px,4vw,22px)}
+  .cd-strip{flex-wrap:wrap;gap:6px}
+  .cd-cell{min-width:56px;padding:10px 12px}
+  .cd-num{font-size:22px}
+
+  .timeline-wrap{grid-template-columns:1fr;gap:12px;padding:0 16px}
+
+  .gallery-masonry{grid-template-columns:1fr;gap:12px}
+  .g-item{min-height:160px}
+  .g-item:nth-child(4){grid-column:auto}
+
+  .gift-cards-col{flex-direction:column}
+  .gift-card:nth-child(2){margin-left:0}
+
+  .schedule-sec,.gallery-sec,.gift-sec{padding:60px 16px}
+  .venue-info-side{padding:30px 20px}
+}
+
+@media(max-width:380px){
+  .cd-strip{gap:4px}
+  .cd-cell{min-width:50px;padding:8px 8px}
+  .cd-num{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Ambient layers -->
+<div class="amb" id="ambLayer"></div>
+<div class="petal-layer" id="petalLayer"></div>
+
+<!-- Nav pill -->
+<nav class="nav-pill" id="navPill">
+  <a href="#hero">Home</a>
+  <a href="#schedule">កម្មវិធី</a>
+  <a href="#venue">ទីតាំង</a>
+  <a href="#gallery">រូបភាព</a>
+  <a href="#gift">អំណោយ</a>
+  <a href="#rsvp">RSVP</a>
+</nav>
+
+<!-- Lang toggle -->
+<button class="lang-btn" title="ភាសាខ្មែរ"><span>ខ្មែរ</span></button>
+
+<!-- Scroll-to-top -->
+<button class="s2t" id="s2tBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ═══════════════════════════════════════════
+     SECTION 1 : HERO — SPLIT SCREEN
+     ═══════════════════════════════════════════ -->
+<section class="hero" id="hero">
+
+  <!-- LEFT: Names + decorative -->
+  <div class="hero-left">
+    <!-- Animated rings -->
+    <div class="hero-rings">
+      <div class="hero-ring"></div>
+      <div class="hero-ring"></div>
+      <div class="hero-ring"></div>
+    </div>
+
+    <!-- SVG flourishes -->
+    <svg class="flourish fl-tl" width="160" height="160" viewBox="0 0 160 160" fill="none"><g opacity=".18"><path d="M0,0 Q32,6 44,36 Q28,28 22,46 Q16,28 0,22Z" fill="#87CEEB"/><path d="M12,0 Q40,12 52,46 Q36,32 29,52 Q22,34 8,26Z" fill="#ADD8E6" opacity=".6"/><ellipse cx="34" cy="26" rx="11" ry="6" fill="#B8E2F4" opacity=".5" transform="rotate(-25 34 26)"/><circle cx="30" cy="28" r="3" fill="#87CEEB" opacity=".6"/><path d="M46,0 Q58,18 66,30 Q50,26 46,42 Q42,24 34,18Z" fill="#C0C0C0" opacity=".3"/><path d="M0,46 Q18,50 29,62 Q14,58 11,74 Q8,54 0,48Z" fill="#C0C0C0" opacity=".25"/><circle cx="62" cy="14" r="5" fill="#B8E2F4" opacity=".25"/><circle cx="14" cy="62" r="5" fill="#D3D3D3" opacity=".25"/></g></svg>
+    <svg class="flourish fl-br" width="160" height="160" viewBox="0 0 160 160" fill="none"><g opacity=".18"><path d="M0,0 Q32,6 44,36 Q28,28 22,46 Q16,28 0,22Z" fill="#87CEEB"/><ellipse cx="34" cy="26" rx="11" ry="6" fill="#B8E2F4" opacity=".5" transform="rotate(-25 34 26)"/><circle cx="30" cy="28" r="3" fill="#87CEEB" opacity=".6"/><path d="M46,0 Q58,18 66,30 Q50,26 46,42 Q42,24 34,18Z" fill="#C0C0C0" opacity=".3"/><circle cx="62" cy="14" r="5" fill="#B8E2F4" opacity=".25"/></g></svg>
+
+    <div class="hero-left-inner" data-reveal="scale">
+      <div class="hero-names-vertical">
+        <div class="hero-name-block">
+          <div class="hero-name-km">វង សុវណ្ណធឿន</div>
+          <div class="hero-name-en">Vong Sovanthoeun</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <span class="hero-amp">♥</span>
+          <span class="hero-rings-icon">⚬⚬</span>
+        </div>
+        <div class="hero-name-block">
+          <div class="hero-name-km">រុឹង វិឡា</div>
+          <div class="hero-name-en">Roeng Vila</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Info -->
+  <div class="hero-right">
+    <svg class="flourish fl-tr" width="120" height="120" viewBox="0 0 160 160" fill="none"><g opacity=".14"><path d="M0,0 Q32,6 44,36 Q28,28 22,46 Q16,28 0,22Z" fill="#87CEEB"/><ellipse cx="34" cy="26" rx="11" ry="6" fill="#B8E2F4" opacity=".5" transform="rotate(-25 34 26)"/><circle cx="30" cy="28" r="3" fill="#87CEEB" opacity=".6"/><circle cx="62" cy="14" r="5" fill="#D3D3D3" opacity=".3"/></g></svg>
+    <svg class="flourish fl-bl" width="120" height="120" viewBox="0 0 160 160" fill="none"><g opacity=".14"><path d="M0,0 Q32,6 44,36 Q28,28 22,46 Q16,28 0,22Z" fill="#87CEEB"/><circle cx="30" cy="28" r="3" fill="#87CEEB" opacity=".6"/><path d="M46,0 Q58,18 66,30 Q50,26 46,42 Q42,24 34,18Z" fill="#C0C0C0" opacity=".3"/></g></svg>
+
+    <div data-reveal="right">
+      <div class="hero-tag">W E D D I N G &nbsp; I N V I T A T I O N</div>
+      <div class="hero-title-km">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+    </div>
+
+    <div class="hero-guest-wrap" data-reveal="right" style="transition-delay:.15s">
+      <div class="hero-guest-label khmer">សូមគោរពអញ្ជើញ</div>
+      <div class="hero-guest-card">
+        <span class="hero-guest-name display">Mr. Vong Sovanthoeun</span>
+      </div>
+    </div>
+
+    <div class="hero-invite-text khmer" data-reveal="right" style="transition-delay:.25s">
+      ចូលរួមជាភ្ញៀវកិត្តិយស ដើម្បីប្រសិទ្ធិពរជ័យ សិរីសួស្ដី ជ័យមង្គល ក្នុងពិធីអាពាហ៍ពិពាហ៍ របស់យើងខ្ញុំទាំងពីរ។
+    </div>
+
+    <div class="hero-date khmer" data-reveal="right" style="transition-delay:.35s">
+      ថ្ងៃទី ២៤ - ២៥ ខែ មីនា ឆ្នាំ ២០២៦
+    </div>
+
+    <div class="cd-strip" data-reveal="up" style="transition-delay:.45s">
+      <div class="cd-cell"><span class="cd-num" id="cd-d">0</span><span class="cd-lbl khmer">ថ្ងៃ</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cd-h">0</span><span class="cd-lbl khmer">ម៉ោង</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cd-m">0</span><span class="cd-lbl khmer">នាទី</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cd-s">0</span><span class="cd-lbl khmer">វិនាទី</span></div>
+    </div>
+
+    <div class="hero-venue" data-reveal="right" style="transition-delay:.55s">
+      គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត<br>
+      <a href="#">Open in Google Maps</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 2 : SCHEDULE — CARD GRID TIMELINE
+     ═══════════════════════════════════════════ -->
+<section class="schedule-sec" id="schedule">
+  <div class="wc-blob"></div>
+  <div class="wc-blob"></div>
+
+  <div class="sch-header" data-reveal="up">
+    <div class="sch-title">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+    <div class="sch-sub">កម្មវិធីថ្ងៃទី ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
+  </div>
+
+  <div class="timeline-wrap stg" id="tlWrap">
+    <div class="tl-card" data-child>
+      <span class="tl-icon">🏛️</span>
+      <div class="tl-time">ម៉ោង ៦:៣០ នាទីព្រឹក</div>
+      <div class="tl-desc">ផ្គុំដុំសាច់ញាតិ ភ្ញៀវកិត្តិយស ដើម្បីរៀបចំពិធីថែរពរជិន</div>
+    </div>
+    <div class="tl-card" data-child>
+      <span class="tl-icon">🐴</span>
+      <div class="tl-time">ម៉ោង ៧:០០ នាទីព្រឹក</div>
+      <div class="tl-desc">ពិធីហែរកំណាត់ចូលមហាជ័យ</div>
+    </div>
+    <div class="tl-card" data-child>
+      <span class="tl-icon">💍</span>
+      <div class="tl-time">ម៉ោង ៧:៤៥ នាទីព្រឹក</div>
+      <div class="tl-desc">ពិធាស្នាក៍ណាក់បុរីនជិន​ន (បំពាក់គ្រឿងអលង្ការ)</div>
+    </div>
+    <div class="tl-card" data-child>
+      <span class="tl-icon">🙏</span>
+      <div class="tl-time">ម៉ោង ៨:១៥ នាទីព្រឹក</div>
+      <div class="tl-desc">និមន្តព្រះសង្ឃសូត្រមន្ត</div>
+    </div>
+    <div class="tl-card" data-child>
+      <span class="tl-icon">✂️</span>
+      <div class="tl-time">ម៉ោង ៩:១៥ នាទីព្រឹក</div>
+      <div class="tl-desc">ពិធីកាត់សក់បង្កក់សីរី</div>
+    </div>
+    <div class="tl-card" data-child>
+      <span class="tl-icon">🌸</span>
+      <div class="tl-time">ម៉ោង ១០:៤០ នាទីព្រឹក</div>
+      <div class="tl-desc">ពិធីសំពះកេដឹម បង្វិលពពិល វែសនដីផួន ដីគា បាចផ្កាស្នា ចងដៃ</div>
+    </div>
+    <div class="tl-card" data-child>
+      <span class="tl-icon">🍽️</span>
+      <div class="tl-time">ម៉ោង ១១:៣០ នាទីព្រឹក</div>
+      <div class="tl-desc">អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div>
+    </div>
+    <div class="tl-card" data-child>
+      <span class="tl-icon">🎉</span>
+      <div class="tl-time">ម៉ោង ៥ ពេលល្ងាច</div>
+      <div class="tl-desc">អញ្ជើញភ្ញៀវកិត្តិយសពិសារអាហារពេលល្ងាច ដោយមេត្រីកាព</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 3 : VENUE — ASYMMETRIC SPLIT
+     ═══════════════════════════════════════════ -->
+<section class="venue-sec" id="venue">
+  <div class="venue-map-side" data-reveal="left">
+    <span class="venue-pin">📍</span>
+    <span class="venue-map-label khmer">ចុចដើម្បីមើលទីតាំងក្នុង Google Maps</span>
+  </div>
+  <div class="venue-info-side">
+    <div data-reveal="right">
+      <div class="venue-tag mono">L O C A T I O N</div>
+      <div class="venue-title khmer">ទីតាំងកម្មវិធីមង្គល</div>
+      <div class="venue-addr khmer">គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត</div>
+    </div>
+    <div class="venue-actions" data-reveal="up" style="transition-delay:.2s">
+      <a class="btn-sky" href="#">🗺️ បើកក្នុង Google Maps</a>
+      <div class="venue-qr">
+        <div class="venue-qr-label khmer">ស្កេន QR Code</div>
+        <div class="venue-qr-box">QR Code</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 4 : GALLERY — MASONRY GRID
+     ═══════════════════════════════════════════ -->
+<section class="gallery-sec" id="gallery">
+  <div class="wc-blob"></div>
+  <div class="gallery-header" data-reveal="right">
+    <div class="gallery-title khmer">រូបភាព</div>
+    <div class="gallery-sub khmer">រូបភាពពិធីអាពាហ៍ពិពាហ៍</div>
+  </div>
+  <div class="gallery-masonry stg" id="galGrid">
+    <div class="g-item" data-child><span class="g-icon">📷</span><span class="g-label">Photo 1</span></div>
+    <div class="g-item" data-child><span class="g-icon">📷</span><span class="g-label">Photo 2</span></div>
+    <div class="g-item" data-child><span class="g-icon">📷</span><span class="g-label">Photo 3</span></div>
+    <div class="g-item" data-child><span class="g-icon">📷</span><span class="g-label">Photo 4</span></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 5 : GIFT — OFFSET LAYOUT
+     ═══════════════════════════════════════════ -->
+<section class="gift-sec" id="gift">
+  <div class="wc-blob"></div>
+  <div class="wc-blob"></div>
+  <div class="gift-layout">
+    <div class="gift-text-col" data-reveal="left">
+      <div class="gift-tag mono">G I F T</div>
+      <div class="gift-title khmer">អំណោយអាពាហ៍ពិពាហ៍</div>
+      <div class="gift-desc khmer">ការមកចូលរួមរបស់អ្នកគឺជាអំណោយដ៏ធំបំផុត ប៉ុន្តែប្រសិនបើអ្នកចង់គួលអំណោយ អ្នកអាចប្រើ QR Code ខាងក្រោម</div>
+      <div class="gift-btn-row">
+        <a class="btn-outline" href="#">បញ្ជាក់ QR Code USD</a>
+        <a class="btn-outline" href="#">បញ្ជាក់ QR Code KHR</a>
+      </div>
+    </div>
+    <div class="gift-cards-col" data-reveal="right">
+      <div class="gift-card">
+        <div class="gc-cur display">USD</div>
+        <div class="gc-bank"><span class="gc-bank-text mono">ABA <span class="r">'</span> PAY</span></div>
+        <div class="gc-scan">Scan. Pay. Done.</div>
+        <div class="gc-qr">QR Code USD</div>
+        <div class="gc-name">VONG SOVANTHOEUN</div>
+      </div>
+      <div class="gift-card">
+        <div class="gc-cur display">KHR</div>
+        <div class="gc-bank"><span class="gc-bank-text mono">ABA <span class="r">'</span> PAY</span></div>
+        <div class="gc-scan">Scan. Pay. Done.</div>
+        <div class="gc-qr">QR Code KHR</div>
+        <div class="gc-name">VONG SOVANTHOEUN</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 6 : RSVP — FULL-WIDTH BANNER
+     ═══════════════════════════════════════════ -->
+<section class="rsvp-sec" id="rsvp">
+  <div class="rsvp-inner">
+    <div data-reveal="scale">
+      <div class="rsvp-title display">RSVP</div>
+      <div class="rsvp-desc khmer">សូមអរគុណសម្រាប់ការចូលរួមរបស់អ្នក</div>
+      <button class="rsvp-btn khmer" id="rsvpBtn">▼ បញ្ជាក់ទម្រង់</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SECTION 7 : FOOTER — 3 COLUMN
+     ═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner" data-reveal="fade">
+    <div class="footer-left">
+      <div class="ft-blessing khmer">សូមអរគុណ និង ជូនពរ សុភមង្គល 🙏</div>
+      <div class="ft-quote display">"Two hearts, one love, one beautiful destiny"</div>
+    </div>
+    <div class="footer-center">
+      <span class="ft-icon">💙</span>
+      <div class="ft-divider"></div>
+    </div>
+    <div class="footer-right">
+      <div class="ft-year display">2026</div>
+      <div class="ft-credit mono">WEDDING E-TICKET</div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+// ═══ Intersection Observer ═══
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis') });
+}, { rootMargin:'0px 0px -50px 0px', threshold:.06 });
+document.querySelectorAll('[data-reveal],.stg').forEach(el => io.observe(el));
+
+// ═══ Countdown ═══
+const W = new Date('2026-03-25T17:00:00+07:00');
+function tick(){
+  const d=W-new Date(); if(d<=0)return;
+  document.getElementById('cd-d').textContent=Math.floor(d/864e5);
+  document.getElementById('cd-h').textContent=Math.floor((d%864e5)/36e5);
+  document.getElementById('cd-m').textContent=Math.floor((d%36e5)/6e4);
+  document.getElementById('cd-s').textContent=Math.floor((d%6e4)/1e3);
+}
+tick(); setInterval(tick,1000);
+
+// ═══ Ambient particles ═══
+const al=document.getElementById('ambLayer');
+for(let i=0;i<30;i++){
+  const d=document.createElement('div');d.className='amb-dot';
+  d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*5}s;animation-duration:${3+Math.random()*4}s;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px;background:${['#87CEEB','#ADD8E6','#C0C0C0','#D3D3D3','#B8E2F4'][~~(Math.random()*5)]}`;
+  al.appendChild(d);
+}
+for(let i=0;i<18;i++){
+  const s=document.createElement('div');s.className='amb-star';s.textContent='✦';
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*5}s;animation-duration:${3+Math.random()*3}s;font-size:${7+Math.random()*9}px;color:${Math.random()>.5?'#C0C0C0':'#87CEEB'}`;
+  al.appendChild(s);
+}
+
+// ═══ Petals ═══
+const pl=document.getElementById('petalLayer');
+const pc=['radial-gradient(ellipse at 40% 30%,#B8E2F4,#87CEEB 100%)','radial-gradient(ellipse at 40% 30%,#D6EFF9,#ADD8E6 100%)','radial-gradient(ellipse at 40% 30%,#E8E8E8,#C0C0C0 100%)','radial-gradient(ellipse at 40% 30%,#D3D3D3,#B8E2F4 100%)'];
+for(let i=0;i<10;i++){
+  const p=document.createElement('div');p.className='petal';
+  const sz=10+Math.random()*12;
+  p.style.cssText=`left:${Math.random()*100}%;animation-delay:${Math.random()*14}s;animation-duration:${10+Math.random()*8}s;width:${sz}px;height:${sz*1.2}px;background:${pc[~~(Math.random()*4)]}`;
+  pl.appendChild(p);
+}
+
+// ═══ Nav pill show on scroll ═══
+const np=document.getElementById('navPill');
+window.addEventListener('scroll',()=>{
+  np.classList.toggle('show',scrollY>300);
+  document.getElementById('s2tBtn').classList.toggle('show',scrollY>500);
+});
+
+// ═══ RSVP ═══
+document.getElementById('rsvpBtn').addEventListener('click',function(){
+  this.textContent='✅ បានបញ្ជាក់រួចហើយ!';this.classList.add('done');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wedding E-Ticket - Choose your invitation version. VONG Sovanthoeun & ROENG Vila.">
+  <title>Wedding E-Ticket — Choose Version</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&family=Noto+Serif+Khmer:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --sky: #87CEEB;
+      --sky-light: #B8E2F4;
+      --sky-pale: #D6EFF9;
+      --sky-deep: #5BAFD4;
+      --silver: #C0C0C0;
+      --silver-pale: #E8E8E8;
+      --white: #FFFFFF;
+      --off-white: #F8FBFD;
+      --ice: #F0F7FB;
+      --dark: #2C3E50;
+      --text: #34495E;
+      --text-light: #7F8C9B;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', 'Noto Serif Khmer', sans-serif;
+      background: var(--off-white);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .bg-blur {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 20%, var(--sky-pale) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(192,192,192,0.15) 0%, transparent 50%),
+        var(--off-white);
+      z-index: -1;
+    }
+    .card {
+      background: var(--white);
+      border-radius: 24px;
+      border: 1px solid var(--silver-pale);
+      box-shadow: 0 12px 48px rgba(135,206,235,0.08), 0 4px 16px rgba(0,0,0,0.04);
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    .title-khmer {
+      font-family: 'Noto Serif Khmer', serif;
+      font-size: clamp(20px, 4vw, 26px);
+      font-weight: 600;
+      color: var(--sky-deep);
+      margin-bottom: 8px;
+    }
+    .title-english {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 4.5vw, 28px);
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      color: var(--text-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0 32px;
+    }
+    .divider-line {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sky-light), transparent);
+    }
+    .divider-icon { color: var(--sky); font-size: 12px; opacity: 0.8; }
+    .version-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .version-btn {
+      display: block;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--dark);
+      background: var(--ice);
+      border: 1.5px solid var(--sky-pale);
+      border-radius: 16px;
+      padding: 18px 24px;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(135,206,235,0.06);
+    }
+    .version-btn:hover {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+      color: var(--white);
+      border-color: var(--sky-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(135,206,235,0.25);
+    }
+    .version-btn strong { display: block; margin-bottom: 4px; font-weight: 600; }
+    .version-btn span { font-size: 12px; color: var(--text-light); }
+    .version-btn:hover span { color: rgba(255,255,255,0.9); }
+    .footer-note {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      color: var(--text-light);
+      letter-spacing: 1px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--silver-pale);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blur" aria-hidden="true"></div>
+
+  <main class="card">
+    <h1 class="title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</h1>
+    <p class="title-english">Wedding E-Ticket</p>
+    <p class="subtitle">VONG Sovanthoeun & ROENG Vila</p>
+
+    <div class="divider">
+      <span class="divider-line"></span>
+      <span class="divider-icon">💍</span>
+      <span class="divider-line"></span>
+    </div>
+
+    <p class="subtitle" style="margin-bottom: 16px;">Choose invitation version</p>
+
+    <nav class="version-list" aria-label="Invitation versions">
+      <a class="version-btn" target="_blank" href="wedding-invitation.html">
+        <strong>Version 1.0</strong>
+        <span>wedding-invitation.html</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V2.html">
+        <strong>Version 2.0</strong>
+        <span>wedding-invitation V2.html</span>
+      </a>
+    </nav>
+
+    <p class="footer-note">Select a version above to open the invitation</p>
+  </main>
+</body>
+</html>
