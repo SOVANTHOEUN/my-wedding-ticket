@@ -54,19 +54,67 @@
       width: 100%;
       text-align: center;
     }
+    .header-block {
+      margin-bottom: 36px;
+    }
     .title-khmer {
       font-family: 'Noto Serif Khmer', serif;
-      font-size: clamp(20px, 4vw, 26px);
+      font-size: clamp(18px, 3.5vw, 22px);
       font-weight: 600;
       color: var(--sky-deep);
-      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
     }
-    .title-english {
+    .couple-names-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(10px, 2vw, 20px);
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .couple-name {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(22px, 4.5vw, 28px);
-      font-weight: 700;
+      font-size: clamp(20px, 4.2vw, 28px);
+      font-weight: 600;
       color: var(--dark);
-      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+      line-height: 1.2;
+    }
+    .couple-amp {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(18px, 3.5vw, 24px);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--sky);
+      line-height: 1;
+      opacity: 0.95;
+    }
+    .subtitle-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      color: var(--text-light);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 0 0 28px;
+    }
+    .divider-line {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sky-light), var(--sky), var(--sky-light), transparent);
+    }
+    .divider-icon {
+      color: var(--sky);
+      font-size: 14px;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 8px rgba(135,206,235,0.3));
     }
     .subtitle {
       font-family: 'Montserrat', sans-serif;
@@ -76,19 +124,6 @@
       text-transform: uppercase;
       margin-bottom: 32px;
     }
-    .divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin: 24px 0 32px;
-    }
-    .divider-line {
-      width: 60px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--sky-light), transparent);
-    }
-    .divider-icon { color: var(--sky); font-size: 12px; opacity: 0.8; }
     .version-list {
       display: flex;
       flex-direction: column;
@@ -136,15 +171,20 @@
   <div class="bg-blur" aria-hidden="true"></div>
 
   <main class="card">
-    <h1 class="title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</h1>
-    <p class="title-english">Wedding E-Ticket</p>
-    <p class="subtitle">VONG Sovanthoeun & ROENG Vila</p>
-
-    <div class="divider">
-      <span class="divider-line"></span>
-      <span class="divider-icon">💍</span>
-      <span class="divider-line"></span>
-    </div>
+    <header class="header-block">
+      <p class="subtitle-tag">Wedding Invitation</p>
+      <h1 class="title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</h1>
+      <div class="couple-names-wrap">
+        <span class="couple-name">VONG Sovanthoeun</span>
+        <span class="couple-amp">♥</span>
+        <span class="couple-name">ROENG Vila</span>
+      </div>
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-icon">💍</span>
+        <span class="divider-line"></span>
+      </div>
+    </header>
 
     <p class="subtitle" style="margin-bottom: 16px;">Choose invitation version</p>
 
@@ -156,6 +196,14 @@
       <a class="version-btn" target="_blank" href="wedding-invitation%20V2.html">
         <strong>Version 2.0</strong>
         <span>wedding-invitation V2.html</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V3.html">
+        <strong>Version 3.0</strong>
+        <span>wedding-invitation V3.html (Custom design)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V4.html">
+        <strong>Version 4.0</strong>
+        <span>wedding-invitation V4.html (Teal &amp; purple)</span>
       </a>
     </nav>
 

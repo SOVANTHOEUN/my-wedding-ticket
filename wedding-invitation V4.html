@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>សិរីមង្គលអាពាហ៍ពិពាហ៍ - VONG Sovanthoeun & ROENG Vila</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Serif+Khmer:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&display=swap">
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --card: #ffffff;
+      --teal: #14b8a6;
+      --teal-dark: #0d9488;
+      --purple: #8b5cf6;
+      --purple-dark: #7c3aed;
+      --text: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', 'Noto Serif Khmer', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    /* Soft background shape */
+    .bg-shape {
+      position: fixed;
+      width: 120%;
+      height: 70vh;
+      top: -20vh;
+      left: -10%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(20,184,166,.08) 0%, transparent 55%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      gap: 4px;
+      background: var(--card);
+      border-radius: 50px;
+      padding: 6px 10px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.12);
+      border: 1px solid var(--border);
+    }
+    .lang-switcher [data-lang] {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 50px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .25s;
+    }
+    .lang-switcher [data-lang]:hover { color: var(--teal-dark); background: var(--bg); }
+    .lang-switcher [data-lang].active { background: var(--teal); color: #fff; }
+
+    /* ═══ HERO: Full-bleed gradient + giant names ═══ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+      background: linear-gradient(160deg, var(--teal) 0%, var(--teal-dark) 40%, var(--purple) 100%);
+      text-align: center;
+      z-index: 1;
+    }
+    .hero .badge {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,.9);
+      margin-bottom: 24px;
+    }
+    .hero .names {
+      font-family: 'Cormorant Garamond', 'Noto Serif Khmer', serif;
+      font-size: clamp(2.5rem, 10vw, 4.5rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 24px rgba(0,0,0,.15);
+    }
+    .hero .names span { opacity: .95; font-size: .45em; font-weight: 500; margin: 0 .15em; }
+    .hero .names-en {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: rgba(255,255,255,.85);
+      margin-bottom: 32px;
+    }
+    .hero .guest-line {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,.9);
+      margin-bottom: 10px;
+    }
+    .hero .guest-name {
+      display: inline-block;
+      padding: 10px 24px;
+      background: rgba(255,255,255,.2);
+      backdrop-filter: blur(8px);
+      border-radius: 50px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 28px;
+      border: 1px solid rgba(255,255,255,.3);
+    }
+
+    /* Floating message card */
+    .hero-card {
+      position: relative;
+      max-width: 480px;
+      width: 100%;
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.18);
+      padding: 36px 28px;
+      margin-top: 20px;
+    }
+    .hero-card .msg {
+      font-size: 0.95rem;
+      line-height: 2;
+      color: var(--text);
+      white-space: pre-line;
+    }
+
+    /* ═══ COUNTDOWN: Bold strip ═══ */
+    .countdown-strip {
+      position: relative;
+      z-index: 2;
+      margin: -40px 20px 0;
+      padding: 28px 20px;
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.1);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .countdown-strip .cd {
+      text-align: center;
+      min-width: 64px;
+    }
+    .countdown-strip .cd-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--purple);
+      display: block;
+      line-height: 1;
+    }
+    .countdown-strip .cd-lbl {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .countdown-strip .date {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-right: 8px;
+    }
+
+    /* ═══ SECTIONS: Cards with presence ═══ */
+    .section {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.06);
+      padding: 36px 28px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,.9);
+      transition: box-shadow .3s, transform .3s;
+    }
+    .card:hover {
+      box-shadow: 0 20px 56px rgba(0,0,0,.1);
+      transform: translateY(-2px);
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--teal);
+      display: inline-block;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+      border-left: 3px solid var(--teal);
+      margin-left: 8px;
+    }
+    .timeline .item {
+      position: relative;
+      padding-bottom: 24px;
+    }
+    .timeline .item:last-child { padding-bottom: 0; }
+    .timeline .item::before {
+      content: '';
+      position: absolute;
+      left: -34px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--purple);
+      border: 3px solid var(--card);
+      box-shadow: 0 0 0 2px var(--teal);
+    }
+    .timeline .time {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--teal-dark);
+      margin-bottom: 4px;
+    }
+    .timeline .desc {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* Venue */
+    .venue-inner {
+      text-align: center;
+      padding: 12px 0;
+    }
+    .venue-inner .pin { font-size: 3rem; margin-bottom: 12px; }
+    .venue-inner .addr {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .venue-inner .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: #fff;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 8px 24px rgba(20,184,166,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .venue-inner .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(20,184,166,.4);
+    }
+    .venue-inner .qr-section {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .venue-inner .qr-section .lbl { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; }
+    .venue-inner .qr-section img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+    }
+
+    /* Gallery: Bento */
+    .gallery-bento {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 12px;
+    }
+    .gallery-bento .g-main {
+      grid-column: 1 / -1;
+      aspect-ratio: 16/9;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--border);
+    }
+    .gallery-bento .g-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-bento .g-item {
+      aspect-ratio: 1;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--border);
+    }
+    .gallery-bento .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Gift */
+    .gift-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .gift-box {
+      background: linear-gradient(180deg, rgba(20,184,166,.06) 0%, var(--bg) 100%);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--purple);
+    }
+    .gift-box .curr {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+    .gift-box .qr {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 14px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--border);
+    }
+    .gift-box .qr img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .gift-box .name { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.08em; }
+
+    /* RSVP */
+    .rsvp-card {
+      text-align: center;
+      padding: 48px 28px;
+      background: linear-gradient(180deg, rgba(139,92,246,.06) 0%, var(--card) 100%);
+      border: 1px solid rgba(139,92,246,.15);
+    }
+    .rsvp-card p { font-size: 1rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+    .rsvp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 40px;
+      background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 12px 32px rgba(139,92,246,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .rsvp-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(139,92,246,.45);
+    }
+    .rsvp-btn.done { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); box-shadow: 0 12px 32px rgba(20,184,166,.35); }
+
+    /* Footer */
+    .footer-card {
+      text-align: center;
+      padding: 40px 28px;
+    }
+    .footer-card .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .footer-card .blessing { font-size: 1rem; color: var(--text); margin-bottom: 8px; font-weight: 500; }
+    .footer-card .quote { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+
+    .lightbox-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 1000;
+      display: none; align-items: center; justify-content: center; padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .lightbox-overlay.open { display: flex; }
+    .lightbox-overlay .lightbox-inner { position: relative; max-width: 95vw; max-height: 90vh; }
+    .lightbox-overlay .lightbox-inner img { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .lightbox-close {
+      position: absolute; top: -48px; right: 0; width: 40px; height: 40px; border: none; border-radius: 50%;
+      background: var(--card); color: var(--text); font-size: 24px; line-height: 1; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,.2); transition: transform .2s, background .2s;
+    }
+    .lightbox-close:hover { background: var(--teal); color: #fff; transform: scale(1.05); }
+
+    @media (max-width: 600px) {
+      .lang-switcher { top: 12px; right: 12px; padding: 4px 8px; }
+      .lang-switcher [data-lang] { padding: 6px 12px; font-size: 11px; }
+      .hero { padding: 60px 16px 50px; }
+      .countdown-strip { margin: -32px 12px 0; padding: 20px 12px; gap: 12px; }
+      .countdown-strip .cd-val { font-size: 1.75rem; }
+      .countdown-strip .cd { min-width: 56px; }
+      .section { padding: 20px 12px 40px; max-width: 100%; }
+      .card { padding: 28px 20px; margin-bottom: 20px; }
+      .gift-grid { grid-template-columns: 1fr; }
+      .gallery-bento { gap: 10px; }
+      .gallery-bento .g-item { aspect-ratio: 4/3; }
+      .venue-inner .btn { padding: 12px 24px; font-size: 0.85rem; }
+      .rsvp-btn { padding: 16px 32px; font-size: 1rem; }
+    }
+  </style>
+  <script src="js/translations.js"></script>
+</head>
+<body>
+  <div class="bg-shape" aria-hidden="true"></div>
+  <div class="lang-switcher" aria-label="Language">
+    <button type="button" data-lang="ko" title="한국어">KR</button>
+    <button type="button" data-lang="en" title="English">EN</button>
+    <button type="button" data-lang="km" title="ភាសាខ្មែរ">KH</button>
+  </div>
+
+  <header class="hero">
+    <div class="badge" data-i18n="heroTopline">W E D D I N G   I N V I T A T I O N</div>
+    <h1 class="names">VONG Sovanthoeun <span>♥</span> ROENG Vila</h1>
+    <p class="names-en">Vong Sovanthoeun & Roeng Vila</p>
+    <p class="guest-line" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</p>
+    <div class="guest-name">Mr. Vong Sovanthoeun</div>
+    <div class="hero-card">
+      <p class="msg" data-i18n-html="invitationMessage">ចូលរួមជាភ្ញៀវកិត្តិយស ដើម្បីប្រសិទ្ធិពរជ័យ សិរីសួស្ដី ជ័យមង្គល ក្នុងពិធីអាពាហ៍ពិពាហ៍ របស់យើងខ្ញុំទាំងពីរ។</p>
+    </div>
+  </header>
+
+  <div class="countdown-strip">
+    <span class="date" data-i18n="dateLine">ថ្ងៃទី ២៤ - ២៥ ខែ មីនា ឆ្នាំ ២០២៦</span>
+    <div class="cd"><span class="cd-val" id="cd-days">0</span><span class="cd-lbl" data-i18n-countdown="cdDays">ថ្ងៃ</span></div>
+    <div class="cd"><span class="cd-val" id="cd-hours">0</span><span class="cd-lbl" data-i18n-countdown="cdHours">ម៉ោង</span></div>
+    <div class="cd"><span class="cd-val" id="cd-mins">0</span><span class="cd-lbl" data-i18n-countdown="cdMins">នាទី</span></div>
+    <div class="cd"><span class="cd-val" id="cd-secs">0</span><span class="cd-lbl" data-i18n-countdown="cdSecs">វិនាទី</span></div>
+  </div>
+
+  <div class="section">
+    <div class="card" id="schedule">
+      <h2 data-i18n="sectionSchedule">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</h2>
+      <div class="timeline">
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ៦:៣០</div><div class="desc" data-i18n-schedule-desc>ផ្គុំដុំសាច់ញាតិ</div></div>
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ៧:០០</div><div class="desc" data-i18n-schedule-desc>ពិធីហែរកំណាត់ចូលមហាជ័យ</div></div>
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ៧:៤៥</div><div class="desc" data-i18n-schedule-desc>ពិធាស្នាក៍ណាក់បុរីនជិន</div></div>
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ៨:១៥</div><div class="desc" data-i18n-schedule-desc>និមន្តព្រះសង្ឃសូត្រមន្ត</div></div>
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ៩:១៥</div><div class="desc" data-i18n-schedule-desc>ពិធីកាត់សក់បង្កក់សីរី</div></div>
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ១០:៤០</div><div class="desc" data-i18n-schedule-desc>ពិធីសំពះកេដឹម ចងដៃ</div></div>
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ១១:៣០</div><div class="desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div></div>
+        <div class="item"><div class="time" data-i18n-schedule-time>ម៉ោង ៥ ល្ងាច</div><div class="desc" data-i18n-schedule-desc>អាហារពេលល្ងាច</div></div>
+      </div>
+    </div>
+
+    <div class="card venue-card" id="venue">
+      <h2 data-i18n="sectionVenue">ទីតាំងកម្មវិធីមង្គល</h2>
+      <div class="venue-inner">
+        <div class="pin">📍</div>
+        <p class="addr" data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត</p>
+        <a href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" target="_blank" rel="noopener noreferrer" class="btn" data-i18n="openMaps">🗺️ Open in Google Maps</a>
+        <div class="qr-section">
+          <div class="lbl" data-i18n="scanQR">ស្កេន QR Code</div>
+          <img src="images/QR/wedding-location-qr-code.png" alt="QR">
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="gallery">
+      <h2 data-i18n="sectionGallery">រូបភាព</h2>
+      <div class="gallery-bento" id="galleryGrid">
+        <div class="g-main"><img src="images/engagement1.jpeg" alt="1"></div>
+        <div class="g-item"><img src="images/engagement2.jpeg" alt="2"></div>
+        <div class="g-item"><img src="images/engagement3.jpeg" alt="3"></div>
+        <div class="g-item"><img src="images/engagement4.jpeg" alt="4"></div>
+        <div class="g-item"><img src="images/keb1.jpeg" alt="5"></div>
+        <div class="g-item"><img src="images/kompot1.jpeg" alt="6"></div>
+      </div>
+    </div>
+
+    <div class="card" id="gift">
+      <h2 data-i18n="sectionGift">អំណោយអាពាហ៍ពិពាហ៍</h2>
+      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:20px;line-height:1.7;" data-i18n-html="giftDesc">ការមកចូលរួមរបស់អ្នកគឺជាអំណោយដ៏ធំបំផុត។ ប្រើ QR Code ខាងក្រោម។</p>
+      <div class="gift-grid">
+        <div class="gift-box">
+          <div class="curr">USD</div>
+          <div class="qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA USD"></div>
+          <div class="name">VONG SOVANTHOEUN</div>
+        </div>
+        <div class="gift-box">
+          <div class="curr">KHR</div>
+          <div class="qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA KHR"></div>
+          <div class="name">VONG SOVANTHOEUN</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card rsvp-card" id="rsvp">
+      <h2 data-i18n="sectionRsvp">RSVP</h2>
+      <p data-i18n="rsvpDesc">សូមអរគុណសម្រាប់ការចូលរួមរបស់អ្នក</p>
+      <button type="button" class="rsvp-btn" id="rsvpBtn" data-i18n="rsvpBtn">▼ បញ្ជាក់ទម្រង់</button>
+    </div>
+
+    <div class="card footer-card">
+      <div class="icon">💙</div>
+      <div class="blessing" data-i18n="footerBlessing">សូមអរគុណ និង ជូនពរ សុភមង្គល 🙏</div>
+      <div class="quote" data-i18n="footerQuote">"Two hearts, one love, one beautiful destiny"</div>
+    </div>
+  </div>
+
+  <div class="lightbox-overlay" id="lightbox" aria-hidden="true">
+    <div class="lightbox-inner">
+      <img id="lightboxImg" src="" alt="">
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var lang = getPreferredLanguage();
+      setLanguage(lang);
+      document.querySelectorAll('.lang-switcher [data-lang]').forEach(function(btn) {
+        btn.addEventListener('click', function() { setLanguage(this.getAttribute('data-lang')); });
+      });
+    })();
+
+    var wd = new Date('2026-03-25T17:00:00+07:00');
+    function tick() {
+      var d = wd - new Date();
+      if (d <= 0) return;
+      var el = document.getElementById('cd-days');
+      if (el) el.textContent = Math.floor(d / 864e5);
+      el = document.getElementById('cd-hours');
+      if (el) el.textContent = Math.floor((d % 864e5) / 36e5);
+      el = document.getElementById('cd-mins');
+      if (el) el.textContent = Math.floor((d % 36e5) / 6e4);
+      el = document.getElementById('cd-secs');
+      if (el) el.textContent = Math.floor((d % 6e4) / 1e3);
+    }
+    tick();
+    setInterval(tick, 1000);
+
+    document.getElementById('rsvpBtn').addEventListener('click', function() {
+      var lang = localStorage.getItem('wedding-lang') || 'km';
+      var t = (typeof translations !== 'undefined' && translations[lang]) ? translations[lang].rsvpConfirmed : '✅ Confirmed!';
+      this.textContent = t;
+      this.classList.add('done');
+    });
+
+    (function() {
+      var lb = document.getElementById('lightbox');
+      var lbImg = document.getElementById('lightboxImg');
+      var lbClose = document.getElementById('lightboxClose');
+      function openLightbox(src, alt) { lbImg.src = src; lbImg.alt = alt || ''; lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+      function closeLightbox() { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+      document.getElementById('galleryGrid').addEventListener('click', function(e) {
+        var cell = e.target.closest('.g-main') || e.target.closest('.g-item');
+        if (!cell) return;
+        var img = cell.querySelector('img');
+        if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
+      });
+      lbClose.addEventListener('click', closeLightbox);
+      lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
+    })();
+  </script>
+</body>
+</html>

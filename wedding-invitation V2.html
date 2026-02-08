@@ -290,7 +290,7 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
 .gallery-masonry{
   max-width:1100px;margin:0 auto;
   display:grid;grid-template-columns:repeat(12,1fr);gap:16px;
-  grid-auto-rows:minmax(80px,auto);
+  grid-template-rows:repeat(4,minmax(180px,1fr));
 }
 .g-item{
   border-radius:16px;overflow:hidden;
@@ -298,6 +298,7 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
   border:1px solid var(--silver-pl);
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;
   position:relative;cursor:pointer;transition:all .4s cubic-bezier(.25,.46,.45,.94);
+  min-height:0;
 }
 .g-item:hover{transform:scale(1.03);box-shadow:0 16px 44px rgba(135,206,235,.14);border-color:var(--sky-lt)}
 .g-item:nth-child(1){grid-column:1/8;grid-row:1/3}
@@ -311,6 +312,24 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
 .g-item .g-label{position:absolute;bottom:10px;left:0;right:0;text-align:center;z-index:1}
 .g-icon{font-size:36px;opacity:.3}
 .g-label{font-family:'Montserrat',sans-serif;font-size:10px;color:var(--txt-mut);letter-spacing:1px}
+
+/* Lightbox */
+.lightbox-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(8px);
+}
+.lightbox-overlay.open{display:flex}
+.lightbox-overlay .lightbox-inner{position:relative;max-width:95vw;max-height:90vh}
+.lightbox-overlay .lightbox-inner img{max-width:100%;max-height:85vh;width:auto;height:auto;object-fit:contain;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox-close{
+  position:absolute;top:-48px;right:0;
+  width:40px;height:40px;border:none;border-radius:50%;
+  background:var(--white);color:var(--dark);font-size:24px;line-height:1;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);transition:transform .2s,background .2s;
+}
+.lightbox-close:hover{background:var(--sky);color:#fff;transform:scale(1.05)}
+@media(max-width:600px){.lightbox-overlay .lightbox-inner img{max-height:80vh}.lightbox-close{top:-44px;width:36px;height:36px;font-size:20px}}
 
 /* ============================================================
    SECTION 5: GIFT — OFFSET OVERLAPPING CARDS
@@ -426,7 +445,7 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
   .venue-info-side{padding:40px 30px;align-items:center;text-align:center}
   .venue-actions{justify-content:center}
 
-  .gallery-masonry{grid-template-columns:repeat(2,1fr);grid-auto-rows:auto}
+  .gallery-masonry{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(4,minmax(180px,1fr));gap:14px}
   .g-item{min-height:180px}
   .g-item:nth-child(1),.g-item:nth-child(2),.g-item:nth-child(3),.g-item:nth-child(4),.g-item:nth-child(5),.g-item:nth-child(6){grid-column:auto;grid-row:auto}
   .g-item:nth-child(4){grid-column:1/3;grid-row:auto}
@@ -440,7 +459,8 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
   .footer-inner{grid-template-columns:1fr;text-align:center;gap:24px}
   .footer-left,.footer-right{text-align:center}
 
-  .nav-pill{display:none}
+  .nav-pill{opacity:1;transform:translateX(-50%) translateY(0);padding:8px 12px;flex-wrap:wrap;justify-content:center;max-width:96vw}
+  .nav-pill a{font-size:9px;padding:6px 10px;letter-spacing:1px}
 }
 
 /* ============================================================
@@ -458,8 +478,9 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
 
   .timeline-wrap{grid-template-columns:1fr;gap:12px;padding:0 16px}
 
+  .nav-pill a{font-size:8px;padding:5px 8px}
   .gallery-masonry{grid-template-columns:1fr;gap:12px}
-  .g-item{min-height:160px}
+  .g-item{min-height:200px}
   .g-item:nth-child(4),.g-item:nth-child(5),.g-item:nth-child(6){grid-column:auto}
 
   .gift-cards-col{flex-direction:column}
@@ -502,6 +523,14 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
 
 <!-- Scroll-to-top -->
 <button class="s2t" id="s2tBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Lightbox for gallery -->
+<div class="lightbox-overlay" id="lightbox" aria-hidden="true">
+  <div class="lightbox-inner">
+    <img id="lightboxImg" src="" alt="">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════
      SECTION 1 : HERO — SPLIT SCREEN
@@ -573,7 +602,7 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
 
     <div class="hero-venue" data-reveal="right" style="transition-delay:.55s">
       <span data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ឃុំខ្នាចរមាស់ ស្រុកបរវេល ខេត្តបាត់ដំបង</span><br>
-      <a href="#" data-i18n="openMaps">Open in Google Maps</a>
+      <a href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" data-i18n="openMaps">Open in Google Maps</a>
     </div>
   </div>
 </section>
@@ -651,7 +680,7 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
       <div class="venue-addr khmer" data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត</div>
     </div>
     <div class="venue-actions" data-reveal="up" style="transition-delay:.2s">
-      <a class="btn-sky" href="#" data-i18n="openMaps">🗺️ បើកក្នុង Google Maps</a>
+      <a class="btn-sky" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" data-i18n="openMaps">🗺️ បើកក្នុង Google Maps</a>
       <div class="venue-qr">
         <div class="venue-qr-label khmer" data-i18n="scanQR">ស្កេន QR Code</div>
         <div class="venue-qr-box"><img src="images/QR/wedding-location-qr-code.png" alt="Location QR Code"></div>
@@ -694,7 +723,7 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
       <div class="gift-desc khmer" data-i18n-html="giftDesc">ការមកចូលរួមរបស់អ្នកគឺជាអំណោយដ៏ធំបំផុត ប៉ុន្តែប្រសិនបើអ្នកចង់គួលអំណោយ អ្នកអាចប្រើ QR Code ខាងក្រោម</div>
       <div class="gift-btn-row">
         <a class="btn-outline" href="#" data-i18n="giftQrUsd">បញ្ជាក់ QR Code USD</a>
-        <a class="btn-outline" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a>
+        <!-- <a class="btn-outline" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a> -->
       </div>
     </div>
     <div class="gift-cards-col" data-reveal="right">
@@ -705,13 +734,13 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
         <div class="gc-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
         <div class="gc-name">VONG SOVANTHOEUN</div>
       </div>
-      <div class="gift-card">
+      <!-- <div class="gift-card">
         <div class="gc-cur display">KHR</div>
         <div class="gc-bank"><span class="gc-bank-text mono">ABA <span class="r">'</span> PAY</span></div>
         <div class="gc-scan">Scan. Pay. Done.</div>
         <div class="gc-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR KHR"></div>
         <div class="gc-name">VONG SOVANTHOEUN</div>
-      </div>
+      </div> -->
     </div>
   </div>
 </section>
@@ -793,12 +822,30 @@ for(let i=0;i<10;i++){
   pl.appendChild(p);
 }
 
-// ═══ Nav pill show on scroll ═══
+// ═══ Nav pill show on scroll (desktop); always visible on mobile via CSS ═══
 const np=document.getElementById('navPill');
 window.addEventListener('scroll',()=>{
   np.classList.toggle('show',scrollY>300);
   document.getElementById('s2tBtn').classList.toggle('show',scrollY>500);
 });
+
+// ═══ Gallery lightbox: click photo to popup ═══
+(function(){
+  var lb=document.getElementById('lightbox');
+  var lbImg=document.getElementById('lightboxImg');
+  var lbClose=document.getElementById('lightboxClose');
+  function openLightbox(src,alt){ lbImg.src=src; lbImg.alt=alt||''; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function closeLightbox(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  document.getElementById('galGrid').addEventListener('click',function(e){
+    var g=e.target.closest('.g-item');
+    if(!g) return;
+    var img=g.querySelector('img');
+    if(img&&img.src){ e.preventDefault(); openLightbox(img.src,img.alt); }
+  });
+  lbClose.addEventListener('click',closeLightbox);
+  lb.addEventListener('click',function(e){ if(e.target===lb) closeLightbox(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&lb.classList.contains('open')) closeLightbox(); });
+})();
 
 // ═══ RSVP ═══
 document.getElementById('rsvpBtn').addEventListener('click',function(){

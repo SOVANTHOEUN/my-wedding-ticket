@@ -1,5 +1,5 @@
 /**
- * Wedding E-Ticket — Multi-language translations (KO default, EN, KM)
+ * Wedding E-Ticket — Multi-language translations (KM default, KO, EN)
  * Names are not translated; use same in all languages.
  */
 const translations = {
@@ -199,7 +199,7 @@ function getPreferredLanguage() {
   if (browser.startsWith("ko")) return "ko";
   if (browser.startsWith("km") || browser.startsWith("khm")) return "km";
   if (browser.startsWith("en")) return "en";
-  return "ko";
+  return "km";
 }
 
 /** Resolve nested key like "invitation.message" */

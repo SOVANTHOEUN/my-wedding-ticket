@@ -418,6 +418,20 @@
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     color: var(--text-muted); position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; letter-spacing: 1px; z-index: 1;
   }
+  .lightbox-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 1000;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .lightbox-overlay.open { display: flex; }
+  .lightbox-overlay .lightbox-inner { position: relative; max-width: 95vw; max-height: 90vh; }
+  .lightbox-overlay .lightbox-inner img { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .lightbox-close {
+    position: absolute; top: -48px; right: 0; width: 40px; height: 40px; border: none; border-radius: 50%;
+    background: var(--white); color: var(--dark); font-size: 24px; line-height: 1; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2); transition: transform .2s, background .2s;
+  }
+  .lightbox-close:hover { background: var(--sky); color: #fff; transform: scale(1.05); }
 
   /* GIFT */
   .gift-desc {
@@ -609,6 +623,12 @@
 <div class="shimmer-layer" id="shimmerLayer"></div>
 <div class="petal-layer" id="petalLayer"></div>
 <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="lightbox-overlay" id="lightbox" aria-hidden="true">
+  <div class="lightbox-inner">
+    <img id="lightboxImg" src="" alt="">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+  </div>
+</div>
 
 <!-- ===== HERO ===== -->
 <section class="hero-section" id="hero">
@@ -721,7 +741,7 @@
 
     <div class="hero-venue-text">
       <span data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ឃុំខ្នាចរមាស់ ស្រុកបរវេល ខេត្តបាត់ដំបង</span><br>
-      <a href="#" data-i18n="openMaps">Open in Google Maps</a>
+      <a href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" data-i18n="openMaps">Open in Google Maps</a>
     </div>
   </div>
 </section>
@@ -763,7 +783,7 @@
       <span class="map-click-text" data-i18n="mapClick">ចុចដើម្បីមើលទីតាំងក្នុង Google Maps</span>
     </div>
     <div class="venue-actions fade-section">
-      <a class="btn-sky" href="#" data-i18n="openMaps">🗺️ បើកក្នុង Google Maps</a>
+      <a class="btn-sky" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" data-i18n="openMaps">🗺️ បើកក្នុង Google Maps</a>
       <div class="qr-inline">
         <div class="qr-label" data-i18n="scanQR">ស្កេន QR Code</div>
         <div class="qr-box"><img src="images/QR/wedding-location-qr-code.png" alt="Location QR Code"></div>
@@ -807,17 +827,17 @@
         <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
         <div class="gift-account-name">VONG SOVANTHOEUN</div>
       </div>
-      <div class="gift-card fade-right">
+      <!-- <div class="gift-card fade-right">
         <div class="gift-currency">KHR</div>
         <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
         <div class="gift-scan">Scan. Pay. Done.</div>
         <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR KHR"></div>
         <div class="gift-account-name">VONG SOVANTHOEUN</div>
-      </div>
+      </div> -->
     </div>
     <div class="gift-btn-row fade-section">
       <a class="btn-outline-sky" href="#" data-i18n="giftQrUsd">បញ្ជាក់ QR Code USD</a>
-      <a class="btn-outline-sky" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a>
+      <!-- <a class="btn-outline-sky" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a> -->
     </div>
   </div>
 </section>
@@ -909,6 +929,24 @@
   window.addEventListener('scroll', () => {
     document.getElementById('scrollTopBtn').classList.toggle('show', window.scrollY > 400);
   });
+
+  // Gallery lightbox
+  (function() {
+    var lb = document.getElementById('lightbox');
+    var lbImg = document.getElementById('lightboxImg');
+    var lbClose = document.getElementById('lightboxClose');
+    function openLightbox(src, alt) { lbImg.src = src; lbImg.alt = alt || ''; lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+    function closeLightbox() { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+    document.getElementById('galleryGrid').addEventListener('click', function(e) {
+      var item = e.target.closest('.gallery-item');
+      if (!item) return;
+      var img = item.querySelector('img');
+      if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
+    });
+    lbClose.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
+  })();
 
   // RSVP
   document.getElementById('rsvpBtn').addEventListener('click', function() {
