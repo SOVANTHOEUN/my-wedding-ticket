@@ -241,7 +241,10 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
   background:linear-gradient(135deg,var(--ice),var(--white));
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;
   position:relative;padding:40px;border-right:1px solid var(--silver-pl);
+  text-decoration:none;color:inherit;
+  transition:box-shadow .3s,border-color .3s;
 }
+.venue-map-side:hover{box-shadow:inset 0 0 0 2px var(--sky-lt);border-color:var(--sky-lt)}
 .venue-map-side::after{
   content:'';position:absolute;inset:0;
   background:radial-gradient(circle at 40% 50%,rgba(135,206,235,.06),transparent 60%);
@@ -669,10 +672,10 @@ body[data-lang="en"] .hero-name-km,.hero-title-km{font-family:'Playfair Display'
      SECTION 3 : VENUE — ASYMMETRIC SPLIT
      ═══════════════════════════════════════════ -->
 <section class="venue-sec" id="venue">
-  <div class="venue-map-side" data-reveal="left">
+  <a class="venue-map-side" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" target="_blank" rel="noopener noreferrer" data-reveal="left" aria-label="Open in Google Maps">
     <span class="venue-pin">📍</span>
     <span class="venue-map-label khmer" data-i18n="mapClick">ចុចដើម្បីមើលទីតាំងក្នុង Google Maps</span>
-  </div>
+  </a>
   <div class="venue-info-side">
     <div data-reveal="right">
       <div class="venue-tag mono">L O C A T I O N</div>
