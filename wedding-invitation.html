@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;600;700&display=swap" as="style">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,700&family=Noto+Serif+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,700&family=Noto+Serif+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --sky: #87CEEB;
@@ -522,18 +522,30 @@
     max-width: 280px; margin: 0 auto;
   }
 
-  /* LANG TOGGLE */
-  .lang-toggle {
+  /* LANGUAGE SWITCHER */
+  .lang-switcher {
     position: fixed; top: 20px; right: 20px; z-index: 200;
-    width: 46px; height: 46px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
-    border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 16px rgba(135,206,235,0.35);
-    transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 4px;
+    background: var(--white); border-radius: 50px;
+    padding: 6px 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 1px solid var(--silver-pale);
   }
-  .lang-toggle:hover { transform: scale(1.1); }
-  .lang-toggle span { font-family: 'Noto Serif Khmer', serif; font-size: 13px; color: white; font-weight: 600; }
+  .lang-switcher [data-lang] {
+    font-family: 'Poppins', 'Noto Sans KR', 'Noto Serif Khmer', sans-serif;
+    font-size: 12px; font-weight: 600;
+    padding: 8px 14px; border: none; border-radius: 50px;
+    background: transparent; color: var(--text-light);
+    cursor: pointer; transition: all 0.25s ease;
+  }
+  .lang-switcher [data-lang]:hover { color: var(--sky-deep); background: var(--ice); }
+  .lang-switcher [data-lang].active {
+    background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+    color: var(--white);
+  }
+  @media (max-width: 480px) {
+    .lang-switcher { top: 12px; right: 12px; padding: 4px 8px; }
+    .lang-switcher [data-lang] { padding: 6px 10px; font-size: 11px; }
+  }
 
   /* SCROLL TOP */
   .scroll-top {
@@ -565,6 +577,15 @@
     100% { transform: translateY(110vh) rotate(400deg) translateX(-30px); opacity: 0; }
   }
 
+  /* Language-specific title fonts */
+  body[data-lang="ko"] .hero-title-khmer,
+  body[data-lang="ko"] .section-title-khmer,
+  body[data-lang="ko"] .guest-label,
+  body[data-lang="ko"] .invitation-text,
+  body[data-lang="ko"] .footer-blessing { font-family: 'Noto Sans KR', 'Poppins', sans-serif; }
+  body[data-lang="en"] .hero-title-khmer,
+  body[data-lang="en"] .section-title-khmer { font-family: 'Playfair Display', 'Poppins', serif; }
+
   /* RESPONSIVE */
   @media (max-width: 480px) {
     .hero-section { padding: 50px 16px; }
@@ -576,10 +597,15 @@
     .name-khmer { font-size: clamp(22px,6vw,38px); }
   }
 </style>
+<script src="js/translations.js"></script>
 </head>
 <body>
 
-<button class="lang-toggle" title="ភាសាខ្មែរ"><span>ខ្មែរ</span></button>
+<div class="lang-switcher" aria-label="Language">
+  <button type="button" data-lang="ko" title="한국어">KR</button>
+  <button type="button" data-lang="en" title="English">EN</button>
+  <button type="button" data-lang="km" title="ភាសាខ្មែរ">KH</button>
+</div>
 <div class="shimmer-layer" id="shimmerLayer"></div>
 <div class="petal-layer" id="petalLayer"></div>
 <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -643,8 +669,8 @@
   </svg>
 
   <div class="hero-content">
-    <div class="hero-topline">W E D D I N G &nbsp; I N V I T A T I O N</div>
-    <div class="hero-title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+    <div class="hero-topline" data-i18n="heroTopline">W E D D I N G   I N V I T A T I O N</div>
+    <div class="hero-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
     <div class="elegant-divider" style="animation: hFadeIn 1s ease-out 0.5s both;">
       <div class="line"></div>
       <div class="icon">💍</div>
@@ -671,31 +697,31 @@
     </div>
 
     <div class="guest-section">
-      <div class="guest-label">សូមគោរពអញ្ជើញ</div>
+      <div class="guest-label" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</div>
       <div class="guest-name-card">
         <span class="guest-name-text">Mr. Vong Sovanthoeun</span>
       </div>
     </div>
 
-    <div class="invitation-text">
+    <div class="invitation-text" data-i18n-html="invitationMessage">
       ចូលរួមជាភ្ញៀវកិត្តិយស ដើម្បីប្រសិទ្ធិពរជ័យ សិរីសួស្ដី ជ័យមង្គល ក្នុងពិធីអាពាហ៍ពិពាហ៍ របស់យើងខ្ញុំទាំងពីរ។
     </div>
 
-    <div class="hero-date-line">ថ្ងៃទី ២៤ - ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
+    <div class="hero-date-line" data-i18n="dateLine">ថ្ងៃទី ២៤ - ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
 
     <div class="countdown" id="countdown">
-      <div class="cd-box"><span class="cd-value" id="cd-days">0</span><span class="cd-label">ថ្ងៃ</span></div>
+      <div class="cd-box"><span class="cd-value" id="cd-days">0</span><span class="cd-label" data-i18n-countdown="cdDays">ថ្ងៃ</span></div>
       <span class="cd-sep">:</span>
-      <div class="cd-box"><span class="cd-value" id="cd-hours">0</span><span class="cd-label">ម៉ោង</span></div>
+      <div class="cd-box"><span class="cd-value" id="cd-hours">0</span><span class="cd-label" data-i18n-countdown="cdHours">ម៉ោង</span></div>
       <span class="cd-sep">:</span>
-      <div class="cd-box"><span class="cd-value" id="cd-mins">0</span><span class="cd-label">នាទី</span></div>
+      <div class="cd-box"><span class="cd-value" id="cd-mins">0</span><span class="cd-label" data-i18n-countdown="cdMins">នាទី</span></div>
       <span class="cd-sep">:</span>
-      <div class="cd-box"><span class="cd-value" id="cd-secs">0</span><span class="cd-label">វិនាទី</span></div>
+      <div class="cd-box"><span class="cd-value" id="cd-secs">0</span><span class="cd-label" data-i18n-countdown="cdSecs">វិនាទី</span></div>
     </div>
 
     <div class="hero-venue-text">
-      គេហដ្ឋានខាងស្រី ឃុំខ្នាចរមាស់ ស្រុកបរវេល ខេត្តបាត់ដំបង<br>
-      <a href="#">Open in Google Maps</a>
+      <span data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ឃុំខ្នាចរមាស់ ស្រុកបរវេល ខេត្តបាត់ដំបង</span><br>
+      <a href="#" data-i18n="openMaps">Open in Google Maps</a>
     </div>
   </div>
 </section>
@@ -706,20 +732,20 @@
   <div class="blob-left"></div>
   <div class="section-inner">
     <div class="fade-section">
-      <div class="section-title-khmer">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</div>
-      <div class="section-subtitle">កម្មវិធីថ្ងៃទី ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
+      <div class="section-title-khmer" data-i18n="sectionSchedule">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+      <div class="section-subtitle" data-i18n="sectionScheduleSub">កម្មវិធីថ្ងៃទី ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
     </div>
     <div class="schedule-card fade-section">
-      <div class="schedule-card-date">🗓 ថ្ងៃទី ២៥ ខែ មីនា ២០២៦</div>
+      <div class="schedule-card-date" data-i18n="scheduleDate">🗓 ថ្ងៃទី ២៥ ខែ មីនា ២០២៦</div>
       <div class="schedule-grid stagger-children" id="scheduleGrid">
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🏛️</div><div><div class="schedule-time">ម៉ោង ៦:៣០ នាទីព្រឹក</div><div class="schedule-desc">ផ្គុំដុំសាច់ញាតិ ភ្ញៀវកិត្តិយស ដើម្បីរៀបចំពិធីថែរពរជិន</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🐴</div><div><div class="schedule-time">ម៉ោង ៧:០០ នាទីព្រឹក</div><div class="schedule-desc">ពិធីហែរកំណាត់ចូលមហាជ័យ</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">💍</div><div><div class="schedule-time">ម៉ោង ៧:៤៥ នាទីព្រឹក</div><div class="schedule-desc">ពិធាស្នាក៍ណាក់បុរីនជិន​ន (បំពាក់គ្រឿងអលង្ការ)</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🙏</div><div><div class="schedule-time">ម៉ោង ៨:១៥ នាទីព្រឹក</div><div class="schedule-desc">និមន្តព្រះសង្ឃសូត្រមន្ត</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">✂️</div><div><div class="schedule-time">ម៉ោង ៩:១៥ នាទីព្រឹក</div><div class="schedule-desc">ពិធីកាត់សក់បង្កក់សីរី</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🌸</div><div><div class="schedule-time">ម៉ោង ១០:៤០ នាទីព្រឹក</div><div class="schedule-desc">ពិធីសំពះកេដឹម បង្វិលពពិល វែសនដីផួន ដីគា បាចផ្កាស្នា ចងដៃ</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time">ម៉ោង ១១:៣០ នាទីព្រឹក</div><div class="schedule-desc">អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🎉</div><div><div class="schedule-time">ម៉ោង ៥ ពេលល្ងាច</div><div class="schedule-desc">អញ្ជើញភ្ញៀវកិត្តិយសពិសារអាហារពេលល្ងាច ដោយមេត្រីកាព</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🏛️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៦:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ផ្គុំដុំសាច់ញាតិ ភ្ញៀវកិត្តិយស ដើម្បីរៀបចំពិធីថែរពរជិន</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🐴</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:០០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីហែរកំណាត់ចូលមហាជ័យ</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">💍</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:៤៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធាស្នាក៍ណាក់បុរីនជិន (បំពាក់គ្រឿងអលង្ការ)</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🙏</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៨:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>និមន្តព្រះសង្ឃសូត្រមន្ត</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">✂️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៩:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីកាត់សក់បង្កក់សីរី</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🌸</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១០:៤០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីសំពះកេដឹម បង្វិលពពិល វែសនដីផួន ដីគា បាចផ្កាស្នា ចងដៃ</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១១:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🎉</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៥ ពេលល្ងាច</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវកិត្តិយសពិសារអាហារពេលល្ងាច ដោយមេត្រីកាព</div></div></div>
       </div>
     </div>
   </div>
@@ -729,17 +755,17 @@
 <section class="section-white">
   <div class="section-inner">
     <div class="fade-section">
-      <div class="section-title-khmer">ទីតាំងកម្មវិធីមង្គល</div>
-      <div class="section-subtitle">គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត</div>
+      <div class="section-title-khmer" data-i18n="sectionVenue">ទីតាំងកម្មវិធីមង្គល</div>
+      <div class="section-subtitle" data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត</div>
     </div>
     <div class="venue-map-area fade-scale">
       <span class="map-pin-icon">📍</span>
-      <span class="map-click-text">ចុចដើម្បីមើលទីតាំងក្នុង Google Maps</span>
+      <span class="map-click-text" data-i18n="mapClick">ចុចដើម្បីមើលទីតាំងក្នុង Google Maps</span>
     </div>
     <div class="venue-actions fade-section">
-      <a class="btn-sky" href="#">🗺️ បើកក្នុង Google Maps</a>
+      <a class="btn-sky" href="#" data-i18n="openMaps">🗺️ បើកក្នុង Google Maps</a>
       <div class="qr-inline">
-        <div class="qr-label">ស្កេន QR Code</div>
+        <div class="qr-label" data-i18n="scanQR">ស្កេន QR Code</div>
         <div class="qr-box"><img src="images/QR/wedding-location-qr-code.png" alt="Location QR Code"></div>
       </div>
     </div>
@@ -751,8 +777,8 @@
   <div class="blob-right" style="top:10%;"></div>
   <div class="section-inner">
     <div class="fade-section">
-      <div class="section-title-khmer">រូបភាព</div>
-      <div class="section-subtitle">រូបភាពពិធីអាពាហ៍ពិពាហ៍</div>
+      <div class="section-title-khmer" data-i18n="sectionGallery">រូបភាព</div>
+      <div class="section-subtitle" data-i18n="sectionGallerySub">រូបភាពពិធីអាពាហ៍ពិពាហ៍</div>
     </div>
     <div class="gallery-grid stagger-children" id="galleryGrid">
       <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Engagement 1"><span class="gallery-item-label">Engagement 1</span></div>
@@ -770,8 +796,8 @@
   <div class="blob-left" style="bottom:5%;"></div>
   <div class="section-inner">
     <div class="fade-section">
-      <div class="section-title-khmer">អំណោយអាពាហ៍ពិពាហ៍</div>
-      <div class="gift-desc">ការមកចូលរួមរបស់អ្នកគឺជាអំណោយដ៏ធំបំផុត ប៉ុន្តែប្រសិនបើអ្នកចង់គួលអំណោយ អ្នកអាចប្រើ QR Code ខាងក្រោម</div>
+      <div class="section-title-khmer" data-i18n="sectionGift">អំណោយអាពាហ៍ពិពាហ៍</div>
+      <div class="gift-desc" data-i18n-html="giftDesc">ការមកចូលរួមរបស់អ្នកគឺជាអំណោយដ៏ធំបំផុត ប៉ុន្តែប្រសិនបើអ្នកចង់គួលអំណោយ អ្នកអាចប្រើ QR Code ខាងក្រោម</div>
     </div>
     <div class="gift-cards fade-section">
       <div class="gift-card fade-left">
@@ -790,8 +816,8 @@
       </div>
     </div>
     <div class="gift-btn-row fade-section">
-      <a class="btn-outline-sky" href="#">បញ្ជាក់ QR Code USD</a>
-      <a class="btn-outline-sky" href="#">បញ្ជាក់ QR Code KHR</a>
+      <a class="btn-outline-sky" href="#" data-i18n="giftQrUsd">បញ្ជាក់ QR Code USD</a>
+      <a class="btn-outline-sky" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a>
     </div>
   </div>
 </section>
@@ -800,11 +826,11 @@
 <section class="section-alt">
   <div class="section-inner" style="padding-top:60px; padding-bottom:60px;">
     <div class="fade-section">
-      <div class="section-title">RSVP</div>
-      <div class="rsvp-desc">សូមអរគុណសម្រាប់ការចូលរួមរបស់អ្នក</div>
+      <div class="section-title" data-i18n="sectionRsvp">RSVP</div>
+      <div class="rsvp-desc" data-i18n="rsvpDesc">សូមអរគុណសម្រាប់ការចូលរួមរបស់អ្នក</div>
     </div>
     <div class="rsvp-btn-wrap fade-section">
-      <button class="rsvp-button" id="rsvpBtn">▼ បញ្ជាក់ទម្រង់</button>
+      <button class="rsvp-button" id="rsvpBtn" data-i18n="rsvpBtn">▼ បញ្ជាក់ទម្រង់</button>
     </div>
   </div>
 </section>
@@ -813,8 +839,8 @@
 <section class="footer-section">
   <div class="fade-section">
     <div class="footer-icon">💙</div>
-    <div class="footer-blessing">សូមអរគុណ និង ជូនពរ សុភមង្គល 🙏</div>
-    <div class="footer-quote">"Two hearts, one love, one beautiful destiny"</div>
+    <div class="footer-blessing" data-i18n="footerBlessing">សូមអរគុណ និង ជូនពរ សុភមង្គល 🙏</div>
+    <div class="footer-quote" data-i18n="footerQuote">"Two hearts, one love, one beautiful destiny"</div>
     <div class="elegant-divider" style="margin-bottom:20px;">
       <div class="line"></div><div class="icon">✦</div><div class="line"></div>
     </div>
@@ -886,8 +912,21 @@
 
   // RSVP
   document.getElementById('rsvpBtn').addEventListener('click', function() {
-    this.innerHTML = '✅ បានបញ្ជាក់រួចហើយ!'; this.classList.add('confirmed');
+    var lang = localStorage.getItem('wedding-lang') || 'ko';
+    var t = typeof translations !== 'undefined' && translations[lang] ? translations[lang].rsvpConfirmed : '✅ Confirmed!';
+    this.innerHTML = t; this.classList.add('confirmed');
   });
+
+  // Multi-language: load translations and init
+  (function() {
+    var lang = getPreferredLanguage();
+    setLanguage(lang);
+    document.querySelectorAll('.lang-switcher [data-lang]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        setLanguage(this.getAttribute('data-lang'));
+      });
+    });
+  })();
 </script>
 </body>
 </html>
