@@ -321,6 +321,7 @@
     color: var(--sky-deep); text-align: center; margin-bottom: 32px; font-weight: 500;
   }
   .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 36px; }
+  .schedule-day-header { grid-column: 1 / -1; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,.08); font-family: 'Noto Serif Khmer', serif; font-size: 14px; color: var(--text); font-weight: 600; }
   @media (max-width: 620px) { .schedule-grid { grid-template-columns: 1fr; gap: 14px; } }
 
   .schedule-entry {
@@ -759,7 +760,7 @@
       <div class="section-subtitle" data-i18n="sectionScheduleSub">កម្មវិធីថ្ងៃទី ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
     </div>
     <div class="schedule-card fade-section">
-      <div class="schedule-card-date" data-i18n="scheduleDate">🗓 ថ្ងៃទី ២៥ ខែ មីនា ២០២៦</div>
+      <div class="schedule-card-date" data-i18n="scheduleDay1Date">ថ្ងៃទី១ — ថ្ងៃអង្គារ ទី២៤ ខែមីនា ឆ្នាំ២០២៦</div>
       <div class="schedule-grid stagger-children" id="scheduleGrid">
         <div class="schedule-entry fade-item"><div class="schedule-icon">🏛️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៦:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ផ្គុំដុំសាច់ញាតិ ភ្ញៀវកិត្តិយស ដើម្បីរៀបចំពិធីថែរពរជិន</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🐴</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:០០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីហែរកំណាត់ចូលមហាជ័យ</div></div></div>
@@ -769,6 +770,7 @@
         <div class="schedule-entry fade-item"><div class="schedule-icon">🌸</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១០:៤០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីសំពះកេដឹម បង្វិលពពិល វែសនដីផួន ដីគា បាចផ្កាស្នា ចងដៃ</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១១:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🎉</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៥ ពេលល្ងាច</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវកិត្តិយសពិសារអាហារពេលល្ងាច ដោយមេត្រីកាព</div></div></div>
+        <div class="schedule-day-header" data-i18n="scheduleDay2Date">ថ្ងៃទី២ កម្មវីធីថ្ងៃទី2 ថ្ងៃពុធ ទី 25 ឆ្នាំ 2026</div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🕯️</div><div><div class="schedule-time" data-i18n-schedule-time>០៥:៣០</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីក្រុងពលី</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🤝</div><div><div class="schedule-time" data-i18n-schedule-time>០៧:០០</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធី បង្វិលពពិល សំពះផ្ទឹម សែនចងដៃ</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>០៩:៣០</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ញើញភ្ញៀវ ពិសារអាហារពេលព្រឹក</div></div></div>

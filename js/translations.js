@@ -159,7 +159,7 @@ const translations = {
     sectionScheduleSub: "កម្មវិធីថ្ងៃទី ២៤–២៥ ខែ មីនា ឆ្នាំ ២០២៦",
     scheduleDate: "🗓 ថ្ងៃទី ២៤–២៥ ខែ មីនា ២០២៦",
     scheduleDay1Date: "ថ្ងៃទី១ — ថ្ងៃអង្គារ ទី២៤ ខែមីនា ឆ្នាំ២០២៦",
-    scheduleDay2Date: "ថ្ងៃទី២ — ថ្ងៃពុធ ទី២៥ ខែមីនា ឆ្នាំ២០២៦",
+    scheduleDay2Date: "ថ្ងៃទី២ កម្មវីធីថ្ងៃទី2 ថ្ងៃពុធ ទី 25 ឆ្នាំ 2026",
     sectionVenue: "ទីតាំងកម្មវិធីមង្គល",
     sectionGallery: "រូបភាព",
     sectionGallerySub: "រូបភាពពិធីអាពាហ៍ពិពាហ៍",
