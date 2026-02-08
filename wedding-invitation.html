@@ -387,7 +387,9 @@
     border: 2px solid var(--sky-light); border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto; font-size: 11px; color: var(--text-muted);
+    overflow: hidden; padding: 6px;
   }
+  .qr-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
   /* GALLERY */
   .gallery-grid {
@@ -460,7 +462,9 @@
     border-radius: 12px; margin: 0 auto 12px;
     display: flex; align-items: center; justify-content: center;
     border: 1.5px solid var(--sky-pale); font-size: 11px; color: var(--text-muted);
+    overflow: hidden; padding: 6px;
   }
+  .gift-qr img { max-width: 100%; max-height: 100%; object-fit: contain; }
   .gift-account-name {
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     font-weight: 600; color: var(--text); letter-spacing: 1.5px; text-transform: uppercase;
@@ -736,7 +740,7 @@
       <a class="btn-sky" href="#">🗺️ បើកក្នុង Google Maps</a>
       <div class="qr-inline">
         <div class="qr-label">ស្កេន QR Code</div>
-        <div class="qr-box">QR Code</div>
+        <div class="qr-box"><img src="images/QR/wedding-location-qr-code.png" alt="Location QR Code"></div>
       </div>
     </div>
   </div>
@@ -753,10 +757,10 @@
     <div class="gallery-grid stagger-children" id="galleryGrid">
       <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Engagement 1"><span class="gallery-item-label">Engagement 1</span></div>
       <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Engagement 2"><span class="gallery-item-label">Engagement 2</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement3.jpeg" alt="Engagement 3"><span class="gallery-item-label">Engagement 3</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement4.jpeg" alt="Engagement 4"><span class="gallery-item-label">Engagement 4</span></div>
       <div class="gallery-item fade-item"><img src="images/keb1.jpeg" alt="Keb"><span class="gallery-item-label">Keb</span></div>
       <div class="gallery-item fade-item"><img src="images/kompot1.jpeg" alt="Kampot"><span class="gallery-item-label">Kampot</span></div>
-      <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Photo 5"><span class="gallery-item-label">Photo 5</span></div>
-      <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Photo 6"><span class="gallery-item-label">Photo 6</span></div>
     </div>
   </div>
 </section>
@@ -774,14 +778,14 @@
         <div class="gift-currency">USD</div>
         <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
         <div class="gift-scan">Scan. Pay. Done.</div>
-        <div class="gift-qr">QR Code USD</div>
+        <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
         <div class="gift-account-name">VONG SOVANTHOEUN</div>
       </div>
       <div class="gift-card fade-right">
         <div class="gift-currency">KHR</div>
         <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
         <div class="gift-scan">Scan. Pay. Done.</div>
-        <div class="gift-qr">QR Code KHR</div>
+        <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR KHR"></div>
         <div class="gift-account-name">VONG SOVANTHOEUN</div>
       </div>
     </div>

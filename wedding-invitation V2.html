@@ -266,8 +266,9 @@ body{font-family:'Poppins','Noto Serif Khmer',sans-serif;background:var(--white)
 .venue-qr-box{
   width:90px;height:90px;background:var(--off);border:2px solid var(--sky-lt);
   border-radius:12px;display:flex;align-items:center;justify-content:center;
-  font-size:10px;color:var(--txt-mut);
+  font-size:10px;color:var(--txt-mut);overflow:hidden;padding:6px;
 }
+.venue-qr-box img{max-width:100%;max-height:100%;object-fit:contain}
 
 /* ============================================================
    SECTION 4: GALLERY — MASONRY / STAGGERED
@@ -342,7 +343,8 @@ body{font-family:'Poppins','Noto Serif Khmer',sans-serif;background:var(--white)
 .gc-bank-text{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;color:#fff;letter-spacing:4px}
 .gc-bank-text .r{color:#E74C3C}
 .gc-scan{font-size:10px;color:var(--txt-mut);margin-bottom:12px}
-.gc-qr{width:110px;height:110px;background:var(--ice);border-radius:11px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--sky-pale);font-size:10px;color:var(--txt-mut)}
+.gc-qr{width:110px;height:110px;background:var(--ice);border-radius:11px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--sky-pale);font-size:10px;color:var(--txt-mut);overflow:hidden;padding:6px}
+.gc-qr img{max-width:100%;max-height:100%;object-fit:contain}
 .gc-name{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;color:var(--txt);letter-spacing:1.5px;text-transform:uppercase}
 
 /* ============================================================
@@ -640,7 +642,7 @@ body{font-family:'Poppins','Noto Serif Khmer',sans-serif;background:var(--white)
       <a class="btn-sky" href="#">🗺️ បើកក្នុង Google Maps</a>
       <div class="venue-qr">
         <div class="venue-qr-label khmer">ស្កេន QR Code</div>
-        <div class="venue-qr-box">QR Code</div>
+        <div class="venue-qr-box"><img src="images/QR/wedding-location-qr-code.png" alt="Location QR Code"></div>
       </div>
     </div>
   </div>
@@ -659,10 +661,10 @@ body{font-family:'Poppins','Noto Serif Khmer',sans-serif;background:var(--white)
   <div class="gallery-masonry stg" id="galGrid">
     <div class="g-item" data-child><img src="images/engagement1.jpeg" alt="Engagement 1"><span class="g-label">Engagement 1</span></div>
     <div class="g-item" data-child><img src="images/engagement2.jpeg" alt="Engagement 2"><span class="g-label">Engagement 2</span></div>
+    <div class="g-item" data-child><img src="images/engagement3.jpeg" alt="Engagement 3"><span class="g-label">Engagement 3</span></div>
+    <div class="g-item" data-child><img src="images/engagement4.jpeg" alt="Engagement 4"><span class="g-label">Engagement 4</span></div>
     <div class="g-item" data-child><img src="images/keb1.jpeg" alt="Keb"><span class="g-label">Keb</span></div>
     <div class="g-item" data-child><img src="images/kompot1.jpeg" alt="Kampot"><span class="g-label">Kampot</span></div>
-    <div class="g-item" data-child><img src="images/engagement1.jpeg" alt="Photo 5"><span class="g-label">Photo 5</span></div>
-    <div class="g-item" data-child><img src="images/engagement2.jpeg" alt="Photo 6"><span class="g-label">Photo 6</span></div>
   </div>
 </section>
 
@@ -688,14 +690,14 @@ body{font-family:'Poppins','Noto Serif Khmer',sans-serif;background:var(--white)
         <div class="gc-cur display">USD</div>
         <div class="gc-bank"><span class="gc-bank-text mono">ABA <span class="r">'</span> PAY</span></div>
         <div class="gc-scan">Scan. Pay. Done.</div>
-        <div class="gc-qr">QR Code USD</div>
+        <div class="gc-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
         <div class="gc-name">VONG SOVANTHOEUN</div>
       </div>
       <div class="gift-card">
         <div class="gc-cur display">KHR</div>
         <div class="gc-bank"><span class="gc-bank-text mono">ABA <span class="r">'</span> PAY</span></div>
         <div class="gc-scan">Scan. Pay. Done.</div>
-        <div class="gc-qr">QR Code KHR</div>
+        <div class="gc-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR KHR"></div>
         <div class="gc-name">VONG SOVANTHOEUN</div>
       </div>
     </div>
