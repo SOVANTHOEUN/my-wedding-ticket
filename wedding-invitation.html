@@ -407,10 +407,14 @@
     box-shadow: 0 16px 40px rgba(135,206,235,0.15);
     border-color: var(--sky-light);
   }
+  .gallery-item img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .gallery-item:has(img) .gallery-item-icon { display: none; }
   .gallery-item-icon { font-size: 36px; opacity: 0.35; }
   .gallery-item-label {
     font-family: 'Montserrat', sans-serif; font-size: 11px;
-    color: var(--text-muted); position: absolute; bottom: 12px; letter-spacing: 1px;
+    color: var(--text-muted); position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; letter-spacing: 1px; z-index: 1;
   }
 
   /* GIFT */
@@ -747,10 +751,12 @@
       <div class="section-subtitle">រូបភាពពិធីអាពាហ៍ពិពាហ៍</div>
     </div>
     <div class="gallery-grid stagger-children" id="galleryGrid">
-      <div class="gallery-item fade-item"><span class="gallery-item-icon">📷</span><span class="gallery-item-label">Photo 1</span></div>
-      <div class="gallery-item fade-item"><span class="gallery-item-icon">📷</span><span class="gallery-item-label">Photo 2</span></div>
-      <div class="gallery-item fade-item"><span class="gallery-item-icon">📷</span><span class="gallery-item-label">Photo 3</span></div>
-      <div class="gallery-item fade-item"><span class="gallery-item-icon">📷</span><span class="gallery-item-label">Photo 4</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Engagement 1"><span class="gallery-item-label">Engagement 1</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Engagement 2"><span class="gallery-item-label">Engagement 2</span></div>
+      <div class="gallery-item fade-item"><img src="images/keb1.jpeg" alt="Keb"><span class="gallery-item-label">Keb</span></div>
+      <div class="gallery-item fade-item"><img src="images/kompot1.jpeg" alt="Kampot"><span class="gallery-item-label">Kampot</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Photo 5"><span class="gallery-item-label">Photo 5</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Photo 6"><span class="gallery-item-label">Photo 6</span></div>
     </div>
   </div>
 </section>
