@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V8 - VONG Sovanthoeun & ROENG Vila</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;600;700&display=swap" as="style">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,700&family=Noto+Serif+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #87CEEB;
+    --sky-light: #B8E2F4;
+    --sky-pale: #D6EFF9;
+    --sky-deep: #5BAFD4;
+    --sky-muted: #7ABDD9;
+    --silver: #C0C0C0;
+    --silver-light: #D3D3D3;
+    --silver-pale: #E8E8E8;
+    --silver-dark: #A0A0A0;
+    --white: #FFFFFF;
+    --off-white: #F8FBFD;
+    --ice: #F0F7FB;
+    --dark: #2C3E50;
+    --text: #34495E;
+    --text-light: #7F8C9B;
+    --text-muted: #A0ADB8;
+    /* V8 Cover Colors - Pink & Reddish-brown theme */
+    --pink-light: #F5E6E8;
+    --pink-soft: #E8C4D0;
+    --pink-accent: #D4A5B8;
+    --rose-brown: #B8867A;
+    --brown-dark: #8B6F5E;
+    --gold-accent: #D4AF37;
+    --gold-light: #E8D5A3;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', 'Noto Serif Khmer', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ========== V8 COVER PAGE & CARD (Slim & Beautiful) ========== */
+  .cover-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, var(--pink-light) 0%, var(--white) 50%, var(--pink-light) 100%);
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+    padding: 20px;
+  }
+  .cover-layer.opening {
+    pointer-events: none;
+  }
+  .cover-layer.opened {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .cover-card-wrap {
+    perspective: 1400px;
+    width: 100%;
+    max-width: 360px;
+    flex-shrink: 0;
+  }
+
+  .invitation-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    max-height: 85vh;
+    transform-style: preserve-3d;
+    transition: transform 1.2s cubic-bezier(0.34, 1.35, 0.5, 1);
+    cursor: pointer;
+  }
+  .cover-layer.opening .invitation-card {
+    transform: rotateY(-180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 20px 50px rgba(184, 134, 122, 0.15),
+      0 6px 20px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: var(--white);
+  }
+
+  .card-front {
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: clamp(28px, 7vw, 44px) clamp(24px, 6vw, 36px);
+    text-align: center;
+    position: relative;
+  }
+  .card-front::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 30% at 50% 10%, rgba(232, 196, 208, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 25% at 20% 85%, rgba(212, 165, 184, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 25% at 80% 85%, rgba(212, 165, 184, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Delicate butterflies and floral motifs */
+  .card-decorative-elements {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .butterfly {
+    position: absolute;
+    font-size: 20px;
+    opacity: 0.25;
+    color: var(--pink-accent);
+    animation: floatButterfly 8s ease-in-out infinite;
+  }
+  .butterfly:nth-child(1) { top: 15%; left: 8%; animation-delay: 0s; }
+  .butterfly:nth-child(2) { top: 25%; right: 10%; animation-delay: 1.5s; }
+  .butterfly:nth-child(3) { bottom: 30%; left: 12%; animation-delay: 3s; }
+  .butterfly:nth-child(4) { bottom: 25%; right: 8%; animation-delay: 4.5s; }
+  @keyframes floatButterfly {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.25; }
+    50% { transform: translateY(-8px) rotate(5deg); opacity: 0.35; }
+  }
+  .floral-leaf {
+    position: absolute;
+    font-size: 16px;
+    opacity: 0.2;
+    color: var(--pink-soft);
+  }
+  .floral-leaf:nth-child(5) { top: 12%; left: 5%; }
+  .floral-leaf:nth-child(6) { top: 18%; right: 6%; }
+  .floral-leaf:nth-child(7) { bottom: 28%; left: 7%; }
+  .floral-leaf:nth-child(8) { bottom: 22%; right: 5%; }
+
+  .card-couple {
+    position: relative;
+    z-index: 2;
+    margin: 20px 0 16px;
+  }
+  .card-couple .names {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 5vw, 28px);
+    font-weight: 600;
+    color: var(--pink-accent);
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card-couple .heart-amp {
+    font-size: 18px;
+    color: var(--pink-accent);
+    margin: 0 4px;
+    opacity: 0.9;
+  }
+  .card-title-khmer {
+    font-family: 'Noto Serif Khmer', serif;
+    font-size: clamp(14px, 3.5vw, 18px);
+    font-weight: 500;
+    color: var(--brown-dark);
+    margin-top: 8px;
+    position: relative;
+    z-index: 2;
+  }
+  .card-invite-line {
+    font-family: 'Noto Serif Khmer', serif;
+    font-size: clamp(12px, 3vw, 15px);
+    color: var(--rose-brown);
+    position: relative;
+    z-index: 2;
+    margin: 20px 0 18px;
+  }
+  .card-guest-box {
+    border: 1.5px solid var(--gold-accent);
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    padding: 14px 32px;
+    margin: 18px 0 24px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
+    position: relative;
+  }
+  .card-guest-box::before,
+  .card-guest-box::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--gold-light);
+    opacity: 0.4;
+  }
+  .card-guest-box::before {
+    top: 6px;
+    left: 8px;
+    border-right: none;
+    border-bottom: none;
+  }
+  .card-guest-box::after {
+    bottom: 6px;
+    right: 8px;
+    border-left: none;
+    border-top: none;
+  }
+  .card-guest-box .label {
+    font-family: 'Noto Serif Khmer', serif;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .card-guest-box .name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(13px, 3.2vw, 16px);
+    font-weight: 600;
+    color: var(--brown-dark);
+    letter-spacing: 0.5px;
+  }
+
+  .tap-to-open-wrap {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    padding-top: 20px;
+    padding-bottom: 12px;
+  }
+  .tap-to-open-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    background: transparent;
+    color: var(--brown-dark);
+    border: none;
+    font-family: 'Noto Serif Khmer', 'Poppins', sans-serif;
+    font-size: clamp(13px, 3.2vw, 15px);
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.25s ease;
+  }
+  .tap-to-open-btn:hover {
+    opacity: 0.8;
+  }
+  .tap-to-open-btn .finger {
+    font-size: 28px;
+    margin-bottom: 4px;
+    animation: tapBounce 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(139, 111, 94, 0.2));
+  }
+  @keyframes tapBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+  .tap-to-open-btn .text-khmer {
+    color: var(--brown-dark);
+    line-height: 1.4;
+  }
+  .tap-to-open-btn .text-english {
+    font-size: clamp(11px, 2.8vw, 13px);
+    color: var(--rose-brown);
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+  }
+
+  .card-face.card-back {
+    background: linear-gradient(180deg, var(--pink-light) 0%, var(--white) 100%);
+    transform: rotateY(180deg);
+  }
+
+  /* Main content: hidden until card opened */
+  .main-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .main-content.visible {
+    display: block;
+    opacity: 1;
+  }
+
+  /* SHIMMER (only in main content) */
+  .shimmer-layer {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    overflow: hidden;
+  }
+  .shimmer-dot {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: var(--pink-accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: shimmerFloat 5s ease-in-out infinite;
+  }
+  @keyframes shimmerFloat {
+    0%, 100% { opacity: 0; transform: scale(0.3) translateY(0); }
+    30% { opacity: 0.7; }
+    50% { opacity: 0.9; transform: scale(1) translateY(-20px); }
+    70% { opacity: 0.5; }
+  }
+  .silver-sparkle {
+    position: absolute;
+    font-size: 10px;
+    opacity: 0;
+    animation: silverTwinkle 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes silverTwinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+    50% { opacity: 0.6; transform: scale(1.2) rotate(180deg); }
+  }
+
+  .fade-section {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .fade-section.visible { opacity: 1; transform: translateY(0); }
+  .fade-left, .fade-right {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+  }
+  .fade-left.visible, .fade-right.visible { opacity: 1; transform: translateY(0); }
+  .fade-scale {
+    opacity: 0; transform: translateY(50px) scale(0.96);
+    transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+  }
+  .fade-scale.visible { opacity: 1; transform: translateY(0) scale(1); }
+  .stagger-children .fade-item {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .stagger-children.visible .fade-item:nth-child(1) { transition-delay: 0.05s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(2) { transition-delay: 0.12s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(3) { transition-delay: 0.19s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(4) { transition-delay: 0.26s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(5) { transition-delay: 0.33s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(6) { transition-delay: 0.40s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(7) { transition-delay: 0.47s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(8) { transition-delay: 0.54s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(9) { transition-delay: 0.61s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(10) { transition-delay: 0.68s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(11) { transition-delay: 0.75s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(12) { transition-delay: 0.82s; opacity:1; transform:translateY(0); }
+  .stagger-children.visible .fade-item:nth-child(13) { transition-delay: 0.89s; opacity:1; transform:translateY(0); }
+
+  .elegant-divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 14px; margin: 24px auto; max-width: 320px;
+  }
+  .elegant-divider .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--pink-soft), var(--pink-accent), var(--pink-soft), transparent);
+  }
+  .elegant-divider .icon { color: var(--pink-accent); font-size: 14px; opacity: 0.7; margin: 0 4px; }
+
+  .floral-corner-svg { position: absolute; pointer-events: none; z-index: 2; }
+  .floral-tl { top: 0; left: 0; }
+  .floral-tr { top: 0; right: 0; transform: scaleX(-1); }
+  .floral-bl { bottom: 0; left: 0; transform: scaleY(-1); }
+  .floral-br { bottom: 0; right: 0; transform: scale(-1,-1); }
+
+  .hero-section {
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 70px 24px; background: var(--white); overflow: hidden;
+  }
+  .hero-wash-1 {
+    position: absolute; top: -100px; right: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(ellipse, var(--pink-light) 0%, transparent 70%);
+    opacity: 0.4; pointer-events: none; border-radius: 50%;
+  }
+  .hero-wash-2 {
+    position: absolute; bottom: -80px; left: -120px;
+    width: 450px; height: 450px;
+    background: radial-gradient(ellipse, var(--pink-light) 0%, transparent 70%);
+    opacity: 0.3; pointer-events: none; border-radius: 50%;
+  }
+  .hero-wash-3 {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(ellipse, rgba(232,196,208,0.08) 0%, transparent 70%);
+    pointer-events: none; border-radius: 50%;
+  }
+  .hero-frame {
+    position: absolute; top: 30px; left: 30px; right: 30px; bottom: 30px;
+    border: 1px solid var(--pink-soft); border-radius: 24px;
+    pointer-events: none; z-index: 1;
+  }
+  .hero-frame::before {
+    content: ''; position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 8px;
+    border: 1px solid rgba(212,165,184,0.2); border-radius: 20px;
+  }
+  .hero-content { position: relative; z-index: 5; text-align: center; max-width: 620px; }
+  .hero-topline {
+    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 6px; text-transform: uppercase; color: var(--rose-brown);
+    margin-bottom: 16px; animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 0.2s both;
+  }
+  @keyframes riseFromBottom { from { opacity:0; transform:translateY(50px); } to { opacity:1; transform:translateY(0); } }
+  .hero-title-khmer {
+    font-family: 'Noto Serif Khmer', serif; font-size: clamp(20px,4.5vw,28px);
+    font-weight: 500; color: var(--brown-dark);
+    margin-bottom: 28px; animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 0.4s both;
+  }
+  .couple-block { margin-bottom: 24px; animation: riseFromBottom 1.2s cubic-bezier(0.16,1,0.3,1) 0.6s both; }
+  .name-row { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .name-block { text-align: center; }
+  .name-khmer {
+    font-family: 'Noto Serif Khmer', serif; font-size: clamp(26px,6.5vw,44px);
+    font-weight: 700; color: var(--pink-accent); line-height: 1.3;
+  }
+  .name-english {
+    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--rose-brown); letter-spacing: 3px; text-transform: uppercase; margin-top: 4px;
+  }
+  .heart-connector { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .heart-icon {
+    font-size: 32px; color: var(--pink-accent);
+    animation: heartGlow 2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 8px rgba(212,165,184,0.4));
+  }
+  @keyframes heartGlow {
+    0%,100% { transform: scale(1); filter: drop-shadow(0 2px 8px rgba(212,165,184,0.3)); }
+    50% { transform: scale(1.12); filter: drop-shadow(0 4px 16px rgba(212,165,184,0.6)); }
+  }
+  .heart-rings { font-size: 16px; opacity: 0.5; color: var(--pink-soft); }
+  .guest-section { margin: 28px 0 12px; animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 0.9s both; }
+  .guest-label { font-family: 'Noto Serif Khmer', serif; font-size: 15px; color: var(--rose-brown); margin-bottom: 10px; }
+  .guest-name-card {
+    display: inline-block; background: var(--white);
+    border: 1.5px solid var(--gold-accent); border-radius: 14px;
+    padding: 14px 44px; box-shadow: 0 4px 20px rgba(212,175,55,0.15);
+  }
+  .guest-name-text {
+    font-family: 'Noto Serif Khmer', serif; font-size: 19px;
+    font-weight: 600; color: var(--brown-dark); letter-spacing: 0.5px;
+  }
+  .invitation-text {
+    font-family: 'Noto Serif Khmer', serif; font-size: 13.5px; color: var(--text);
+    line-height: 2.1; margin: 24px 0 16px; max-width: 520px;
+    animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 1.1s both;
+  }
+  .hero-date-line {
+    font-family: 'Noto Serif Khmer', serif; font-size: 14px;
+    color: var(--brown-dark); font-weight: 500; margin-bottom: 22px;
+    animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 1.2s both;
+  }
+  .countdown {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; margin: 16px 0; animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 1.3s both;
+  }
+  .cd-box {
+    text-align: center; background: var(--pink-light); border: 1px solid var(--pink-soft);
+    border-radius: 12px; padding: 12px 14px; min-width: 62px;
+    transition: transform 0.3s ease;
+  }
+  .cd-box:hover { transform: translateY(-3px); }
+  .cd-value {
+    font-family: 'Playfair Display', serif; font-size: 26px;
+    font-weight: 700; color: var(--brown-dark); display: block; line-height: 1;
+  }
+  .cd-label {
+    font-family: 'Noto Serif Khmer', serif; font-size: 10px;
+    color: var(--rose-brown); display: block; margin-top: 5px;
+  }
+  .cd-sep { font-family: 'Montserrat', sans-serif; font-size: 18px; color: var(--pink-soft); margin: 0 2px; }
+  .hero-venue-text {
+    font-family: 'Noto Serif Khmer', serif; font-size: 12.5px;
+    color: var(--rose-brown); margin-top: 20px; line-height: 1.8;
+    animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 1.4s both;
+  }
+  .hero-venue-text a {
+    color: var(--brown-dark); text-decoration: none;
+    border-bottom: 1px dotted var(--pink-accent); transition: color 0.3s;
+  }
+  .hero-venue-text a:hover { color: var(--rose-brown); }
+
+  .section-alt { background: var(--pink-light); }
+  .section-white { background: var(--white); }
+  section { position: relative; overflow: hidden; }
+  .section-inner { max-width: 780px; margin: 0 auto; padding: 80px 24px; }
+  .section-title-khmer {
+    font-family: 'Noto Serif Khmer', serif; font-size: clamp(22px,4.5vw,30px);
+    font-weight: 600; color: var(--brown-dark); text-align: center; margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif; font-size: clamp(24px,5vw,34px);
+    font-weight: 700; color: var(--brown-dark); text-align: center; margin-bottom: 6px;
+  }
+  .section-subtitle {
+    font-family: 'Noto Serif Khmer', serif; font-size: 13px;
+    color: var(--rose-brown); text-align: center; margin-bottom: 40px;
+  }
+  .blob-right {
+    position: absolute; right: -120px; top: 20%;
+    width: 300px; height: 300px;
+    background: radial-gradient(ellipse, var(--pink-light) 0%, transparent 70%);
+    border-radius: 50%; opacity: 0.25; pointer-events: none;
+  }
+  .blob-left {
+    position: absolute; left: -120px; bottom: 10%;
+    width: 350px; height: 350px;
+    background: radial-gradient(ellipse, rgba(232,196,208,0.15) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+
+  .schedule-card {
+    background: var(--white); border-radius: 20px;
+    border: 1px solid var(--pink-soft);
+    padding: 40px 32px; position: relative;
+    box-shadow: 0 8px 40px rgba(212,165,184,0.08), 0 2px 10px rgba(0,0,0,0.02);
+  }
+  .schedule-card::before {
+    content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--pink-accent), transparent);
+    border-radius: 2px;
+  }
+  .schedule-card-date {
+    font-family: 'Noto Serif Khmer', serif; font-size: 14px;
+    color: var(--brown-dark); text-align: center; margin-bottom: 32px; font-weight: 500;
+  }
+  .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 36px; }
+  .schedule-day-header { grid-column: 1 / -1; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,.08); font-family: 'Noto Serif Khmer', serif; font-size: 14px; font-weight: 500; color: var(--sky-deep);}
+  @media (max-width: 620px) { .schedule-grid { grid-template-columns: 1fr; gap: 14px; } }
+  .schedule-entry {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 16px; border-radius: 14px; background: var(--pink-light);
+    border: 1px solid transparent; transition: all 0.3s ease;
+  }
+  .schedule-entry:hover {
+    border-color: var(--pink-accent);
+    box-shadow: 0 4px 16px rgba(212,165,184,0.12);
+    transform: translateY(-2px);
+  }
+  .schedule-icon {
+    font-size: 24px; flex-shrink: 0; width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--white); border-radius: 12px;
+    border: 1px solid var(--pink-soft); box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .schedule-time {
+    font-family: 'Montserrat', sans-serif; font-size: 12px;
+    color: var(--brown-dark); font-weight: 600; margin-bottom: 3px; letter-spacing: 0.5px;
+  }
+  .schedule-desc {
+    font-family: 'Noto Serif Khmer', serif; font-size: 12.5px;
+    color: var(--text); line-height: 1.7;
+  }
+
+  .venue-map-area {
+    max-width: 700px; margin: 0 auto 32px;
+    background: linear-gradient(135deg, var(--pink-light) 0%, var(--white) 100%);
+    border-radius: 18px; border: 1px solid var(--pink-soft);
+    height: 260px; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px; position: relative; overflow: hidden;
+    text-decoration: none; color: inherit;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .venue-map-area:hover { box-shadow: 0 12px 36px rgba(212,165,184,0.18); border-color: var(--pink-accent); }
+  .venue-map-area::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(232,196,208,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(212,165,184,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .map-pin-icon { font-size: 44px; z-index: 1; }
+  .map-click-text { font-family: 'Noto Serif Khmer', serif; font-size: 13px; color: var(--rose-brown); z-index: 1; }
+  .venue-actions {
+    display: flex; align-items: center; justify-content: center;
+    gap: 32px; flex-wrap: wrap; max-width: 700px; margin: 0 auto;
+  }
+  .btn-sky {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--white); background: linear-gradient(135deg, var(--pink-accent) 0%, var(--rose-brown) 100%);
+    border: none; border-radius: 50px; padding: 14px 32px;
+    cursor: pointer; text-decoration: none; transition: all 0.35s ease;
+    box-shadow: 0 4px 18px rgba(212,165,184,0.4);
+  }
+  .btn-sky:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(212,165,184,0.5); }
+  .qr-inline { text-align: center; }
+  .qr-label { font-family: 'Noto Serif Khmer', serif; font-size: 12px; color: var(--rose-brown); margin-bottom: 8px; }
+  .qr-box {
+    width: 110px; height: 110px; background: var(--pink-light);
+    border: 2px solid var(--pink-accent); border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto; font-size: 11px; color: var(--text-muted);
+    overflow: hidden; padding: 6px;
+  }
+  .qr-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px; max-width: 760px; margin: 0 auto;
+  }
+  .gallery-item {
+    aspect-ratio: 4/3; border-radius: 16px; overflow: hidden;
+    background: linear-gradient(135deg, var(--pink-light) 0%, var(--pink-soft) 100%);
+    border: 1px solid var(--pink-soft);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .gallery-item:hover {
+    transform: scale(1.04) translateY(-4px);
+    box-shadow: 0 16px 40px rgba(212,165,184,0.2);
+    border-color: var(--pink-accent);
+  }
+  .gallery-item img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .gallery-item:has(img) .gallery-item-icon { display: none; }
+  .gallery-item-icon { font-size: 36px; opacity: 0.35; }
+  .gallery-item-label {
+    font-family: 'Montserrat', sans-serif; font-size: 11px;
+    color: var(--text-muted); position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; letter-spacing: 1px; z-index: 1;
+  }
+  .lightbox-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 1000;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(8px);
+  }
+  .lightbox-overlay.open { display: flex; }
+  .lightbox-overlay .lightbox-inner { position: relative; max-width: 95vw; max-height: 90vh; }
+  .lightbox-overlay .lightbox-inner img { max-width: 100%; max-height: 85vh; width: auto; height: auto; object-fit: contain; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .lightbox-close {
+    position: absolute; top: -48px; right: 0; width: 40px; height: 40px; border: none; border-radius: 50%;
+    background: var(--white); color: var(--dark); font-size: 24px; line-height: 1; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2); transition: transform .2s, background .2s;
+  }
+  .lightbox-close:hover { background: var(--pink-accent); color: #fff; transform: scale(1.05); }
+
+  .gift-desc {
+    font-family: 'Noto Serif Khmer', serif; font-size: 13.5px;
+    color: var(--text); text-align: center; max-width: 540px;
+    margin: 0 auto 42px; line-height: 2;
+  }
+  .gift-cards {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; max-width: 620px; margin: 0 auto 32px;
+  }
+  @media (max-width: 560px) { .gift-cards { grid-template-columns: 1fr; max-width: 320px; } }
+  .gift-card {
+    background: var(--white); border-radius: 18px;
+    border: 1px solid var(--pink-soft); padding: 30px 22px;
+    text-align: center; box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+    transition: all 0.35s ease; position: relative; overflow: hidden;
+  }
+  .gift-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--pink-soft), var(--pink-accent), var(--pink-soft));
+  }
+  .gift-card:hover { transform: translateY(-5px); box-shadow: 0 12px 36px rgba(212,165,184,0.15); }
+  .gift-currency {
+    font-family: 'Playfair Display', serif; font-size: 28px;
+    font-weight: 700; color: var(--brown-dark); margin-bottom: 14px;
+  }
+  .gift-bank-strip {
+    background: linear-gradient(135deg, #1B4F72 0%, #2C6E9E 100%);
+    border-radius: 8px; padding: 8px 18px; margin-bottom: 14px;
+  }
+  .gift-bank-text {
+    font-family: 'Montserrat', sans-serif; font-size: 15px;
+    font-weight: 800; color: white; letter-spacing: 4px;
+  }
+  .gift-bank-text .red { color: #E74C3C; }
+  .gift-scan { font-size: 11px; color: var(--text-muted); margin-bottom: 14px; }
+  .gift-qr {
+    width: 120px; height: 120px; background: var(--pink-light);
+    border-radius: 12px; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--pink-accent); font-size: 11px; color: var(--text-muted);
+    overflow: hidden; padding: 6px;
+  }
+  .gift-qr img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .gift-account-name {
+    font-family: 'Montserrat', sans-serif; font-size: 11px;
+    font-weight: 600; color: var(--text); letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .gift-btn-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline-sky {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
+    color: var(--brown-dark); background: transparent;
+    border: 1.5px solid var(--pink-accent); border-radius: 50px;
+    padding: 12px 28px; cursor: pointer; text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .btn-outline-sky:hover {
+    background: var(--pink-accent); color: white; border-color: var(--pink-accent);
+    transform: translateY(-2px);
+  }
+
+  .rsvp-desc {
+    font-family: 'Noto Serif Khmer', serif; font-size: 14px;
+    color: var(--rose-brown); text-align: center; margin-bottom: 28px;
+  }
+  .rsvp-btn-wrap { text-align: center; }
+  .rsvp-button {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Noto Serif Khmer', serif; font-size: 16px; font-weight: 500;
+    color: var(--brown-dark); background: var(--white);
+    border: 1.5px solid var(--pink-accent); border-radius: 16px;
+    padding: 18px 48px; cursor: pointer; transition: all 0.35s ease;
+    box-shadow: 0 4px 16px rgba(212,165,184,0.12);
+  }
+  .rsvp-button:hover {
+    background: var(--pink-accent); color: white; border-color: var(--pink-accent);
+    box-shadow: 0 8px 28px rgba(212,165,184,0.35); transform: translateY(-3px);
+  }
+  .rsvp-button.confirmed {
+    background: linear-gradient(135deg, var(--pink-accent) 0%, var(--rose-brown) 100%);
+    color: white; border-color: transparent;
+  }
+
+  .footer-section { text-align: center; padding: 50px 24px 36px; background: var(--pink-light); }
+  .footer-icon { font-size: 44px; margin-bottom: 14px; opacity: 0.6; }
+  .footer-blessing { font-family: 'Noto Serif Khmer', serif; font-size: 16px; color: var(--brown-dark); margin-bottom: 6px; }
+  .footer-quote {
+    font-family: 'Playfair Display', serif; font-size: 15px;
+    font-style: italic; color: var(--rose-brown); margin-bottom: 28px;
+  }
+  .footer-credit {
+    font-family: 'Montserrat', sans-serif; font-size: 10px;
+    color: var(--text-muted); letter-spacing: 4px; text-transform: uppercase;
+    padding-top: 20px; border-top: 1px solid var(--pink-soft);
+    max-width: 280px; margin: 0 auto;
+  }
+
+  .lang-switcher {
+    position: fixed; top: 20px; right: 20px; z-index: 200;
+    display: flex; align-items: center; gap: 4px;
+    background: var(--white); border-radius: 50px;
+    padding: 6px 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 1px solid var(--silver-pale);
+  }
+  .lang-switcher [data-lang] {
+    font-family: 'Poppins', 'Noto Sans KR', 'Noto Serif Khmer', sans-serif;
+    font-size: 12px; font-weight: 600;
+    padding: 8px 14px; border: none; border-radius: 50px;
+    background: transparent; color: var(--text-light);
+    cursor: pointer; transition: all 0.25s ease;
+  }
+  .lang-switcher [data-lang]:hover { color: var(--sky-deep); background: var(--ice); }
+  .lang-switcher [data-lang].active {
+    background: linear-gradient(135deg, var(--pink-accent) 0%, var(--rose-brown) 100%);
+    color: var(--white);
+  }
+  .lang-switcher [data-lang]:hover { color: var(--brown-dark); background: var(--pink-light); }
+  .music-toggle {
+    position: fixed; top: 20px; left: 20px; z-index: 200;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--white); border: 1px solid var(--pink-soft);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    cursor: pointer; font-size: 22px; display: flex;
+    align-items: center; justify-content: center;
+    transition: all 0.25s ease;
+  }
+  .music-toggle:hover { background: var(--pink-light); border-color: var(--pink-accent); transform: scale(1.05); }
+  .music-toggle.playing { background: linear-gradient(135deg, var(--pink-accent) 0%, var(--rose-brown) 100%); color: var(--white); border-color: var(--rose-brown); }
+  .scroll-top {
+    position: fixed; bottom: 28px; right: 28px;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--white); border: 1.5px solid var(--pink-accent);
+    cursor: pointer; font-size: 16px; color: var(--brown-dark);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); z-index: 50;
+    transition: all 0.3s ease; opacity: 0; transform: translateY(24px);
+  }
+  .scroll-top.show { opacity: 1; transform: translateY(0); }
+  .scroll-top:hover { background: var(--pink-accent); color: white; border-color: var(--pink-accent); }
+
+  body[data-lang="ko"] .hero-title-khmer,
+  body[data-lang="ko"] .section-title-khmer,
+  body[data-lang="ko"] .guest-label,
+  body[data-lang="ko"] .invitation-text,
+  body[data-lang="ko"] .footer-blessing { font-family: 'Noto Sans KR', 'Poppins', sans-serif; }
+  body[data-lang="en"] .hero-title-khmer,
+  body[data-lang="en"] .section-title-khmer { font-family: 'Playfair Display', 'Poppins', serif; }
+
+  @media (max-width: 480px) {
+    .cover-card-wrap { max-width: 320px; }
+    .invitation-card { aspect-ratio: 2/3; max-height: 80vh; }
+    .card-front { padding: 24px 20px; }
+    .card-couple .names { font-size: clamp(18px, 4.5vw, 24px); }
+    .card-guest-box { padding: 12px 24px; }
+    .hero-section { padding: 50px 16px; }
+    .hero-frame { top: 16px; left: 16px; right: 16px; bottom: 16px; }
+    .section-inner { padding: 60px 16px; }
+    .schedule-card { padding: 28px 16px; }
+    .cd-box { padding: 10px 10px; min-width: 52px; }
+    .cd-value { font-size: 22px; }
+    .name-khmer { font-size: clamp(22px,6vw,38px); }
+    .lang-switcher { top: 12px; right: 12px; padding: 4px 8px; }
+    .music-toggle { top: 12px; left: 12px; width: 42px; height: 42px; font-size: 20px; }
+  }
+</style>
+<script src="js/translations.js"></script>
+</head>
+<body>
+
+<!-- ========== V8 COVER: CLOSED CARD (Slim & Beautiful) ========== -->
+<div class="cover-layer" id="coverLayer">
+  <div class="cover-card-wrap">
+    <div class="invitation-card" id="invitationCard">
+      <div class="card-face card-front">
+        <div class="card-decorative-elements" aria-hidden="true">
+          <span class="butterfly">🦋</span>
+          <span class="butterfly">🦋</span>
+          <span class="butterfly">🦋</span>
+          <span class="butterfly">🦋</span>
+          <span class="floral-leaf">🍃</span>
+          <span class="floral-leaf">🍃</span>
+          <span class="floral-leaf">🍃</span>
+          <span class="floral-leaf">🍃</span>
+        </div>
+        <div class="card-couple">
+          <div class="names">
+            Vong Sovanthoeun
+            <span class="heart-amp">♥</span>
+            Roeng Vila
+          </div>
+        </div>
+        <div class="card-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+        <div class="card-invite-line" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</div>
+        <div class="card-guest-box">
+          <div class="label" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</div>
+          <div class="name">លោក ជ័យ វឌ្ឍនះ</div>
+        </div>
+        <div class="tap-to-open-wrap">
+          <button type="button" class="tap-to-open-btn" id="tapToOpen" aria-label="Open invitation">
+            <span class="finger">👇</span>
+            <span class="text-khmer" data-i18n="clickToOpen">សូមចុចដើម្បីបើកធៀប</span>
+            <span class="text-english">Click to Open</span>
+          </button>
+        </div>
+      </div>
+      <div class="card-face card-back"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MAIN CONTENT (V1) ========== -->
+<div class="main-content" id="mainContent">
+<button class="music-toggle" id="musicToggle" type="button" aria-label="Play background music" title="Play wedding music">🔇</button>
+<div class="lang-switcher" aria-label="Language">
+  <button type="button" data-lang="ko" title="한국어">KR</button>
+  <button type="button" data-lang="en" title="English">EN</button>
+  <button type="button" data-lang="km" title="ភាសាខ្មែរ">KH</button>
+</div>
+<audio id="bgMusic" loop preload="metadata">
+  <source src="audio/wedding-romantic-love-music.mp3" type="audio/mpeg">
+</audio>
+<div class="shimmer-layer" id="shimmerLayer"></div>
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="lightbox-overlay" id="lightbox" aria-hidden="true">
+  <div class="lightbox-inner">
+    <img id="lightboxImg" src="" alt="">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+  </div>
+</div>
+
+<section class="hero-section" id="hero">
+  <div class="hero-wash-1"></div>
+  <div class="hero-wash-2"></div>
+  <div class="hero-wash-3"></div>
+  <div class="hero-frame"></div>
+  <svg class="floral-corner-svg floral-tl" width="200" height="200" viewBox="0 0 200 200" fill="none"><g opacity="0.22"><path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/><ellipse cx="42" cy="32" rx="14" ry="8" fill="#B8E2F4" opacity="0.5" transform="rotate(-25 42 32)"/><circle cx="38" cy="35" r="4" fill="#87CEEB" opacity="0.6"/></g></svg>
+  <svg class="floral-corner-svg floral-tr" width="200" height="200" viewBox="0 0 200 200" fill="none"><g opacity="0.22"><path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/><ellipse cx="42" cy="32" rx="14" ry="8" fill="#B8E2F4" opacity="0.5" transform="rotate(-25 42 32)"/><circle cx="38" cy="35" r="4" fill="#87CEEB" opacity="0.6"/></g></svg>
+  <svg class="floral-corner-svg floral-bl" width="200" height="200" viewBox="0 0 200 200" fill="none"><g opacity="0.22"><path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/><circle cx="38" cy="35" r="4" fill="#87CEEB" opacity="0.6"/></g></svg>
+  <svg class="floral-corner-svg floral-br" width="200" height="200" viewBox="0 0 200 200" fill="none"><g opacity="0.22"><path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/><circle cx="38" cy="35" r="4" fill="#87CEEB" opacity="0.6"/></g></svg>
+  <div class="hero-content">
+    <div class="hero-topline" data-i18n="heroTopline">W E D D I N G   I N V I T A T I O N</div>
+    <div class="hero-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+    <div class="elegant-divider" style="animation: riseFromBottom 1s cubic-bezier(0.16,1,0.3,1) 0.5s both;">
+      <div class="line"></div>
+      <span class="icon">💕</span><span class="icon">💍</span><span class="icon">🎉</span>
+      <div class="line"></div>
+    </div>
+    <div class="couple-block">
+      <div class="name-row">
+        <div class="name-block">
+          <div class="name-khmer">វង សុវណ្ណធឿន</div>
+          <div class="name-english">Vong Sovanthoeun</div>
+        </div>
+        <br>
+        <div class="heart-connector">
+          <span class="heart-icon">💙</span>
+          <span class="heart-rings">🎊 ✨ 🎊</span>
+        </div>
+        <br>
+        <div class="name-block">
+          <div class="name-khmer" style="font-family:'Noto Serif Khmer',serif" lang="km">រ៉ឹង វិឡា</div>
+          <div class="name-english">Roeng Vila</div>
+        </div>
+      </div>
+    </div>
+    <div class="guest-section">
+      <div class="guest-label" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</div>
+      <div class="guest-name-card">
+        <span class="guest-name-text">លោក ជ័យ វឌ្ឍនះ</span>
+      </div>
+    </div>
+    <div class="invitation-text" data-i18n-html="invitationMessage">
+      ចូលរួមជាភ្ញៀវកិត្តិយស ដើម្បីប្រសិទ្ធិពរជ័យ សិរីសួស្ដី ជ័យមង្គល ក្នុងពិធីអាពាហ៍ពិពាហ៍ របស់យើងខ្ញុំទាំងពីរ។
+    </div>
+    <div class="hero-date-line" data-i18n="dateLine">ថ្ងៃទី ២៤ - ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
+    <div class="countdown" id="countdown">
+      <div class="cd-box"><span class="cd-value" id="cd-days">0</span><span class="cd-label" data-i18n-countdown="cdDays">ថ្ងៃ</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-box"><span class="cd-value" id="cd-hours">0</span><span class="cd-label" data-i18n-countdown="cdHours">ម៉ោង</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-box"><span class="cd-value" id="cd-mins">0</span><span class="cd-label" data-i18n-countdown="cdMins">នាទី</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-box"><span class="cd-value" id="cd-secs">0</span><span class="cd-label" data-i18n-countdown="cdSecs">វិនាទី</span></div>
+    </div>
+    <div class="hero-venue-text">
+      <span data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ឃុំខ្នាចរមាស់ ស្រុកបរវេល ខេត្តបាត់ដំបង</span><br>
+      <a href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" data-i18n="openMaps">Open in Google Maps</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="blob-right"></div>
+  <div class="blob-left"></div>
+  <div class="section-inner">
+    <div class="fade-section">
+      <div class="section-title-khmer" data-i18n="sectionSchedule">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+      <div class="section-subtitle" data-i18n="sectionScheduleSub">កម្មវិធីថ្ងៃទី ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
+    </div>
+    <div class="schedule-card fade-section">
+      <div class="schedule-card-date" data-i18n="scheduleDay1Date">ថ្ងៃទី១ — ថ្ងៃអង្គារ ទី២៤ ខែមីនា ឆ្នាំ២០២៦</div>
+      <div class="schedule-grid stagger-children" id="scheduleGrid">
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🏛️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៦:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ផ្គុំដុំសាច់ញាតិ ភ្ញៀវកិត្តិយស ដើម្បីរៀបចំពិធីថែរពរជិន</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🐴</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:០០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីហែរកំណាត់ចូលមហាជ័យ</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">💍</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:៤៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធាស្នាក៍ណាក់បុរីនជិន (បំពាក់គ្រឿងអលង្ការ)</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🙏</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៨:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>និមន្តព្រះសង្ឃសូត្រមន្ត</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">✂️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៩:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីកាត់សក់បង្កក់សីរី</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🌸</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១០:៤០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីសំពះកេដឹម បង្វិលពពិល វែសនដីផួន ដីគា បាចផ្កាស្នា ចងដៃ</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១១:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🎉</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៥ ពេលល្ងាច</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវកិត្តិយសពិសារអាហារពេលល្ងាច ដោយមេត្រីកាព</div></div></div>
+        <div class="schedule-day-header section-subtitle schedule-card-date" data-i18n="scheduleDay2Date">ថ្ងៃទី២ — ថ្ងៃពុធ ទី២៥ ខែមីនា ឆ្នាំ២០២៦</div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🕯️</div><div><div class="schedule-time" data-i18n-schedule-time>០៥:៣០</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីក្រុងពលី</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🤝</div><div><div class="schedule-time" data-i18n-schedule-time>០៧:០០</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធី បង្វិលពពិល សំពះផ្ទឹម សែនចងដៃ</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>០៩:៣០</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ញើញភ្ញៀវ ពិសារអាហារពេលព្រឹក</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🎊</div><div><div class="schedule-time" data-i18n-schedule-time>១១:០០</div><div class="schedule-desc" data-i18n-schedule-desc>ទទួលបដិសណ្ឋារកិច្ច ពិសារភោជនាអាហារ</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-white">
+  <div class="section-inner">
+    <div class="fade-section">
+      <div class="section-title-khmer" data-i18n="sectionVenue">ទីតាំងកម្មវិធីមង្គល</div>
+      <div class="section-subtitle" data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត</div>
+    </div>
+    <a class="venue-map-area fade-scale" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" target="_blank" rel="noopener noreferrer" aria-label="Open in Google Maps">
+      <span class="map-pin-icon">📍</span>
+      <span class="map-click-text" data-i18n="mapClick">ចុចដើម្បីមើលទីតាំងក្នុង Google Maps</span>
+    </a>
+    <div class="venue-actions fade-section">
+      <a class="btn-sky" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" data-i18n="openMaps">🗺️ បើកក្នុង Google Maps</a>
+      <div class="qr-inline">
+        <div class="qr-label" data-i18n="scanQR">ស្កេន QR Code</div>
+        <div class="qr-box"><img src="images/QR/wedding-location-qr-code.png" alt="Location QR Code"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="blob-right" style="top:10%;"></div>
+  <div class="section-inner">
+    <div class="fade-section">
+      <div class="section-title-khmer" data-i18n="sectionGallery">រូបភាព</div>
+      <div class="section-subtitle" data-i18n="sectionGallerySub">រូបភាពពិធីអាពាហ៍ពិពាហ៍</div>
+    </div>
+    <div class="gallery-grid stagger-children" id="galleryGrid">
+      <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Engagement 1"><span class="gallery-item-label">Engagement 1</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Engagement 2"><span class="gallery-item-label">Engagement 2</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement3.jpeg" alt="Engagement 3"><span class="gallery-item-label">Engagement 3</span></div>
+      <div class="gallery-item fade-item"><img src="images/engagement4.jpeg" alt="Engagement 4"><span class="gallery-item-label">Engagement 4</span></div>
+      <div class="gallery-item fade-item"><img src="images/keb1.jpeg" alt="Keb"><span class="gallery-item-label">Keb</span></div>
+      <div class="gallery-item fade-item"><img src="images/kompot1.jpeg" alt="Kampot"><span class="gallery-item-label">Kampot</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-white">
+  <div class="blob-left" style="bottom:5%;"></div>
+  <div class="section-inner">
+    <div class="fade-section">
+      <div class="section-title-khmer" data-i18n="sectionGift">អំណោយអាពាហ៍ពិពាហ៍</div>
+      <div class="gift-desc" data-i18n-html="giftDesc">ការមកចូលរួមរបស់អ្នកគឺជាអំណោយដ៏ធំបំផុត ប៉ុន្តែប្រសិនបើអ្នកចង់គួលអំណោយ អ្នកអាចប្រើ QR Code ខាងក្រោម</div>
+    </div>
+    <div class="gift-cards fade-section">
+      <div class="gift-card fade-left">
+        <div class="gift-currency">USD</div>
+        <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
+        <div class="gift-scan">Scan. Pay. Done.</div>
+        <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
+        <div class="gift-account-name">VONG SOVANTHOEUN</div>
+      </div>
+    </div>
+    <div class="gift-btn-row fade-section">
+      <a class="btn-outline-sky" href="#" data-i18n="giftQrUsd">បញ្ជាក់ QR Code USD</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="section-inner" style="padding-top:60px; padding-bottom:60px;">
+    <div class="fade-section">
+      <div class="section-title" data-i18n="sectionRsvp">RSVP</div>
+      <div class="rsvp-desc" data-i18n="rsvpDesc">សូមអរគុណសម្រាប់ការចូលរួមរបស់អ្នក</div>
+    </div>
+    <div class="rsvp-btn-wrap fade-section">
+      <button class="rsvp-button" id="rsvpBtn" data-i18n="rsvpBtn">▼ បញ្ជាក់ទម្រង់</button>
+    </div>
+  </div>
+</section>
+
+<section class="footer-section">
+  <div class="fade-section">
+    <div class="footer-icon">💙 🎊 ❤️</div>
+    <div class="footer-blessing" data-i18n="footerBlessing">សូមអរគុណ និង ជូនពរ សុភមង្គល 🙏</div>
+    <div class="footer-quote" data-i18n="footerQuote">"Two hearts, one love, one beautiful destiny"</div>
+    <div class="elegant-divider" style="margin-bottom:20px;">
+      <div class="line"></div><span class="icon">💕</span><span class="icon">🎉</span><span class="icon">✨</span><div class="line"></div>
+    </div>
+    <div class="footer-credit">WEDDING E-TICKET V8 · 2026</div>
+  </div>
+</section>
+</div><!-- .main-content -->
+
+<script>
+  // ---------- V8: Card open ----------
+  (function() {
+    var cover = document.getElementById('coverLayer');
+    var main = document.getElementById('mainContent');
+    var card = document.getElementById('invitationCard');
+    var tapBtn = document.getElementById('tapToOpen');
+    var OPEN_DURATION = 1200;
+
+    function openCard() {
+      if (cover.classList.contains('opening') || cover.classList.contains('opened')) return;
+      cover.classList.add('opening');
+      setTimeout(function() {
+        cover.classList.remove('opening');
+        cover.classList.add('opened');
+        main.classList.add('visible');
+        setTimeout(function() {
+          cover.style.display = 'none';
+        }, 650);
+      }, OPEN_DURATION);
+    }
+
+    if (tapBtn) tapBtn.addEventListener('click', function(e) { e.preventDefault(); openCard(); });
+    if (card) card.addEventListener('click', function(e) { if (!tapBtn.contains(e.target)) openCard(); });
+  })();
+
+  // Intersection Observer (elements inside main content)
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { rootMargin: '0px 0px -60px 0px', threshold: 0.08 });
+  var mainEl = document.getElementById('mainContent');
+  if (mainEl) {
+    mainEl.querySelectorAll('.fade-section,.fade-left,.fade-right,.fade-scale,.stagger-children').forEach(function(el) { obs.observe(el); });
+  }
+
+  // Background music
+  (function() {
+    var audio = document.getElementById('bgMusic');
+    var btn = document.getElementById('musicToggle');
+    if (!audio || !btn) return;
+    audio.muted = true;
+    audio.volume = 0.6;
+    function updateBtn() {
+      var isPlaying = !audio.muted && !audio.paused;
+      btn.textContent = isPlaying ? '\uD83D\uDD0A' : '\uD83D\uDD07';
+      btn.classList.toggle('playing', isPlaying);
+      btn.setAttribute('aria-label', isPlaying ? 'Mute background music' : 'Play background music');
+    }
+    btn.addEventListener('click', function() {
+      if (audio.muted) {
+        audio.muted = false;
+        audio.play().catch(function() { audio.muted = true; });
+      } else {
+        audio.muted = true;
+        audio.pause();
+      }
+      updateBtn();
+    });
+    updateBtn();
+  })();
+
+  // Countdown
+  var wd = new Date('2026-03-25T17:00:00+07:00');
+  function tick() {
+    var diff = wd - new Date();
+    if (diff <= 0) return;
+    var el = document.getElementById('cd-days');
+    if (el) el.textContent = Math.floor(diff/864e5);
+    el = document.getElementById('cd-hours');
+    if (el) el.textContent = Math.floor((diff%864e5)/36e5);
+    el = document.getElementById('cd-mins');
+    if (el) el.textContent = Math.floor((diff%36e5)/6e4);
+    el = document.getElementById('cd-secs');
+    if (el) el.textContent = Math.floor((diff%6e4)/1e3);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // Shimmer (only when main is visible)
+  (function() {
+    var main = document.getElementById('mainContent');
+    var sl = document.getElementById('shimmerLayer');
+    if (!sl) return;
+    for (var i = 0; i < 35; i++) {
+      var d = document.createElement('div');
+      d.className = 'shimmer-dot';
+      d.style.left = Math.random()*100+'%';
+      d.style.top = Math.random()*100+'%';
+      d.style.animationDelay = (Math.random()*5)+'s';
+      d.style.animationDuration = (3+Math.random()*4)+'s';
+      var sz = 2+Math.random()*4;
+      d.style.width = sz+'px';
+      d.style.height = sz+'px';
+      d.style.background = ['#D4A5B8','#E8C4D0','#B8867A','#8B6F5E','#F5E6E8'][Math.floor(Math.random()*5)];
+      sl.appendChild(d);
+    }
+    for (var j = 0; j < 20; j++) {
+      var s = document.createElement('div');
+      s.className = 'silver-sparkle';
+      s.textContent = '✦';
+      s.style.left = Math.random()*100+'%';
+      s.style.top = Math.random()*100+'%';
+      s.style.animationDelay = (Math.random()*5)+'s';
+      s.style.animationDuration = (3+Math.random()*3)+'s';
+      s.style.fontSize = (8+Math.random()*8)+'px';
+      s.style.color = Math.random()>0.5 ? '#D4A5B8' : '#B8867A';
+      sl.appendChild(s);
+    }
+  })();
+
+  // Scroll top
+  window.addEventListener('scroll', function() {
+    var btn = document.getElementById('scrollTopBtn');
+    if (btn) btn.classList.toggle('show', window.scrollY > 400);
+  });
+
+  // Gallery lightbox
+  (function() {
+    var lb = document.getElementById('lightbox');
+    var lbImg = document.getElementById('lightboxImg');
+    var lbClose = document.getElementById('lightboxClose');
+    var grid = document.getElementById('galleryGrid');
+    if (!grid || !lb) return;
+    function openLightbox(src, alt) {
+      lbImg.src = src;
+      lbImg.alt = alt || '';
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    grid.addEventListener('click', function(e) {
+      var item = e.target.closest('.gallery-item');
+      if (!item) return;
+      var img = item.querySelector('img');
+      if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
+    });
+    if (lbClose) lbClose.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
+  })();
+
+  // RSVP
+  (function() {
+    var rsvpBtn = document.getElementById('rsvpBtn');
+    if (rsvpBtn) {
+      rsvpBtn.addEventListener('click', function() {
+        var lang = typeof getPreferredLanguage === 'function' ? getPreferredLanguage() : (localStorage.getItem('wedding-lang') || 'ko');
+        var t = typeof translations !== 'undefined' && translations[lang] ? translations[lang].rsvpConfirmed : '✅ Confirmed!';
+        this.innerHTML = t;
+        this.classList.add('confirmed');
+      });
+    }
+  })();
+
+  // Multi-language (apply to cover + main so "Tap to Open" is translated)
+  (function() {
+    var lang = typeof getPreferredLanguage === 'function' ? getPreferredLanguage() : 'km';
+    if (typeof setLanguage === 'function') setLanguage(lang);
+    document.querySelectorAll('.lang-switcher [data-lang]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (typeof setLanguage === 'function') setLanguage(this.getAttribute('data-lang'));
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -33,6 +33,8 @@ const translations = {
     rsvpDesc: "참석해 주셔서 감사합니다.",
     rsvpBtn: "▼ 참석 여부 알려주기",
     rsvpConfirmed: "✅ 참석 확정되었습니다!",
+    clickToOpen: "클릭하여 열기",
+    guestNamePlaceholder: "손님 이름",
     footerBlessing: "감사하며 행복을 빕니다 🙏",
     footerQuote: "두 마음, 하나의 사랑, 아름다운 인연",
     invitation: {
@@ -103,6 +105,8 @@ const translations = {
     rsvpDesc: "Thank you for joining us.",
     rsvpBtn: "▼ Confirm attendance",
     rsvpConfirmed: "✅ Confirmed!",
+    clickToOpen: "Click to Open",
+    guestNamePlaceholder: "Guest Name",
     footerBlessing: "Thank you & best wishes 🙏",
     footerQuote: "Two hearts, one love, one beautiful destiny",
     invitation: {
@@ -171,6 +175,8 @@ const translations = {
     rsvpDesc: "សូមអរគុណសម្រាប់ការចូលរួមរបស់អ្នក",
     rsvpBtn: "▼ បញ្ជាក់ទម្រង់",
     rsvpConfirmed: "✅ បានបញ្ជាក់រួចហើយ!",
+    clickToOpen: "សូមចុចដើម្បីបើកធៀប",
+    guestNamePlaceholder: "ឈ្មោះភ្ញៀវ",
     footerBlessing: "សូមអរគុណ និង ជូនពរ សុភមង្គល 🙏",
     footerQuote: "Two hearts, one love, one beautiful destiny",
     invitation: {
@@ -257,6 +263,12 @@ function setLanguage(lang) {
     const key = el.getAttribute("data-i18n-html");
     const value = getTranslation(lang, key);
     if (value != null) el.innerHTML = value.replace(/\n/g, "<br>");
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+    const key = el.getAttribute("data-i18n-placeholder");
+    const value = getTranslation(lang, key);
+    if (value != null && el.placeholder !== undefined) el.placeholder = value;
   });
 
   const cdLabels = ["cdDays", "cdHours", "cdMins", "cdSecs"];
