@@ -617,9 +617,9 @@
   body.ticket-opened #detail-page { display: block; }
 
   .ticket-container {
-    position: relative; width: 100%; max-width: 420px; height: 100vh;
+    position: relative; width: 100%; max-width: 400px; min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 40px 24px 20px; text-align: center;
+    padding: 48px 28px 36px; text-align: center;
     animation: ticketReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
   @keyframes ticketReveal {
@@ -629,130 +629,128 @@
 
   /* Floral decorations */
   .ticket-floral-top-left {
-    position: absolute; top: 20px; left: 10px; width: 100px; height: 120px;
-    opacity: 0.22; pointer-events: none; z-index: 1;
-  }
-  .ticket-floral-bottom-left {
-    position: absolute; bottom: 20px; left: 0; width: 90px; height: 100px;
+    position: absolute; top: 16px; left: 0; width: 90px; height: 100px;
     opacity: 0.2; pointer-events: none; z-index: 1;
   }
   .ticket-floral-bottom-right {
-    position: absolute; bottom: 0; right: 0; width: 120px; height: 140px;
-    opacity: 0.22; pointer-events: none; z-index: 1;
+    position: absolute; bottom: 16px; right: 0; width: 90px; height: 100px;
+    opacity: 0.2; pointer-events: none; z-index: 1;
   }
 
   /* Butterflies */
   .ticket-butterfly {
-    position: absolute; width: 24px; height: 24px; opacity: 0.4;
+    position: absolute; width: 22px; height: 22px; opacity: 0.35;
     pointer-events: none; z-index: 2;
     animation: butterflyFloat 8s ease-in-out infinite;
   }
   @keyframes butterflyFloat {
     0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
-    25% { transform: translateY(-15px) translateX(10px) rotate(5deg); }
-    50% { transform: translateY(-25px) translateX(-8px) rotate(-5deg); }
-    75% { transform: translateY(-10px) translateX(12px) rotate(3deg); }
+    25% { transform: translateY(-12px) translateX(8px) rotate(5deg); }
+    50% { transform: translateY(-18px) translateX(-6px) rotate(-5deg); }
+    75% { transform: translateY(-8px) translateX(10px) rotate(3deg); }
   }
-  .ticket-butterfly-1 { bottom: 15%; left: 12%; animation-delay: 0s; }
-  .ticket-butterfly-2 { bottom: 22%; right: 15%; animation-delay: 1.5s; }
-  .ticket-butterfly-3 { bottom: 30%; left: 8%; animation-delay: 3s; }
-  .ticket-butterfly-4 { bottom: 18%; right: 25%; animation-delay: 4.5s; }
+  .ticket-butterfly-1 { bottom: 25%; left: 15%; animation-delay: 0s; }
+  .ticket-butterfly-2 { bottom: 35%; right: 18%; animation-delay: 2s; }
+  .ticket-butterfly-3 { bottom: 45%; left: 10%; animation-delay: 4s; }
 
   .ticket-content {
     position: relative; z-index: 10; width: 100%;
     display: flex; flex-direction: column; align-items: center;
-    gap: 20px; margin-bottom: auto;
+    gap: 0;
   }
 
-  .ticket-names {
-    font-family: 'Playfair Display', serif; font-size: clamp(26px, 6.5vw, 32px);
-    font-weight: 600; color: var(--sky-deep); line-height: 1.4;
-    margin-bottom: 4px; letter-spacing: 0.5px;
-    animation: ticketContentUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  /* Header block */
+  .ticket-header {
+    margin-bottom: 32px;
   }
-  .ticket-names .heart { color: var(--sky); font-size: 0.9em; margin: 0 6px; }
   .ticket-title-khmer {
-    font-family: 'Noto Serif Khmer', serif; font-size: clamp(16px, 4vw, 20px);
-    font-weight: 500; color: var(--sky-deep); margin-bottom: 16px;
-    animation: ticketContentUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    font-family: 'Noto Serif Khmer', serif; font-size: clamp(15px, 3.8vw, 18px);
+    font-weight: 500; color: var(--sky-deep);
+    margin-bottom: 20px; letter-spacing: 0.5px;
+    animation: ticketContentUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
   }
+  .ticket-names-row {
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: 16px; flex-wrap: wrap;
+    animation: ticketContentUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  }
+  .ticket-name-block {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    text-align: center;
+  }
+  .ticket-name-khmer {
+    font-family: 'Noto Serif Khmer', serif; font-size: clamp(22px, 5.5vw, 28px);
+    font-weight: 600; color: var(--dark); line-height: 1.3;
+  }
+  .ticket-name-english {
+    font-family: 'Montserrat', sans-serif; font-size: 11px;
+    font-weight: 500; color: var(--text-light);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .ticket-names-heart {
+    display: flex; align-items: center;
+    font-size: 24px; color: var(--sky); line-height: 1;
+    padding-top: 6px;
+  }
+
+  /* Invitation line */
   .ticket-invite {
-    font-family: 'Noto Serif Khmer', serif; font-size: clamp(13px, 3.5vw, 15px);
-    color: var(--sky-muted); margin-bottom: 24px;
-    animation: ticketContentUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+    font-family: 'Noto Serif Khmer', serif; font-size: clamp(14px, 3.5vw, 16px);
+    color: var(--text-light); margin-bottom: 28px;
+    animation: ticketContentUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+  }
+
+  /* Guest name section */
+  .ticket-guest-section {
+    width: 100%; margin-bottom: 32px;
+    animation: ticketContentUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+  }
+  .ticket-name-input-wrapper {
+    position: relative; width: 100%; max-width: 260px; margin: 0 auto;
+  }
+  .ticket-name-input {
+    width: 100%; padding: 16px 24px;
+    background: var(--white);
+    border: 1px solid var(--silver-pale);
+    border-radius: 12px;
+    font-family: 'Noto Serif Khmer', 'Poppins', sans-serif;
+    font-size: 16px; color: var(--dark);
+    text-align: center; outline: none;
+    box-shadow: 0 2px 12px rgba(135,206,235,0.08);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .ticket-name-input:focus {
+    border-color: var(--sky-light);
+    box-shadow: 0 2px 16px rgba(135,206,235,0.15);
+  }
+  .ticket-name-input::placeholder {
+    color: var(--text-muted); font-size: 14px;
+  }
+
+  /* CTA Button */
+  .ticket-cta-wrapper {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    animation: ticketContentUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.55s both;
+  }
+  .ticket-cta-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+    border: none; border-radius: 28px;
+    padding: 14px 36px; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(91,175,212,0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .ticket-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(91,175,212,0.45); }
+  .ticket-cta-btn-icon { font-size: 18px; }
+  .ticket-cta-hint {
+    font-family: 'Noto Serif Khmer', serif; font-size: 11px;
+    color: var(--text-muted); margin-top: 4px;
   }
   @keyframes ticketContentUp {
     from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Guest name input field */
-  .ticket-name-input-wrapper {
-    position: relative; width: 100%; max-width: 280px; margin: 0 auto 28px;
-    animation: ticketContentUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
-  }
-  .ticket-name-input {
-    width: 100%; padding: 14px 20px;
-    background: var(--white);
-    border: 2px solid var(--sky-light);
-    border-radius: 50px;
-    font-family: 'Poppins', 'Noto Serif Khmer', sans-serif;
-    font-size: 14px; color: var(--text);
-    text-align: center; outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-  .ticket-name-input:focus {
-    border-color: var(--sky);
-    box-shadow: 0 0 0 3px rgba(135,206,235,0.2);
-  }
-  .ticket-name-input::placeholder {
-    color: var(--text-muted); font-style: italic;
-  }
-  .ticket-input-decoration-left,
-  .ticket-input-decoration-right {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 24px; height: 24px; opacity: 0.6;
-    pointer-events: none;
-  }
-  .ticket-input-decoration-left { left: -12px; }
-  .ticket-input-decoration-right { right: -12px; }
-
-  /* CTA Button */
-  .ticket-cta-wrapper {
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    margin-top: 8px;
-    animation: ticketContentUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
-  }
-  .ticket-cta-icon-wrapper {
-    position: relative; width: 50px; height: 50px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 4px;
-  }
-  .ticket-cta-hand {
-    font-size: 32px; opacity: 0.7;
-    animation: handPulse 2s ease-in-out infinite;
-  }
-  @keyframes handPulse {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-4px) scale(1.05); }
-  }
-  .ticket-cta-circle {
-    position: absolute; inset: 0;
-    border: 2px dashed var(--sky);
-    border-radius: 50%; opacity: 0.3;
-    animation: circlePulse 2s ease-in-out infinite;
-  }
-  @keyframes circlePulse {
-    0%, 100% { transform: scale(1); opacity: 0.3; }
-    50% { transform: scale(1.1); opacity: 0.5; }
-  }
-  .ticket-cta-text {
-    font-family: 'Noto Serif Khmer', serif; font-size: clamp(12px, 3vw, 14px);
-    color: var(--sky-muted); margin-bottom: 4px;
-  }
-  .ticket-cta-text-en {
-    font-family: 'Poppins', sans-serif; font-size: clamp(11px, 2.8vw, 13px);
-    color: var(--sky); font-weight: 500;
   }
 
   /* Language-specific title fonts */
@@ -766,9 +764,15 @@
 
   /* RESPONSIVE */
   @media (max-width: 480px) {
-    .ticket-container { padding: 30px 20px 15px; }
-    .ticket-names { font-size: clamp(24px, 6vw, 30px); }
-    .ticket-butterfly { width: 20px; height: 20px; }
+    .ticket-container {
+      padding: 0vh 20px 12vh 20px;
+      justify-content: center;
+    }
+    .ticket-header { margin-bottom: 24px; }
+    .ticket-name-khmer { font-size: clamp(20px, 5.5vw, 26px); }
+    .ticket-name-english { font-size: 10px; }
+    .ticket-name-input { padding: 14px 20px; font-size: 15px; }
+    .ticket-butterfly { width: 18px; height: 18px; }
     .hero-section { padding: 50px 16px; }
     .hero-frame { top: 16px; left: 16px; right: 16px; bottom: 16px; }
     .section-inner { padding: 60px 16px; }
@@ -786,28 +790,16 @@
 <div id="ticket-cover" role="button" tabindex="0" aria-label="Open invitation">
   <div class="ticket-container" onclick="event.stopPropagation()">
     <!-- Floral decorations -->
-    <svg class="ticket-floral-top-left" viewBox="0 0 100 120" fill="none">
-      <g opacity="0.4">
-        <path d="M0,20 Q15,5 30,25 Q20,15 25,40 Q15,25 5,35Z" fill="#87CEEB"/>
-        <path d="M15,0 Q35,10 45,35 Q30,25 35,50 Q25,35 15,40Z" fill="#B8E2F4"/>
-        <ellipse cx="35" cy="20" rx="8" ry="5" fill="#5BAFD4" opacity="0.6"/>
-        <circle cx="28" cy="28" r="3" fill="#7ABDD9"/>
-      </g>
-    </svg>
-    <svg class="ticket-floral-bottom-left" viewBox="0 0 90 100" fill="none">
+    <svg class="ticket-floral-top-left" viewBox="0 0 90 100" fill="none">
       <g opacity="0.35">
-        <path d="M0,40 Q20,25 35,50 Q25,40 30,65 Q20,50 10,60Z" fill="#87CEEB"/>
-        <path d="M20,30 Q40,20 50,45 Q35,35 40,60 Q30,45 20,50Z" fill="#B8E2F4"/>
-        <ellipse cx="45" cy="35" rx="10" ry="6" fill="#5BAFD4" opacity="0.5"/>
+        <path d="M0,20 Q15,5 28,25 Q18,15 22,38 Q12,25 5,32Z" fill="#87CEEB"/>
+        <ellipse cx="35" cy="18" rx="8" ry="5" fill="#5BAFD4" opacity="0.5"/>
       </g>
     </svg>
-    <svg class="ticket-floral-bottom-right" viewBox="0 0 120 140" fill="none">
-      <g opacity="0.3">
-        <path d="M80,0 Q95,15 110,35 Q100,25 105,50 Q95,35 85,45Z" fill="#87CEEB"/>
-        <path d="M70,20 Q90,30 100,55 Q85,45 90,70 Q80,55 70,60Z" fill="#B8E2F4"/>
-        <ellipse cx="95" cy="25" rx="12" ry="7" fill="#5BAFD4" opacity="0.5"/>
-        <circle cx="88" cy="35" r="4" fill="#7ABDD9"/>
-        <path d="M50,60 Q70,50 85,75 Q70,65 75,90 Q65,75 55,85Z" fill="#B8E2F4"/>
+    <svg class="ticket-floral-bottom-right" viewBox="0 0 90 100" fill="none">
+      <g opacity="0.35">
+        <path d="M70,0 Q85,12 90,30 Q80,22 85,45 Q75,32 68,38Z" fill="#87CEEB"/>
+        <ellipse cx="75" cy="22" rx="8" ry="5" fill="#5BAFD4" opacity="0.5"/>
       </g>
     </svg>
 
@@ -815,39 +807,39 @@
     <div class="ticket-butterfly ticket-butterfly-1">🦋</div>
     <div class="ticket-butterfly ticket-butterfly-2">🦋</div>
     <div class="ticket-butterfly ticket-butterfly-3">🦋</div>
-    <div class="ticket-butterfly ticket-butterfly-4">🦋</div>
 
     <!-- Main content -->
     <div class="ticket-content">
-      <div class="ticket-names">
-        <span>វង សុវណ្ណធឿន</span>
-        <span class="heart">💕</span>
-        <span>រ៉ឹង វិឡា</span>
+      <div class="ticket-header">
+        <div class="ticket-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+        <div class="ticket-names-row">
+          <div class="ticket-name-block">
+            <span class="ticket-name-khmer">វង សុវណ្ណធឿន</span>
+            <span class="ticket-name-english">Vong Sovanthoeun</span>
+          </div>
+          <div class="ticket-names-heart">💕</div>
+          <div class="ticket-name-block">
+            <span class="ticket-name-khmer">រ៉ឹង វិឡា</span>
+            <span class="ticket-name-english">Roeng Vila</span>
+          </div>
+        </div>
       </div>
-      <div class="ticket-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
       <div class="ticket-invite" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</div>
 
-      <!-- Guest name input -->
-      <div class="ticket-name-input-wrapper">
-        <svg class="ticket-input-decoration-left" viewBox="0 0 24 24" fill="none">
-          <path d="M12,2 Q8,6 6,10 Q10,8 14,10 Q12,6 16,4 Q14,2 12,2Z" fill="#87CEEB" opacity="0.5"/>
-          <path d="M8,8 Q10,10 12,12 Q10,10 8,8Z" fill="#B8E2F4" opacity="0.6"/>
-        </svg>
-        <input type="text" class="ticket-name-input" id="guestNameInput" value="លោក ជ័យ វឌ្ឍនះ" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
-        <svg class="ticket-input-decoration-right" viewBox="0 0 24 24" fill="none">
-          <path d="M12,2 Q16,6 18,10 Q14,8 10,10 Q12,6 8,4 Q10,2 12,2Z" fill="#87CEEB" opacity="0.5"/>
-          <path d="M16,8 Q14,10 12,12 Q14,10 16,8Z" fill="#B8E2F4" opacity="0.6"/>
-        </svg>
+      <!-- Guest name section -->
+      <div class="ticket-guest-section">
+        <div class="ticket-name-input-wrapper">
+          <input type="text" class="ticket-name-input" id="guestNameInput" value="លោក ជ័យ វឌ្ឍនះ" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
+        </div>
       </div>
 
       <!-- CTA -->
       <div class="ticket-cta-wrapper" id="ticketOpenBtn">
-        <div class="ticket-cta-icon-wrapper">
-          <div class="ticket-cta-circle"></div>
-          <div class="ticket-cta-hand">👆</div>
-        </div>
-        <div class="ticket-cta-text" data-i18n="clickToOpen">សូមចុចដើម្បីបើកធៀប</div>
-        <div class="ticket-cta-text-en">Click to Open</div>
+        <button type="button" class="ticket-cta-btn">
+          <span class="ticket-cta-btn-icon">👆</span>
+          <span data-i18n="clickToOpen">សូមចុចដើម្បីបើកធៀប</span>
+        </button>
+        <div class="ticket-cta-hint">Click to Open</div>
       </div>
     </div>
 
