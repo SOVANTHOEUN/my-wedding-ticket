@@ -678,12 +678,20 @@
     display: flex; flex-direction: column; align-items: center; gap: 4px;
     text-align: center;
   }
+  .ticket-name-block.ticket-groom-block {
+    align-items: flex-start; text-align: left;
+  }
+  .ticket-name-block.ticket-bride-block {
+    align-items: flex-end; text-align: right;
+  }
   .ticket-name-khmer {
-    font-family: 'Noto Serif Khmer', serif; font-size: clamp(22px, 5.5vw, 28px);
-    font-weight: 600; color: var(--dark); line-height: 1.3;
+    font-family: 'Noto Serif Khmer', serif;
+    font-size: clamp(24px, 6vw, 30px);
+    font-weight: 600; color: var(--dark);
+    line-height: 1.4;
   }
   .ticket-name-english {
-    font-family: 'Montserrat', sans-serif; font-size: 11px;
+    font-family: 'Montserrat', sans-serif; font-size: 10px;
     font-weight: 500; color: var(--text-light);
     letter-spacing: 1.5px; text-transform: uppercase;
   }
@@ -769,7 +777,7 @@
       justify-content: center;
     }
     .ticket-header { margin-bottom: 24px; }
-    .ticket-name-khmer { font-size: clamp(20px, 5.5vw, 26px); }
+    .ticket-name-khmer { font-size: clamp(22px, 5.5vw, 28px); }
     .ticket-name-english { font-size: 10px; }
     .ticket-name-input { padding: 14px 20px; font-size: 15px; }
     .ticket-butterfly { width: 18px; height: 18px; }
@@ -813,12 +821,12 @@
       <div class="ticket-header">
         <div class="ticket-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
         <div class="ticket-names-row">
-          <div class="ticket-name-block">
+          <div class="ticket-name-block ticket-groom-block">
             <span class="ticket-name-khmer">វង សុវណ្ណធឿន</span>
             <span class="ticket-name-english">Vong Sovanthoeun</span>
           </div>
           <div class="ticket-names-heart">💕</div>
-          <div class="ticket-name-block">
+          <div class="ticket-name-block ticket-bride-block">
             <span class="ticket-name-khmer">រ៉ឹង វិឡា</span>
             <span class="ticket-name-english">Roeng Vila</span>
           </div>
