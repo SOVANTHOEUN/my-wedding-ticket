@@ -369,25 +369,28 @@
   }
 
   /* VENUE */
-  .venue-map-area {
-    max-width: 700px; margin: 0 auto 32px;
-    background: linear-gradient(135deg, var(--ice) 0%, var(--white) 100%);
-    border-radius: 18px; border: 1px solid var(--silver-pale);
-    height: 260px; display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 12px; position: relative; overflow: hidden;
-    text-decoration: none; color: inherit;
+  .venue-map-wrapper {
+    max-width: 700px; margin: 0 auto 24px;
+    border-radius: 18px; overflow: hidden;
+    border: 1px solid var(--silver-pale);
+    box-shadow: 0 4px 20px rgba(135,206,235,0.1);
     transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
-  .venue-map-area:hover { box-shadow: 0 12px 36px rgba(135,206,235,0.15); border-color: var(--sky-light); }
-  .venue-map-area::before {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(circle at 30% 40%, rgba(135,206,235,0.08) 0%, transparent 50%),
-      radial-gradient(circle at 70% 60%, rgba(192,192,192,0.06) 0%, transparent 50%);
-    pointer-events: none;
+  .venue-map-wrapper:hover { box-shadow: 0 12px 36px rgba(135,206,235,0.15); border-color: var(--sky-light); }
+  .venue-map-embed {
+    display: block; width: 100%; height: 280px;
+    border: none; background: var(--ice);
   }
-  .map-pin-icon { font-size: 44px; z-index: 1; }
-  .map-click-text { font-family: 'Noto Serif Khmer', serif; font-size: 13px; color: var(--text-light); z-index: 1; }
+  .venue-nav-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600;
+    color: var(--white); background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+    border: none; border-radius: 50px; padding: 16px 36px;
+    text-decoration: none; transition: all 0.35s ease;
+    box-shadow: 0 4px 18px rgba(135,206,235,0.35);
+  }
+  .venue-nav-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(135,206,235,0.45); }
+  .venue-nav-btn .nav-icon { font-size: 20px; }
 
   .venue-actions {
     display: flex; align-items: center; justify-content: center;
@@ -415,6 +418,11 @@
   .qr-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
   /* GALLERY */
+  .gallery-coming-soon {
+    font-family: 'Poppins', sans-serif; font-size: 13px;
+    color: var(--text-muted); margin-top: 8px; margin-bottom: 0;
+    font-style: italic;
+  }
   .gallery-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px; max-width: 760px; margin: 0 auto;
@@ -1062,18 +1070,18 @@
     <div class="schedule-card fade-section">
       <div class="schedule-card-date" data-i18n="scheduleDay1Date">ថ្ងៃទី១ — ថ្ងៃអង្គារ ទី២៤ ខែមីនា ឆ្នាំ២០២៦</div>
       <div class="schedule-grid stagger-children" id="scheduleGrid">
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🏛️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៦:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ផ្គុំដុំសាច់ញាតិ ភ្ញៀវកិត្តិយស ដើម្បីរៀបចំពិធីថែរពរជិន</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🐴</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:០០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីហែរកំណាត់ចូលមហាជ័យ</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">💍</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:៤៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធាស្នាក៍ណាក់បុរីនជិន (បំពាក់គ្រឿងអលង្ការ)</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🙏</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៨:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>និមន្តព្រះសង្ឃសូត្រមន្ត</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">✂️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៩:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីកាត់សក់បង្កក់សីរី</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🥳</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៦:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ផ្គុំដុំសាច់ញាតិ ភ្ញៀវកិត្តិយស ដើម្បីរៀបចំពិធីថែរពរជិន</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">💍</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:០០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីហែរកំណាត់ចូលមហាជ័យ</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៧:៤៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធាស្នាក៍ណាក់បុរីនជិន (បំពាក់គ្រឿងអលង្ការ)</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">✂️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៨:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>និមន្តព្រះសង្ឃសូត្រមន្ត</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៩:១៥ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីកាត់សក់បង្កក់សីរី</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🌸</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១០:៤០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីសំពះកេដឹម បង្វិលពពិល វែសនដីផួន ដីគា បាចផ្កាស្នា ចងដៃ</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១១:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🎉</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៥ ពេលល្ងាច</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវកិត្តិយសពិសារអាហារពេលល្ងាច ដោយមេត្រីកាព</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🙏</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ១១:៣០ នាទីព្រឹក</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>ម៉ោង ៥ ពេលល្ងាច</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ជើញភ្ញៀវកិត្តិយសពិសារអាហារពេលល្ងាច ដោយមេត្រីកាព</div></div></div>
         <div class="schedule-day-header section-subtitle schedule-card-date" data-i18n="scheduleDay2Date">ថ្ងៃទី២ — ថ្ងៃពុធ ទី២៥ ខែមីនា ឆ្នាំ២០២៦</div>
         <!-- <div class="section-subtitle" data-i18n="scheduleDay2Date">ថ្ងៃទី២ — ថ្ងៃពុធ ទី២៥ ខែមីនា ឆ្នាំ២០២៦</div> -->
         <div class="schedule-entry fade-item"><div class="schedule-icon">🕯️</div><div><div class="schedule-time" data-i18n-schedule-time>០៥:៣០</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធីក្រុងពលី</div></div></div>
-        <div class="schedule-entry fade-item"><div class="schedule-icon">🤝</div><div><div class="schedule-time" data-i18n-schedule-time>០៧:០០</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធី បង្វិលពពិល សំពះផ្ទឹម សែនចងដៃ</div></div></div>
+        <div class="schedule-entry fade-item"><div class="schedule-icon">🫶</div><div><div class="schedule-time" data-i18n-schedule-time>០៧:០០</div><div class="schedule-desc" data-i18n-schedule-desc>ពិធី បង្វិលពពិល សំពះផ្ទឹម សែនចងដៃ</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🍽️</div><div><div class="schedule-time" data-i18n-schedule-time>០៩:៣០</div><div class="schedule-desc" data-i18n-schedule-desc>អញ្ញើញភ្ញៀវ ពិសារអាហារពេលព្រឹក</div></div></div>
         <div class="schedule-entry fade-item"><div class="schedule-icon">🎊</div><div><div class="schedule-time" data-i18n-schedule-time>១១:០០</div><div class="schedule-desc" data-i18n-schedule-desc>ទទួលបដិសណ្ឋារកិច្ច ពិសារភោជនាអាហារ</div></div></div>
       </div>
@@ -1088,12 +1096,11 @@
       <div class="section-title-khmer" data-i18n="sectionVenue">ទីតាំងកម្មវិធីមង្គល</div>
       <div class="section-subtitle" data-i18n="venueSubtitle">គេហដ្ឋានខាងស្រី ភូមិល្វេ យំព្រាំងស្នាយ ស្រុកណូយ កខេត្តកំពត</div>
     </div>
-    <a class="venue-map-area fade-scale" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" target="_blank" rel="noopener noreferrer" aria-label="Open in Google Maps">
-      <span class="map-pin-icon">📍</span>
-      <span class="map-click-text" data-i18n="mapClick">ចុចដើម្បីមើលទីតាំងក្នុង Google Maps</span>
-    </a>
+    <div class="venue-map-wrapper fade-scale">
+      <iframe class="venue-map-embed" src="https://www.google.com/maps?q=13.26297,102.95403&output=embed&z=15" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Wedding venue location"></iframe>
+    </div>
     <div class="venue-actions fade-section">
-      <a class="btn-sky" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" data-i18n="openMaps">🗺️ បើកក្នុង Google Maps</a>
+      <a class="venue-nav-btn" href="https://maps.app.goo.gl/Wzr7MBzpbPDrzP1eA" target="_blank" rel="noopener noreferrer"><span class="nav-icon">🧭</span><span data-i18n="getDirections">ទទួលទិសដៅ</span></a>
       <div class="qr-inline">
         <div class="qr-label" data-i18n="scanQR">ស្កេន QR Code</div>
         <div class="qr-box"><img src="images/QR/wedding-location-qr-code.png" alt="Location QR Code"></div>
@@ -1109,14 +1116,13 @@
     <div class="fade-section">
       <div class="section-title-khmer" data-i18n="sectionGallery">រូបភាព</div>
       <div class="section-subtitle" data-i18n="sectionGallerySub">រូបភាពពិធីអាពាហ៍ពិពាហ៍</div>
+      <p class="gallery-coming-soon" data-i18n="preWeddingComingSoon">Pre-wedding photo coming soon</p>
     </div>
     <div class="gallery-grid stagger-children" id="galleryGrid">
       <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Engagement 1"><span class="gallery-item-label">Engagement 1</span></div>
       <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Engagement 2"><span class="gallery-item-label">Engagement 2</span></div>
       <div class="gallery-item fade-item"><img src="images/engagement3.jpeg" alt="Engagement 3"><span class="gallery-item-label">Engagement 3</span></div>
       <div class="gallery-item fade-item"><img src="images/engagement4.jpeg" alt="Engagement 4"><span class="gallery-item-label">Engagement 4</span></div>
-      <div class="gallery-item fade-item"><img src="images/keb1.jpeg" alt="Keb"><span class="gallery-item-label">Keb</span></div>
-      <div class="gallery-item fade-item"><img src="images/kompot1.jpeg" alt="Kampot"><span class="gallery-item-label">Kampot</span></div>
     </div>
   </div>
 </section>
@@ -1137,17 +1143,17 @@
         <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
         <div class="gift-account-name">VONG SOVANTHOEUN</div>
       </div>
-      <!-- <div class="gift-card fade-right">
+      <div class="gift-card fade-right">
         <div class="gift-currency">KHR</div>
         <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
         <div class="gift-scan">Scan. Pay. Done.</div>
-        <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR KHR"></div>
+        <div class="gift-qr"><img src="images/QR/aba-pay-qr-khr.png" alt="ABA Pay QR KHR"></div>
         <div class="gift-account-name">VONG SOVANTHOEUN</div>
-      </div> -->
+      </div>
     </div>
     <div class="gift-btn-row fade-section">
       <a class="btn-outline-sky" href="#" data-i18n="giftQrUsd">បញ្ជាក់ QR Code USD</a>
-      <!-- <a class="btn-outline-sky" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a> -->
+      <a class="btn-outline-sky" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a>
     </div>
   </div>
 </section>
@@ -1274,7 +1280,7 @@
     var TARGET_VOLUME = 0.6;
     var FADE_DURATION_MS = 3000;
     var PLAYLIST = [
-      { src: 'audio/ជូនពរអាពាហ៍ពិពាហ៍.mp3', start: 30, stop: 120 },
+      { src: 'audio/ជូនពរអាពាហ៍ពិពាហ៍.mp3', start: 29, stop: 120 },
       { src: 'audio/ស្ពានសុភមង្គល.mp3', start: 23, stop: 72 },
       { src: 'audio/ថ្ងៃមង្គលយើង.mp3', start: 9, stop: 120 }
     ];
