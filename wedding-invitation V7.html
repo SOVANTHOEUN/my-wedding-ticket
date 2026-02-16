@@ -593,21 +593,31 @@
     .lang-switcher [data-lang] { padding: 6px 10px; font-size: 11px; }
   }
 
-  /* MUSIC TOGGLE — floating bottom-left, visible on cover and detail */
-  .music-toggle {
+  /* MUSIC CONTROLS — floating bottom-left, prev | play/pause | next */
+  .music-controls {
     position: fixed; bottom: 28px; left: 20px; z-index: 200;
-    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; gap: 6px;
     background: var(--white); border: 1px solid var(--silver-pale);
+    border-radius: 50px; padding: 6px 6px 6px 10px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    cursor: pointer; font-size: 22px; display: flex;
-    align-items: center; justify-content: center;
-    transition: all 0.25s ease;
   }
-  .music-toggle:hover { background: var(--ice); border-color: var(--sky-light); transform: scale(1.05); }
-  .music-toggle.playing { background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%); color: var(--white); border-color: var(--sky-deep); }
-  .music-toggle.playing:hover { opacity: 0.95; }
+  .music-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: transparent; border: none;
+    cursor: pointer; font-size: 18px; display: flex;
+    align-items: center; justify-content: center;
+    transition: all 0.25s ease; color: var(--text);
+  }
+  .music-btn:hover { background: var(--ice); color: var(--sky-deep); transform: scale(1.05); }
+  .music-toggle {
+    width: 44px; height: 44px; font-size: 22px;
+  }
+  .music-toggle.playing { background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%); color: var(--white); }
+  .music-toggle.playing:hover { opacity: 0.95; background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%); }
   @media (max-width: 480px) {
-    .music-toggle { bottom: 20px; left: 12px; width: 42px; height: 42px; font-size: 20px; }
+    .music-controls { bottom: 20px; left: 12px; padding: 5px 5px 5px 8px; gap: 4px; }
+    .music-btn { width: 36px; height: 36px; font-size: 16px; }
+    .music-toggle { width: 38px; height: 38px; font-size: 20px; }
   }
 
   /* SCROLL TOP */
@@ -857,7 +867,11 @@
 </head>
 <body>
 
-<button class="music-toggle" id="musicToggle" type="button" aria-label="Play background music" title="Play wedding music">🔇</button>
+<div class="music-controls">
+  <button class="music-btn" id="musicPrev" type="button" aria-label="Previous track" title="Previous">⏮</button>
+  <button class="music-toggle music-btn" id="musicToggle" type="button" aria-label="Play background music" title="Play wedding music">🔇</button>
+  <button class="music-btn" id="musicNext" type="button" aria-label="Next track" title="Next">⏭</button>
+</div>
 <audio id="bgMusic" preload="metadata"></audio>
 
 <!-- ===== V7: TICKET COVER (first view) ===== -->
@@ -1142,14 +1156,14 @@
         <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
         <div class="gift-scan">Scan. Pay. Done.</div>
         <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
-        <div class="gift-account-name">Sovanthoeu 💞 Vila</div>
+        <div class="gift-account-name">Sovanthoeun 💞 Vila</div>
       </div>
       <div class="gift-card fade-right">
         <div class="gift-currency">KHR</div>
         <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
         <div class="gift-scan">Scan. Pay. Done.</div>
         <div class="gift-qr"><img src="images/QR/aba-pay-qr-khr.png" alt="ABA Pay QR KHR"></div>
-        <div class="gift-account-name">Sovanthoeu 💞 Vila</div>
+        <div class="gift-account-name">Sovanthoeun 💞 Vila</div>
       </div>
     </div>
     <div class="gift-btn-row fade-section">
@@ -1282,6 +1296,7 @@
     var FADE_DURATION_MS = 3000;
     var PLAYLIST = [
       { src: 'audio/ផ្កាស្នេហ៍និរន្តរ៍.mp3', start: 30, stop: 150 },
+      { src: 'audio/ជំហានទី ១.mp3', start: 48, stop: 180 },
       { src: 'audio/ជូនពរអាពាហ៍ពិពាហ៍.mp3', start: 29, stop: 120 },
       { src: 'audio/ស្ពានសុភមង្គល.mp3', start: 23, stop: 72 },
       { src: 'audio/ថ្ងៃមង្គលយើង.mp3', start: 9, stop: 120 }
@@ -1332,6 +1347,22 @@
       currentTrack = (currentTrack + 1) % PLAYLIST.length;
       playTrack(currentTrack);
     }
+
+    function goToPrevTrack() {
+      currentTrack = (currentTrack - 1 + PLAYLIST.length) % PLAYLIST.length;
+      playTrack(currentTrack);
+    }
+
+    document.getElementById('musicPrev').addEventListener('click', function() {
+      if (audio.muted) { audio.muted = false; }
+      goToPrevTrack();
+      updateBtn();
+    });
+    document.getElementById('musicNext').addEventListener('click', function() {
+      if (audio.muted) { audio.muted = false; }
+      goToNextTrack();
+      updateBtn();
+    });
 
     audio.addEventListener('timeupdate', function() {
       if (audio.muted || audio.paused) return;
