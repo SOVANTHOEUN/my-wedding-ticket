@@ -601,6 +601,8 @@
     border-radius: 50px; padding: 6px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     transition: padding 0.3s ease, gap 0.3s ease, border-radius 0.3s ease;
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none;
   }
   .music-controls.expanded {
     padding: 6px 6px 6px 10px;
@@ -612,6 +614,8 @@
     cursor: pointer; font-size: 18px; display: flex;
     align-items: center; justify-content: center;
     transition: all 0.25s ease; color: var(--text);
+    -webkit-user-select: none; user-select: none;
+    -webkit-touch-callout: none;
   }
   .music-prev, .music-next {
     width: 0; min-width: 0; opacity: 0; overflow: hidden;
