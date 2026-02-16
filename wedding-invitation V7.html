@@ -1335,7 +1335,8 @@
       audio.src = t.src;
       function onReady() {
         audio.currentTime = t.start;
-        audio.play().catch(function() { audio.muted = true; });
+        audio.muted = false;
+        audio.play().catch(function() { /* Don't mute on mobile when play fails */ });
         fadeIn();
         updateBtn();
       }
@@ -1353,15 +1354,15 @@
       playTrack(currentTrack);
     }
 
-    document.getElementById('musicPrev').addEventListener('click', function() {
-      if (audio.muted) { audio.muted = false; }
+    document.getElementById('musicPrev').addEventListener('click', function(e) {
+      e.preventDefault();
+      audio.muted = false;
       goToPrevTrack();
-      updateBtn();
     });
-    document.getElementById('musicNext').addEventListener('click', function() {
-      if (audio.muted) { audio.muted = false; }
+    document.getElementById('musicNext').addEventListener('click', function(e) {
+      e.preventDefault();
+      audio.muted = false;
       goToNextTrack();
-      updateBtn();
     });
 
     audio.addEventListener('timeupdate', function() {
@@ -1382,7 +1383,7 @@
           if (audio.currentTime >= t.stop) goToNextTrack();
           else {
             if (audio.currentTime < t.start) audio.currentTime = t.start;
-            audio.play().catch(function() { audio.muted = true; });
+            audio.play().catch(function() { /* Don't mute on mobile */ });
             fadeIn();
           }
         }
