@@ -580,6 +580,23 @@
     .lang-switcher [data-lang] { padding: 6px 10px; font-size: 11px; }
   }
 
+  /* MUSIC TOGGLE — floating bottom-left, visible on cover and detail */
+  .music-toggle {
+    position: fixed; bottom: 28px; left: 20px; z-index: 200;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--white); border: 1px solid var(--silver-pale);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    cursor: pointer; font-size: 22px; display: flex;
+    align-items: center; justify-content: center;
+    transition: all 0.25s ease;
+  }
+  .music-toggle:hover { background: var(--ice); border-color: var(--sky-light); transform: scale(1.05); }
+  .music-toggle.playing { background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%); color: var(--white); border-color: var(--sky-deep); }
+  .music-toggle.playing:hover { opacity: 0.95; }
+  @media (max-width: 480px) {
+    .music-toggle { bottom: 20px; left: 12px; width: 42px; height: 42px; font-size: 20px; }
+  }
+
   /* SCROLL TOP */
   .scroll-top {
     position: fixed; bottom: 28px; right: 28px;
@@ -825,6 +842,9 @@
 </head>
 <body>
 
+<button class="music-toggle" id="musicToggle" type="button" aria-label="Play background music" title="Play wedding music">🔇</button>
+<audio id="bgMusic" preload="metadata"></audio>
+
 <!-- ===== V7: TICKET COVER (first view) ===== -->
 <div id="ticket-cover" role="button" tabindex="0" aria-label="Open invitation">
   <div class="ticket-container" onclick="event.stopPropagation()">
@@ -873,7 +893,7 @@
       <!-- Guest name section -->
       <div class="ticket-guest-section">
         <div class="ticket-name-input-wrapper">
-          <input type="text" class="ticket-name-input" id="guestNameInput" value="លោក ជ័យ វឌ្ឍនះ" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
+          <input type="text" class="ticket-name-input" id="guestNameInput" value="លោក រៀម សុផា" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
         </div>
       </div>
 
@@ -1241,6 +1261,104 @@
     this.innerHTML = t; this.classList.add('confirmed');
   });
 
+  // Background music — 3-track playlist with custom start/stop, fade-in when opening ticket
+  (function() {
+    var audio = document.getElementById('bgMusic');
+    var btn = document.getElementById('musicToggle');
+    var TARGET_VOLUME = 0.6;
+    var FADE_DURATION_MS = 3000;
+    var PLAYLIST = [
+      { src: 'audio/ថ្ងៃមង្គលយើង.mp3', start: 9, stop: 120 },
+      { src: 'audio/ជូនពរអាពាហ៍ពិពាហ៍.mp3', start: 30, stop: 120 },
+      { src: 'audio/ស្ពានសុភមង្គល.mp3', start: 23, stop: 72 }
+    ];
+    var currentTrack = 0;
+    if (!audio || !btn) return;
+    audio.muted = true;
+    audio.volume = 0;
+
+    function updateBtn() {
+      var isPlaying = !audio.muted && !audio.paused;
+      btn.textContent = isPlaying ? '\uD83D\uDD0A' : '\uD83D\uDD07';
+      btn.classList.toggle('playing', isPlaying);
+      btn.setAttribute('aria-label', isPlaying ? 'Mute background music' : 'Play background music');
+      btn.title = isPlaying ? 'Mute music' : 'Play wedding music';
+    }
+
+    function fadeIn() {
+      audio.volume = 0;
+      var start = performance.now();
+      function step(now) {
+        var elapsed = now - start;
+        if (elapsed >= FADE_DURATION_MS) {
+          audio.volume = TARGET_VOLUME;
+          return;
+        }
+        audio.volume = (elapsed / FADE_DURATION_MS) * TARGET_VOLUME;
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function playTrack(index) {
+      var t = PLAYLIST[index];
+      currentTrack = index;
+      audio.src = t.src;
+      function onReady() {
+        audio.currentTime = t.start;
+        audio.play().catch(function() { audio.muted = true; });
+        fadeIn();
+        updateBtn();
+      }
+      if (audio.readyState >= 1) onReady();
+      else audio.addEventListener('loadedmetadata', onReady, { once: true });
+    }
+
+    function goToNextTrack() {
+      currentTrack = (currentTrack + 1) % PLAYLIST.length;
+      playTrack(currentTrack);
+    }
+
+    audio.addEventListener('timeupdate', function() {
+      if (audio.muted || audio.paused) return;
+      var t = PLAYLIST[currentTrack];
+      if (audio.currentTime >= t.stop) {
+        goToNextTrack();
+      }
+    });
+
+    btn.addEventListener('click', function() {
+      if (audio.muted) {
+        audio.muted = false;
+        var t = PLAYLIST[currentTrack];
+        if (!audio.src || audio.ended) {
+          playTrack(currentTrack);
+        } else {
+          if (audio.currentTime >= t.stop) goToNextTrack();
+          else {
+            if (audio.currentTime < t.start) audio.currentTime = t.start;
+            audio.play().catch(function() { audio.muted = true; });
+            fadeIn();
+          }
+        }
+      } else {
+        audio.muted = true;
+        audio.pause();
+      }
+      updateBtn();
+    });
+
+    updateBtn();
+
+    window.startWeddingMusic = function() {
+      if (audio.muted) {
+        audio.muted = false;
+        currentTrack = 0;
+        playTrack(0);
+      }
+    };
+  })();
+
   // Multi-language: load translations and init
   (function() {
     var lang = getPreferredLanguage();
@@ -1252,10 +1370,11 @@
     });
   })();
 
-  // V7: Open ticket (show detail page)
+  // V7: Open ticket (show detail page) — auto-play music on user gesture
   function openTicket() {
     document.body.classList.add('ticket-opened');
     window.scrollTo(0, 0);
+    if (typeof window.startWeddingMusic === 'function') window.startWeddingMusic();
   }
   var ticketCover = document.getElementById('ticket-cover');
   var ticketContainer = document.querySelector('.ticket-container');
