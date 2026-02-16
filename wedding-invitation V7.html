@@ -593,31 +593,49 @@
     .lang-switcher [data-lang] { padding: 6px 10px; font-size: 11px; }
   }
 
-  /* MUSIC CONTROLS — floating bottom-left, prev | play/pause | next */
+  /* MUSIC CONTROLS — collapsed: mute icon only; long-press to expand prev/next */
   .music-controls {
     position: fixed; bottom: 28px; left: 20px; z-index: 200;
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 0;
     background: var(--white); border: 1px solid var(--silver-pale);
-    border-radius: 50px; padding: 6px 6px 6px 10px;
+    border-radius: 50px; padding: 6px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: padding 0.3s ease, gap 0.3s ease, border-radius 0.3s ease;
+  }
+  .music-controls.expanded {
+    padding: 6px 6px 6px 10px;
+    gap: 6px;
   }
   .music-btn {
-    width: 40px; height: 40px; border-radius: 50%;
+    width: 40px; height: 40px; min-width: 40px; border-radius: 50%;
     background: transparent; border: none;
     cursor: pointer; font-size: 18px; display: flex;
     align-items: center; justify-content: center;
     transition: all 0.25s ease; color: var(--text);
   }
+  .music-prev, .music-next {
+    width: 0; min-width: 0; opacity: 0; overflow: hidden;
+    padding: 0; margin: 0; pointer-events: none;
+    transition: width 0.3s ease, min-width 0.3s ease, opacity 0.3s ease;
+  }
+  .music-controls.expanded .music-prev,
+  .music-controls.expanded .music-next {
+    width: 40px; min-width: 40px; opacity: 1; pointer-events: auto;
+  }
   .music-btn:hover { background: var(--ice); color: var(--sky-deep); transform: scale(1.05); }
   .music-toggle {
-    width: 44px; height: 44px; font-size: 22px;
+    width: 44px; height: 44px; min-width: 44px; font-size: 22px;
   }
   .music-toggle.playing { background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%); color: var(--white); }
   .music-toggle.playing:hover { opacity: 0.95; background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%); }
   @media (max-width: 480px) {
-    .music-controls { bottom: 20px; left: 12px; padding: 5px 5px 5px 8px; gap: 4px; }
-    .music-btn { width: 36px; height: 36px; font-size: 16px; }
-    .music-toggle { width: 38px; height: 38px; font-size: 20px; }
+    .music-controls { bottom: 20px; left: 12px; padding: 5px; }
+    .music-controls.expanded { padding: 5px 5px 5px 8px; gap: 4px; }
+    .music-btn { width: 36px; height: 36px; min-width: 36px; font-size: 16px; }
+    .music-prev, .music-next { width: 0; min-width: 0; }
+    .music-controls.expanded .music-prev,
+    .music-controls.expanded .music-next { width: 36px; min-width: 36px; }
+    .music-toggle { width: 38px; height: 38px; min-width: 38px; font-size: 20px; }
   }
 
   /* SCROLL TOP */
@@ -867,10 +885,10 @@
 </head>
 <body>
 
-<div class="music-controls">
-  <button class="music-btn" id="musicPrev" type="button" aria-label="Previous track" title="Previous">⏮</button>
+<div class="music-controls" id="musicControls">
+  <button class="music-btn music-prev" id="musicPrev" type="button" aria-label="Previous track" title="Previous">⏮</button>
   <button class="music-toggle music-btn" id="musicToggle" type="button" aria-label="Play background music" title="Play wedding music">🔇</button>
-  <button class="music-btn" id="musicNext" type="button" aria-label="Next track" title="Next">⏭</button>
+  <button class="music-btn music-next" id="musicNext" type="button" aria-label="Next track" title="Next">⏭</button>
 </div>
 <audio id="bgMusic" preload="metadata"></audio>
 
@@ -1356,14 +1374,52 @@
 
     document.getElementById('musicPrev').addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation();
       audio.muted = false;
       goToPrevTrack();
     });
     document.getElementById('musicNext').addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation();
       audio.muted = false;
       goToNextTrack();
     });
+
+    // Long-press on play/pause to expand/collapse prev/next buttons
+    var longPressTimer = null;
+    var longPressTriggered = false;
+    var LONG_PRESS_MS = 500;
+    var controlsEl = document.getElementById('musicControls');
+
+    function clearLongPress() {
+      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+    }
+    function startLongPress() {
+      clearLongPress();
+      longPressTriggered = false;
+      longPressTimer = setTimeout(function() {
+        longPressTimer = null;
+        longPressTriggered = true;
+        controlsEl.classList.toggle('expanded');
+      }, LONG_PRESS_MS);
+    }
+
+    btn.addEventListener('mousedown', startLongPress);
+    btn.addEventListener('mouseup', clearLongPress);
+    btn.addEventListener('mouseleave', clearLongPress);
+    btn.addEventListener('touchstart', function(e) { startLongPress(); }, { passive: true });
+    btn.addEventListener('touchend', function(e) { clearLongPress(); }, { passive: true });
+    btn.addEventListener('touchcancel', clearLongPress);
+
+    var originalClick = btn.onclick;
+    btn.addEventListener('click', function(e) {
+      if (longPressTriggered) {
+        longPressTriggered = false;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+    }, true);
 
     audio.addEventListener('timeupdate', function() {
       if (audio.muted || audio.paused) return;
