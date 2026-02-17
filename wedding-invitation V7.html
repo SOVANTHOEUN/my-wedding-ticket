@@ -36,6 +36,7 @@
     background: var(--white);
     color: var(--text);
     overflow-x: hidden;
+    overflow-y: auto;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -683,11 +684,22 @@
   }
   body.ticket-opened #ticket-cover {
     opacity: 0; visibility: hidden; pointer-events: none;
+    display: none; /* Ensure cover doesn't block scroll on detail page */
   }
   #detail-page {
     display: none; min-height: 100vh;
   }
-  body.ticket-opened #detail-page { display: block; }
+  body.ticket-opened {
+    overflow: hidden;
+  }
+  body.ticket-opened #detail-page {
+    display: block;
+    position: fixed; inset: 0;
+    overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+  }
 
   .ticket-container {
     position: relative; width: 100%; max-width: 400px; min-height: 100vh;
@@ -805,15 +817,18 @@
     animation: ticketContentUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
   }
   .ticket-name-input-wrapper {
-    position: relative; width: 100%; max-width: 260px; margin: 0 auto;
+    position: relative; width: 100%;
+    max-width: min(95vw, 380px); margin: 0 auto;
+    min-width: 0;
   }
   .ticket-name-input {
-    width: 100%; padding: 16px 24px;
+    width: 100%; min-width: 0; box-sizing: border-box;
+    padding: 16px 20px;
     background: var(--white);
     border: 1px solid var(--silver-pale);
     border-radius: 12px;
     font-family: 'Noto Serif Khmer', 'Poppins', sans-serif;
-    font-size: 16px; color: var(--dark);
+    font-size: clamp(14px, 3.5vw, 16px); color: var(--dark);
     text-align: center; outline: none;
     box-shadow: 0 2px 12px rgba(135,206,235,0.08);
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
@@ -870,7 +885,8 @@
     .ticket-header { margin-bottom: 24px; }
     .ticket-name-khmer { font-size: clamp(22px, 5.5vw, 28px); }
     .ticket-name-english { font-size: 10px; }
-    .ticket-name-input { padding: 14px 20px; font-size: 15px; }
+    .ticket-name-input { padding: 14px 16px; font-size: clamp(13px, 3.2vw, 15px); }
+    .ticket-name-input-wrapper { max-width: min(92vw, 340px); }
     .guest-name-card { padding: 16px 32px; }
     .guest-name-text { font-size: 20px; letter-spacing: 1px; }
     .ticket-butterfly { width: 18px; height: 18px; }
@@ -885,6 +901,7 @@
     .name-khmer { font-size: clamp(22px,6vw,38px); }
   }
 </style>
+<script src="js/guests.js"></script>
 <script src="js/translations.js"></script>
 </head>
 <body>
@@ -944,7 +961,7 @@
       <!-- Guest name section -->
       <div class="ticket-guest-section">
         <div class="ticket-name-input-wrapper">
-          <input type="text" class="ticket-name-input" id="guestNameInput" value="លោក រៀម សុផា" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
+          <input type="text" class="ticket-name-input" id="guestNameInput" value="ឯកឧត្តម និង លោកជំទាវ" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
         </div>
       </div>
 
@@ -973,7 +990,7 @@
 </div>
 <div class="shimmer-layer" id="shimmerLayer"></div>
 <div class="petal-layer" id="petalLayer"></div>
-<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button class="scroll-top" id="scrollTopBtn" onclick="document.getElementById('detail-page').scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="lightbox-overlay" id="lightbox" aria-hidden="true">
   <div class="lightbox-inner">
     <img id="lightboxImg" src="" alt="">
@@ -1068,7 +1085,7 @@
     <div class="guest-section">
       <div class="guest-label" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</div>
       <div class="guest-name-card">
-        <span class="guest-name-text">Mr. Vong Sovanthoeun</span>
+        <span class="guest-name-text">ឯកឧត្តម និង លោកជំទាវ</span>
       </div>
     </div>
 
@@ -1224,6 +1241,28 @@
 </div><!-- #detail-page -->
 
 <script>
+  // Guest from URL (?g=token) — apply to cover and detail
+  (function() {
+    var DEFAULT_GUEST = 'ឯកឧត្តម និង លោកជំទាវ';
+    var params = new URLSearchParams(window.location.search);
+    var token = (params.get('g') || '').toLowerCase().trim();
+    var name = typeof GUEST_LIST !== 'undefined' && token && GUEST_LIST[token]
+      ? GUEST_LIST[token]
+      : DEFAULT_GUEST;
+    function applyGuest(guestName) {
+      var input = document.getElementById('guestNameInput');
+      var detailSpan = document.querySelector('.guest-name-text');
+      if (input) input.value = guestName;
+      if (detailSpan) detailSpan.textContent = guestName;
+    }
+    applyGuest(name);
+    window.applyGuestToDetail = function() {
+      var input = document.getElementById('guestNameInput');
+      var detailSpan = document.querySelector('.guest-name-text');
+      if (input && detailSpan) detailSpan.textContent = input.value;
+    };
+  })();
+
   // Intersection Observer
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -1281,9 +1320,13 @@
   }
 
   // Scroll top button
-  window.addEventListener('scroll', () => {
-    document.getElementById('scrollTopBtn').classList.toggle('show', window.scrollY > 400);
-  });
+  function updateScrollBtn() {
+    var dp = document.getElementById('detail-page');
+    var y = dp && dp.scrollTop !== undefined ? dp.scrollTop : window.scrollY;
+    document.getElementById('scrollTopBtn').classList.toggle('show', y > 400);
+  }
+  window.addEventListener('scroll', updateScrollBtn, true);
+  document.getElementById('detail-page').addEventListener('scroll', updateScrollBtn);
 
   // Gallery lightbox
   (function() {
@@ -1479,7 +1522,9 @@
   // V7: Open ticket (show detail page) — auto-play music on user gesture
   function openTicket() {
     document.body.classList.add('ticket-opened');
-    window.scrollTo(0, 0);
+    var dp = document.getElementById('detail-page');
+    if (dp) { dp.scrollTop = 0; dp.scrollTo && dp.scrollTo(0, 0); }
+    if (typeof window.applyGuestToDetail === 'function') window.applyGuestToDetail();
     if (typeof window.startWeddingMusic === 'function') window.startWeddingMusic();
   }
   var ticketCover = document.getElementById('ticket-cover');
