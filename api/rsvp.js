@@ -64,7 +64,7 @@ function findRsvpRow(rows, token) {
   return null;
 }
 
-async function appendRsvp(sheets, token, guestName, status, message, deviceType, location) {
+async function appendRsvp(sheets, token, guestName, status, message, device_type, location) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const regDttm = new Date().toISOString();
   await sheets.spreadsheets.values.append({
@@ -73,12 +73,12 @@ async function appendRsvp(sheets, token, guestName, status, message, deviceType,
     valueInputOption: 'RAW',
     insertDataOption: 'INSERT_ROWS',
     requestBody: {
-      values: [[token, guestName, status, regDttm, '', message || '', deviceType || '', location || '']]
+      values: [[token, guestName, status, regDttm, '', message || '', device_type || '', location || '']]
     }
   });
 }
 
-async function updateRsvpRow(sheets, rowIndex, token, guestName, status, regDttm, message, deviceType, location) {
+async function updateRsvpRow(sheets, rowIndex, token, guestName, status, regDttm, message, device_type, location) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const modDttm = new Date().toISOString();
   const range = `RSVP!A${rowIndex + 2}:H${rowIndex + 2}`;
@@ -87,7 +87,7 @@ async function updateRsvpRow(sheets, rowIndex, token, guestName, status, regDttm
     range,
     valueInputOption: 'RAW',
     requestBody: {
-      values: [[token, guestName, status, regDttm, modDttm, message || '', deviceType || '', location || '']]
+      values: [[token, guestName, status, regDttm, modDttm, message || '', device_type || '', location || '']]
     }
   });
 }
@@ -156,7 +156,7 @@ module.exports = async function handler(req, res) {
   const token = (body.token || '').toLowerCase().trim();
   const status = (body.status || '').toLowerCase();
   const message = typeof body.message === 'string' ? body.message.slice(0, 500).trim() : '';
-  const deviceType = typeof body.device_type === 'string' ? body.device_type.slice(0, 50).trim() : '';
+  const device_type = typeof body.device_type === 'string' ? body.device_type.slice(0, 50).trim() : '';
   const location = getLocationFromHeaders(req);
 
   if (!token) {
@@ -183,7 +183,7 @@ module.exports = async function handler(req, res) {
       }
       const row = found.row;
       const regDttm = row[3] || new Date().toISOString();
-      await updateRsvpRow(sheets, found.index, token, guestName, status, regDttm, message, deviceType, location);
+      await updateRsvpRow(sheets, found.index, token, guestName, status, regDttm, message, device_type, location);
       return res.status(200).json({ ok: true, status, updated: true });
     }
 
@@ -191,7 +191,7 @@ module.exports = async function handler(req, res) {
     if (found) {
       return res.status(409).json({ error: 'Already submitted. Use update to change.' });
     }
-    await appendRsvp(sheets, token, guestName, status, message, deviceType, location);
+    await appendRsvp(sheets, token, guestName, status, message, device_type, location);
     return res.status(200).json({ ok: true, status });
   } catch (e) {
     console.error('RSVP error:', e.message);

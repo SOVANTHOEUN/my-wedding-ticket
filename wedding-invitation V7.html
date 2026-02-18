@@ -1543,6 +1543,7 @@
       if (rsvpConfirm.disabled) return;
       var msg = rsvpMessage ? sanitizeGuestName(rsvpMessage.value) : '';
       var prevStatus = currentStatus;
+      var method = currentStatus === null ? 'POST' : 'PATCH';  // Must compute before optimistic update
       // Optimistic UI: show selected state immediately
       setSubmitted(status, msg);
       rsvpStatus.textContent = getText('rsvpSaving');
@@ -1550,7 +1551,6 @@
       rsvpConfirm.disabled = true;
       rsvpDecline.disabled = true;
       if (rsvpUndecided) rsvpUndecided.disabled = true;
-      var method = currentStatus === null ? 'POST' : 'PATCH';
       var payload = { token: token, status: status, message: msg, device_type: getDeviceType() };
       fetch(window.location.origin + '/api/rsvp', {
         method: method,
