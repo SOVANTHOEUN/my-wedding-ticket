@@ -2,7 +2,7 @@
 <html lang="km">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V7 — VONG Sovanthoeun & ROENG Vila</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -588,13 +588,15 @@
   }
   .rsvp-button:disabled { opacity: 0.6; cursor: not-allowed; }
   .rsvp-message-wrap {
-    max-width: 400px; margin: 0 auto 20px;
+    max-width: 400px; width: 100%; min-width: 0; margin: 0 auto 20px;
+    padding: 0 4px; box-sizing: border-box;
   }
   .rsvp-message {
-    width: 100%; min-height: 80px; padding: 14px 18px;
+    width: 100%; min-width: 0; max-width: 100%; min-height: 80px; padding: 14px 18px;
     font-family: 'Poppins', 'Noto Serif Khmer', sans-serif; font-size: 14px;
     border: 1px solid var(--silver-pale); border-radius: 12px;
     resize: vertical; outline: none; transition: border-color 0.25s;
+    box-sizing: border-box; overflow-wrap: break-word; word-wrap: break-word;
   }
   .rsvp-message:focus { border-color: var(--sky-light); }
   .rsvp-message::placeholder { color: var(--text-muted); }
