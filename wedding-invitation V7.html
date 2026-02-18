@@ -512,12 +512,24 @@
     overflow: hidden; padding: 6px;
   }
   .gift-qr img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .gift-qr-khr { position: relative; }
+  .gift-qr-khr-symbol {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #000; border: 1.5px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Noto Serif Khmer', serif; font-size: 11px; font-weight: 700;
+    color: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+  }
   .gift-account-name {
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     font-weight: 600; color: var(--text); letter-spacing: 1.5px; text-transform: uppercase;
   }
 
-  .gift-btn-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .gift-download-btn { margin-top: 16px; width: 100%; justify-content: center; }
+  @media (min-width: 561px) {
+    .gift-download-btn { width: auto; }
+  }
   .btn-outline-sky {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500;
@@ -1233,18 +1245,19 @@
         <div class="gift-scan">Scan. Pay. Done.</div>
         <div class="gift-qr"><img src="images/QR/aba-pay-qr-clean.png" alt="ABA Pay QR USD"></div>
         <div class="gift-account-name">Sovanthoeun 💞 Vila</div>
+        <a class="btn-outline-sky gift-download-btn" href="images/QR/aba-pay-qr-clean.png" download="aba-pay-qr-usd.png" data-i18n="giftQrUsd">ទាយយក QR Code USD</a>
       </div>
       <div class="gift-card fade-right">
         <div class="gift-currency">KHR</div>
         <div class="gift-bank-strip"><span class="gift-bank-text">ABA <span class="red">'</span> PAY</span></div>
         <div class="gift-scan">Scan. Pay. Done.</div>
-        <div class="gift-qr"><img src="images/QR/aba-pay-qr-khr.png" alt="ABA Pay QR KHR"></div>
+        <div class="gift-qr gift-qr-khr">
+          <img src="images/QR/aba-pay-qr-khr.png" alt="ABA Pay QR KHR">
+          <span class="gift-qr-khr-symbol">៛</span>
+        </div>
         <div class="gift-account-name">Sovanthoeun 💞 Vila</div>
+        <a class="btn-outline-sky gift-download-btn" href="images/QR/aba-pay-qr-khr.png" download="aba-pay-qr-khr.png" data-i18n="giftQrKhr">ទាយយក QR Code KHR</a>
       </div>
-    </div>
-    <div class="gift-btn-row fade-section">
-      <a class="btn-outline-sky" href="#" data-i18n="giftQrUsd">បញ្ជាក់ QR Code USD</a>
-      <a class="btn-outline-sky" href="#" data-i18n="giftQrKhr">បញ្ជាក់ QR Code KHR</a>
     </div>
   </div>
 </section>
@@ -1382,6 +1395,20 @@
     lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
   })();
+
+  // Gift QR download — when served over HTTP: native download works
+  // When opened from file://: opens in new tab (right-click or long-press to save)
+  document.querySelectorAll('.gift-download-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      var href = this.getAttribute('href');
+      if (!href || href === '#') return;
+      if (window.location.protocol === 'file:') {
+        e.preventDefault();
+        window.open(href, '_blank', 'noopener');
+      }
+      // else: let native link with download attribute work (no preventDefault)
+    });
+  });
 
   // RSVP
   document.getElementById('rsvpBtn').addEventListener('click', function() {

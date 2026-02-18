@@ -21,14 +21,20 @@ my-wedding-ticket/
 
 1. **Clone or download** this project.
 2. **Open the site**  
-   - Option A: Double-click `index.html` to open in your browser.  
-   - Option B: Use a local server (recommended for testing):
+   - Option A: Double-click `index.html` (or `wedding-invitation V7.html`) to open in your browser.  
+   - Option B: **Use a local server** (recommended — required for QR download to work):
+     ```bash
+     # Node (easiest)
+     npx serve
+     # Or: npm run serve
+     # Then open the URL shown (e.g. http://localhost:3000)
+     ```
      ```bash
      # Python 3
      python3 -m http.server 8000
      # Then visit http://localhost:8000
      ```
-     Or with Node: `npx serve` then visit the URL shown.
+   - **Note:** QR code download buttons only work when the page is served over HTTP (Option B) or when deployed. If opened from file://, clicking will open the image in a new tab — use right-click (desktop) or long-press (mobile) to save.
 3. **Add your assets (optional)**  
    - Gallery: Add images in `images/` and update the gallery in `index.html` to use `<img src="images/photo1.jpg" alt="...">` inside each `.gallery-item`.  
    - Maps/QR: Replace `#` in “Open in Google Maps” and QR links with your real Google Maps URL and QR image paths (e.g. `images/qr-usd.png`).
