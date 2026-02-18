@@ -167,13 +167,13 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const guestList = await getGuestList(sheets);
+    // Fetch guest list and RSVP rows in parallel (saves ~1 round-trip)
+    const [guestList, rows] = await Promise.all([getGuestList(sheets), getRsvpRows(sheets)]);
     const guestName = guestList[token];
     if (!guestName) {
       return res.status(404).json({ error: 'Guest not found' });
     }
 
-    const rows = await getRsvpRows(sheets);
     const found = findRsvpRow(rows, token);
 
     // ——— PATCH: Update existing ———

@@ -1542,7 +1542,11 @@
     function submitRsvp(status) {
       if (rsvpConfirm.disabled) return;
       var msg = rsvpMessage ? sanitizeGuestName(rsvpMessage.value) : '';
-      rsvpStatus.textContent = '...';
+      var prevStatus = currentStatus;
+      // Optimistic UI: show selected state immediately
+      setSubmitted(status, msg);
+      rsvpStatus.textContent = getText('rsvpSaving');
+      rsvpStatus.style.color = 'var(--text-muted)';
       rsvpConfirm.disabled = true;
       rsvpDecline.disabled = true;
       if (rsvpUndecided) rsvpUndecided.disabled = true;
@@ -1560,12 +1564,28 @@
           if (rsvpUndecided) rsvpUndecided.disabled = false;
           if (res.ok && res.data.ok) setSubmitted(status, msg);
           else if (res.status === 409) setSubmitted(currentStatus || status, rsvpMessage ? rsvpMessage.value : '');
-          else setError(res.data.error || 'Failed');
+          else {
+            if (prevStatus) setSubmitted(prevStatus, rsvpMessage ? rsvpMessage.value : '');
+            else {
+              rsvpConfirm.classList.remove('selected');
+              rsvpDecline.classList.remove('selected');
+              if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
+              currentStatus = null;
+            }
+            setError(res.data.error || 'Failed');
+          }
         })
         .catch(function() {
           rsvpConfirm.disabled = false;
           rsvpDecline.disabled = false;
           if (rsvpUndecided) rsvpUndecided.disabled = false;
+          if (prevStatus) setSubmitted(prevStatus, rsvpMessage ? rsvpMessage.value : '');
+          else {
+            rsvpConfirm.classList.remove('selected');
+            rsvpDecline.classList.remove('selected');
+            if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
+            currentStatus = null;
+          }
           setError('Failed to send');
         });
     }
