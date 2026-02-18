@@ -16,6 +16,8 @@ my-wedding-ticket/
 ├── images/             # Gallery photos, QR codes
 ├── audio/              # Background music
 ├── README.md
+├── scripts/
+│   └── test-rsvp-security.js  # RSVP API security tests
 ├── vercel.json         # Security headers, CSP
 └── SECURITY-SETUP.md   # Guest list & RSVP configuration
 ```
@@ -90,6 +92,16 @@ Vercel is free for personal projects and works well for static sites.
 
 - **Netlify**: Drag-and-drop the project folder at [app.netlify.com/drop](https://app.netlify.com/drop), or connect a Git repo for auto-deploys.
 - **GitHub Pages**: Push to GitHub, then in the repo go to **Settings** → **Pages** → Source: **main** branch, folder **/ (root)**. Site will be at `https://USERNAME.github.io/REPO_NAME/`.
+
+## Security testing
+
+Run RSVP security tests against your deployment:
+
+```bash
+node scripts/test-rsvp-security.js https://YOUR_DEPLOYMENT.vercel.app
+```
+
+See `SECURITY-TEST-REPORT.md` for full results.
 
 ## Tech stack
 

@@ -45,7 +45,7 @@ The guest list is **never exposed** in the client. The API returns only the requ
 
 ### RSVP Feature (optional)
 
-If you use the RSVP feature, create an **RSVP** tab with columns: `token` | `guest_name` | `status` | `reg_dttm` | `mod_dttm` | `message` | `device_type` | `location`. Status: `confirm`, `decline`, or `undecided`. `reg_dttm` = first submit time; `mod_dttm` = last update time (empty on first submit). `device_type` = mobile/tablet/desktop (from client). `location` = guest-provided address (e.g. village, commune, district, province) if provided; otherwise city, region, country, postal code, lat/lng from Vercel geo headers. The API uses `valueInputOption: RAW` to insert values only. To avoid new rows inheriting header formatting, add a blank row 2 with default (no) formatting — data rows will then inherit from row 2.
+If you use the RSVP feature, create an **RSVP** tab with columns: `token` | `guest_name` | `status` | `reg_dttm` | `mod_dttm` | `message` | `device_type` | `location`. Status: `confirm`, `decline`, or `undecided`. `reg_dttm` = first submit time; `mod_dttm` = last update time (empty on first submit). `device_type` = mobile/tablet/desktop (from client). `location` = city, region, country, postal code, lat/lng from Vercel geo headers. The API uses `valueInputOption: RAW` to insert values only. To avoid new rows inheriting header formatting, add a blank row 2 with default (no) formatting — data rows will then inherit from row 2.
 
 ## 4. HTTPS
 
