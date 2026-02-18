@@ -2,10 +2,9 @@
  * Wedding E-Ticket — Secure guest lookup API
  * Returns only the requested guest name (never exposes full list).
  *
- * Data source (choose one):
- * 1. GUEST_LIST_JSON — Env var with JSON: {"g001":"Guest Name",...}
- * 2. Google Sheets — GOOGLE_SHEET_ID + GOOGLE_SHEET_CREDENTIALS (service account JSON)
- *    Sheet format: Col A = token (g001), Col B = guest name. Row 1 = header.
+ * Data source: Google Sheets
+ * Env: GOOGLE_SHEET_ID + GUEST_SHEET_CREDENTIALS (service account JSON)
+ * Sheet format: Col A = token (g001) or names; Col B = name if Col A is token.
  */
 
 // In-memory cache for Google Sheets (persists across warm invocations)
@@ -17,18 +16,7 @@ async function getGuestList() {
   const now = Date.now();
   if (cache.data && cache.expires > now) return cache.data;
 
-  // Option 1: GUEST_LIST_JSON env var
-  const jsonEnv = process.env.GUEST_LIST_JSON;
-  if (jsonEnv) {
-    try {
-      const data = JSON.parse(jsonEnv);
-      if (typeof data === 'object' && data !== null) return data;
-    } catch (e) {
-      console.error('GUEST_LIST_JSON parse error:', e.message);
-    }
-  }
-
-  // Option 2: Google Sheets
+  // Google Sheets
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const credsJson = process.env.GUEST_SHEET_CREDENTIALS || process.env.GOOGLE_SHEET_CREDENTIALS;
   if (sheetId && credsJson) {

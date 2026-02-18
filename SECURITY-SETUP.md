@@ -17,25 +17,9 @@ Guest names are sanitized to prevent XSS:
 - Max 100 characters
 - HTML/script characters (`< > " ' &`) are stripped
 
-## 3. Guest List — Choose One Data Source
+## 3. Guest List — Google Sheets
 
 The guest list is **never exposed** in the client. The API returns only the requested name.
-
-### Option A: Environment Variable (Simplest)
-
-1. Generate the JSON:
-   ```bash
-   node scripts/export-guest-list-json.js
-   ```
-
-2. In [Vercel Dashboard](https://vercel.com) → Your Project → **Settings** → **Environment Variables**:
-   - **Name:** `GUEST_LIST_JSON`
-   - **Value:** Paste the JSON output (single line is fine)
-   - Apply to Production, Preview, Development
-
-3. Redeploy.
-
-### Option B: Google Sheets (Editable without redeploy)
 
 **Format A — Names only (auto-generated tokens):**
 - Column A = guest names. Row 1 = g001, Row 2 = g002, etc.
@@ -49,13 +33,19 @@ The guest list is **never exposed** in the client. The API returns only the requ
    - Enable **Google Sheets API** (APIs & Services → Library → search "Sheets API")
    - Create **Service Account** (APIs & Services → Credentials → Create Credentials → Service Account)
    - Download the JSON key file
-   - **Share your Google Sheet** with the service account email (e.g. `xxx@project.iam.gserviceaccount.com`) as **Viewer**
+   - **Share your Google Sheet** with the service account email (e.g. `xxx@project.iam.gserviceaccount.com`):
+     - **Viewer** — for guest lookup only
+     - **Editor** — required if using RSVP (so the API can write to the RSVP tab)
 
 3. **Vercel Environment Variables:**
    - `GOOGLE_SHEET_ID` — Your sheet ID: `1ANpuNf9J1Q1yk8q2oxcIfP0H8R_klsPIAwhz7A3-O3A`
    - `GUEST_SHEET_CREDENTIALS` or `GOOGLE_SHEET_CREDENTIALS` — Paste the **entire** JSON key file content (minified, single line works best)
 
 4. Redeploy.
+
+### RSVP Feature (optional)
+
+If you use the RSVP feature, create an **RSVP** tab in your sheet with columns: `token` | `guest_name` | `status` | `timestamp` | `message`. Status values: `confirm`, `decline`, or `undecided`. The service account must have **Editor** permission (not just Viewer) so the API can append RSVP responses.
 
 ## 4. HTTPS
 

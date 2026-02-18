@@ -549,6 +549,10 @@
     color: var(--text-light); text-align: center; margin-bottom: 28px;
   }
   .rsvp-btn-wrap { text-align: center; }
+  .rsvp-buttons {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    justify-content: center; align-items: center; margin-bottom: 20px;
+  }
   .rsvp-button {
     display: inline-flex; align-items: center; gap: 10px;
     font-family: 'Noto Serif Khmer', serif; font-size: 16px; font-weight: 500;
@@ -561,10 +565,37 @@
     background: var(--sky); color: white; border-color: var(--sky);
     box-shadow: 0 8px 28px rgba(135,206,235,0.3); transform: translateY(-3px);
   }
-  .rsvp-button.confirmed {
-    background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
-    color: white; border-color: transparent;
+  .rsvp-button.confirm:hover { background: var(--sky); }
+  .rsvp-button.decline {
+    border-color: var(--silver-light); color: var(--text-light);
   }
+  .rsvp-button.decline:hover {
+    background: var(--silver-pale); color: var(--dark); border-color: var(--silver-dark);
+  }
+  .rsvp-button.undecided {
+    border-color: var(--sky-muted); color: var(--sky-deep);
+  }
+  .rsvp-button.undecided:hover {
+    background: var(--sky-pale); color: var(--sky-deep); border-color: var(--sky-muted);
+  }
+  .rsvp-button.confirmed, .rsvp-button.sent {
+    background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+    color: white; border-color: transparent; cursor: default;
+  }
+  .rsvp-button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .rsvp-message-wrap {
+    max-width: 400px; margin: 0 auto 20px;
+  }
+  .rsvp-message {
+    width: 100%; min-height: 80px; padding: 14px 18px;
+    font-family: 'Poppins', 'Noto Serif Khmer', sans-serif; font-size: 14px;
+    border: 1px solid var(--silver-pale); border-radius: 12px;
+    resize: vertical; outline: none; transition: border-color 0.25s;
+  }
+  .rsvp-message:focus { border-color: var(--sky-light); }
+  .rsvp-message::placeholder { color: var(--text-muted); }
+  .rsvp-status { font-family: 'Noto Serif Khmer', serif; font-size: 14px; color: var(--sky-deep); margin-top: 12px; min-height: 22px; }
+  .rsvp-needs-token { color: var(--text-muted); font-size: 13px; margin-top: 12px; }
 
   /* FOOTER */
   .footer-section { text-align: center; padding: 50px 24px 36px; background: var(--off-white); }
@@ -1269,7 +1300,16 @@
       <div class="rsvp-desc" data-i18n="rsvpDesc">សូមអរគុណសម្រាប់ការចូលរួមរបស់អ្នក</div>
     </div>
     <div class="rsvp-btn-wrap fade-section">
-      <button class="rsvp-button" id="rsvpBtn" data-i18n="rsvpBtn">▼ បញ្ជាក់ទម្រង់</button>
+      <div class="rsvp-buttons" id="rsvpButtons">
+        <button type="button" class="rsvp-button confirm" id="rsvpConfirm" data-i18n="rsvpConfirm">ចូលរួម</button>
+        <button type="button" class="rsvp-button decline" id="rsvpDecline" data-i18n="rsvpDecline">មិនអាចចូលរួម</button>
+        <button type="button" class="rsvp-button undecided" id="rsvpUndecided" data-i18n="rsvpUndecided">មិនទាន់សម្រេចចិត្ត</button>
+      </div>
+      <div class="rsvp-message-wrap">
+        <textarea class="rsvp-message" id="rsvpMessage" placeholder="សារ (ជម្រើស)" data-i18n-placeholder="rsvpMessagePlaceholder" maxlength="500"></textarea>
+      </div>
+      <div class="rsvp-status" id="rsvpStatus"></div>
+      <div class="rsvp-needs-token" id="rsvpNeedsToken" style="display:none;" data-i18n="rsvpNeedsToken">សូមប្រើតំណភ្ជាប់អញ្ជើញរបស់អ្នក។</div>
     </div>
   </div>
 </section>
@@ -1441,12 +1481,66 @@
     });
   });
 
-  // RSVP
-  document.getElementById('rsvpBtn').addEventListener('click', function() {
-    var lang = localStorage.getItem('wedding-lang') || 'ko';
-    var t = typeof translations !== 'undefined' && translations[lang] ? translations[lang].rsvpConfirmed : '✅ Confirmed!';
-    this.innerHTML = t; this.classList.add('confirmed');
-  });
+  // RSVP — Confirm/Decline with API
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var token = (params.get('g') || '').toLowerCase().trim();
+    var rsvpButtons = document.getElementById('rsvpButtons');
+    var rsvpConfirm = document.getElementById('rsvpConfirm');
+    var rsvpDecline = document.getElementById('rsvpDecline');
+    var rsvpUndecided = document.getElementById('rsvpUndecided');
+    var rsvpMessage = document.getElementById('rsvpMessage');
+    var rsvpStatus = document.getElementById('rsvpStatus');
+    var rsvpNeedsToken = document.getElementById('rsvpNeedsToken');
+
+    function getText(key) {
+      var lang = localStorage.getItem('wedding-lang') || 'km';
+      return (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) ? translations[lang][key] : key;
+    }
+
+    function setSent(status) {
+      rsvpConfirm.disabled = true;
+      rsvpDecline.disabled = true;
+      if (rsvpUndecided) rsvpUndecided.disabled = true;
+      rsvpMessage.disabled = true;
+      var msg = status === 'confirm' ? getText('rsvpSuccessConfirm') : (status === 'decline' ? getText('rsvpSuccessDecline') : getText('rsvpSuccessUndecided'));
+      rsvpStatus.textContent = msg;
+      rsvpStatus.style.color = 'var(--sky-deep)';
+    }
+
+    function setError(msg) {
+      rsvpStatus.textContent = msg;
+      rsvpStatus.style.color = 'var(--text-muted)';
+    }
+
+    if (!token) {
+      if (rsvpButtons) rsvpButtons.style.display = 'none';
+      if (rsvpMessage) rsvpMessage.style.display = 'none';
+      if (rsvpNeedsToken) rsvpNeedsToken.style.display = 'block';
+      return;
+    }
+
+    function submitRsvp(status) {
+      if (rsvpConfirm.disabled) return;
+      var msg = rsvpMessage ? sanitizeGuestName(rsvpMessage.value) : '';
+      rsvpStatus.textContent = '...';
+      fetch(window.location.origin + '/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, status: status, message: msg })
+      })
+        .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+        .then(function(res) {
+          if (res.ok && res.data.ok) setSent(status);
+          else setError(res.data.error || 'Failed');
+        })
+        .catch(function() { setError('Failed to send'); });
+    }
+
+    if (rsvpConfirm) rsvpConfirm.addEventListener('click', function() { submitRsvp('confirm'); });
+    if (rsvpDecline) rsvpDecline.addEventListener('click', function() { submitRsvp('decline'); });
+    if (rsvpUndecided) rsvpUndecided.addEventListener('click', function() { submitRsvp('undecided'); });
+  })();
 
   // Background music — 3-track playlist with custom start/stop, fade-in when opening ticket
   (function() {

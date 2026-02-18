@@ -6,15 +6,18 @@ A static wedding invitation (e-ticket) website for **VONG Sovanthoeun & ROENG Vi
 
 ```
 my-wedding-ticket/
-├── index.html          # Main entry (open this in browser or deploy as root)
-├── css/
-│   └── styles.css      # All styles
+├── index.html          # Version selector (main entry)
+├── wedding-invitation V7.html   # Primary invitation (ticket cover + detail)
 ├── js/
-│   └── main.js        # Countdown, animations, RSVP, scroll effects
-├── images/             # Put gallery photos and QR images here
+│   └── translations.js # Multi-language (KM, EN, KR)
+├── api/
+│   ├── guest.js        # Guest lookup from Google Sheets (serverless)
+│   └── rsvp.js         # RSVP submit to Google Sheets (serverless)
+├── images/             # Gallery photos, QR codes
+├── audio/              # Background music
 ├── README.md
-├── .gitignore
-└── vercel.json         # Optional: Vercel config for static hosting
+├── vercel.json         # Security headers, CSP
+└── SECURITY-SETUP.md   # Guest list & RSVP configuration
 ```
 
 ## Setup (local)
