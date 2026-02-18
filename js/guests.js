@@ -31,3 +31,8 @@ const GUEST_LIST = {
   "g025": "លោក លន សុផារ៉ា",
   "g026": "លោក ហម លាភហេង"
 };
+
+// For scripts/export-guest-list-json.js (Node.js)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { GUEST_LIST };
+}

@@ -1,0 +1,90 @@
+/**
+ * Wedding E-Ticket — Secure guest lookup API
+ * Returns only the requested guest name (never exposes full list).
+ *
+ * Data source (choose one):
+ * 1. GUEST_LIST_JSON — Env var with JSON: {"g001":"Guest Name",...}
+ * 2. Google Sheets — GOOGLE_SHEET_ID + GOOGLE_SHEET_CREDENTIALS (service account JSON)
+ *    Sheet format: Col A = token (g001), Col B = guest name. Row 1 = header.
+ */
+
+// In-memory cache for Google Sheets (persists across warm invocations)
+if (!global.guestListCache) global.guestListCache = { data: null, expires: 0 };
+const cache = global.guestListCache;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+async function getGuestList() {
+  const now = Date.now();
+  if (cache.data && cache.expires > now) return cache.data;
+
+  // Option 1: GUEST_LIST_JSON env var
+  const jsonEnv = process.env.GUEST_LIST_JSON;
+  if (jsonEnv) {
+    try {
+      const data = JSON.parse(jsonEnv);
+      if (typeof data === 'object' && data !== null) return data;
+    } catch (e) {
+      console.error('GUEST_LIST_JSON parse error:', e.message);
+    }
+  }
+
+  // Option 2: Google Sheets
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  const credsJson = process.env.GUEST_SHEET_CREDENTIALS || process.env.GOOGLE_SHEET_CREDENTIALS;
+  if (sheetId && credsJson) {
+    try {
+      const { google } = await import('googleapis');
+      const creds = JSON.parse(credsJson);
+      const auth = new google.auth.GoogleAuth({
+        credentials: creds,
+        scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
+      });
+      const sheets = google.sheets({ version: 'v4', auth });
+      const res = await sheets.spreadsheets.values.get({
+        spreadsheetId: sheetId,
+        range: 'A:B' // Col A = names (or token); Col B = name if Col A is token
+      });
+      const rows = res.data.values || [];
+      const data = {};
+      const tokenPattern = /^g\d+$/;
+      rows.forEach((row, i) => {
+        const colA = (row[0] || '').toString().trim();
+        const colB = (row[1] || '').toString().trim();
+        let token, name;
+        if (colB && tokenPattern.test(colA.toLowerCase())) {
+          token = colA.toLowerCase();
+          name = colB;
+        } else if (colA) {
+          token = 'g' + String(i + 1).padStart(3, '0');
+          name = colA;
+        }
+        if (token && name) data[token] = name;
+      });
+      cache.data = data;
+      cache.expires = now + CACHE_TTL_MS;
+      return data;
+    } catch (e) {
+      console.error('Google Sheets fetch error:', e.message);
+    }
+  }
+
+  return null;
+}
+
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'private, max-age=300'); // 5 min cache
+
+  const token = (req.query.g || '').toLowerCase().trim();
+  if (!token) {
+    return res.status(400).json({ error: 'Missing token' });
+  }
+
+  const list = await getGuestList();
+  if (!list) {
+    return res.status(503).json({ error: 'Guest list not configured' });
+  }
+
+  const name = list[token] || null;
+  return res.status(200).json({ name });
+}

@@ -5,5 +5,8 @@
   "scripts": {
     "serve": "npx serve . -l 3000",
     "start": "npx serve . -l 3000"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0"
   }
 }

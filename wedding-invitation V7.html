@@ -945,7 +945,6 @@
     .name-khmer { font-size: clamp(22px,6vw,38px); }
   }
 </style>
-<script src="js/guests.js"></script>
 <script src="js/translations.js"></script>
 </head>
 <body>
@@ -1291,26 +1290,58 @@
 </div><!-- #detail-page -->
 
 <script>
-  // Guest from URL (?g=token) — apply to cover and detail
+  // Sanitize guest name — prevent XSS, limit length
+  function sanitizeGuestName(str) {
+    if (typeof str !== 'string') return '';
+    return str.slice(0, 100).replace(/[<>\"'&]/g, '');
+  }
+
+  // Guest from URL (?g=token) — fetch from API (guest list hidden server-side)
   (function() {
     var DEFAULT_GUEST = 'ឯកឧត្តម និង លោកជំទាវ';
     var params = new URLSearchParams(window.location.search);
     var token = (params.get('g') || '').toLowerCase().trim();
-    var name = typeof GUEST_LIST !== 'undefined' && token && GUEST_LIST[token]
-      ? GUEST_LIST[token]
-      : DEFAULT_GUEST;
+
     function applyGuest(guestName) {
+      var safe = sanitizeGuestName(guestName) || DEFAULT_GUEST;
       var input = document.getElementById('guestNameInput');
       var detailSpan = document.querySelector('.guest-name-text');
-      if (input) input.value = guestName;
-      if (detailSpan) detailSpan.textContent = guestName;
+      if (input) input.value = safe;
+      if (detailSpan) detailSpan.textContent = safe;
     }
-    applyGuest(name);
-    window.applyGuestToDetail = function() {
+
+    function applyGuestFromInput() {
       var input = document.getElementById('guestNameInput');
       var detailSpan = document.querySelector('.guest-name-text');
-      if (input && detailSpan) detailSpan.textContent = input.value;
-    };
+      if (input && detailSpan) detailSpan.textContent = sanitizeGuestName(input.value) || DEFAULT_GUEST;
+    }
+
+    if (token) {
+      fetch(window.location.origin + '/api/guest?g=' + encodeURIComponent(token))
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(data) {
+          if (data && data.name) applyGuest(data.name);
+          else applyGuest(DEFAULT_GUEST);
+        })
+        .catch(function() { applyGuest(DEFAULT_GUEST); });
+    } else {
+      applyGuest(DEFAULT_GUEST);
+    }
+
+    window.applyGuestToDetail = applyGuestFromInput;
+
+    // Sanitize guest name on input (when user types)
+    var input = document.getElementById('guestNameInput');
+    if (input) {
+      input.addEventListener('input', function() {
+        var safe = sanitizeGuestName(this.value);
+        if (safe !== this.value) this.value = safe;
+      });
+      input.addEventListener('blur', function() {
+        var safe = sanitizeGuestName(this.value);
+        if (safe !== this.value) this.value = safe;
+      });
+    }
   })();
 
   // Intersection Observer
