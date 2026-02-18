@@ -156,7 +156,7 @@ module.exports = async function handler(req, res) {
   const token = (body.token || '').toLowerCase().trim();
   const status = (body.status || '').toLowerCase();
   const message = typeof body.message === 'string' ? body.message.slice(0, 500).trim() : '';
-  const deviceType = typeof body.device_type === 'string' ? body.device_type.slice(0, 20).trim() : '';
+  const deviceType = typeof body.device_type === 'string' ? body.device_type.slice(0, 50).trim() : '';
   const location = getLocationFromHeaders(req);
 
   if (!token) {

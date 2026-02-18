@@ -573,10 +573,14 @@
     background: var(--silver-pale); color: var(--dark); border-color: var(--silver-dark);
   }
   .rsvp-button.undecided {
-    border-color: var(--sky-muted); color: var(--sky-deep);
+    border-color: var(--silver-light); color: var(--text-light);
   }
   .rsvp-button.undecided:hover {
-    background: var(--sky-pale); color: var(--sky-deep); border-color: var(--sky-muted);
+    background: var(--silver-pale); color: var(--dark); border-color: var(--silver-dark);
+  }
+  .rsvp-button.selected {
+    background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+    color: white; border-color: transparent;
   }
   .rsvp-button.confirmed, .rsvp-button.sent {
     background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
@@ -1499,17 +1503,17 @@
       return (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) ? translations[lang][key] : key;
     }
 
-    function setSubmitted(status, disableForm) {
+    function setSubmitted(status, savedMessage) {
       currentStatus = status;
       var msg = status === 'confirm' ? getText('rsvpSuccessConfirm') : (status === 'decline' ? getText('rsvpSuccessDecline') : getText('rsvpSuccessUndecided'));
       rsvpStatus.textContent = msg;
       rsvpStatus.style.color = 'var(--sky-deep)';
-      if (disableForm) {
-        rsvpConfirm.disabled = true;
-        rsvpDecline.disabled = true;
-        if (rsvpUndecided) rsvpUndecided.disabled = true;
-        rsvpMessage.disabled = true;
-      }
+      if (rsvpMessage && savedMessage) rsvpMessage.value = savedMessage;
+      rsvpConfirm.classList.remove('selected');
+      rsvpDecline.classList.remove('selected');
+      if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
+      var btn = status === 'confirm' ? rsvpConfirm : (status === 'decline' ? rsvpDecline : rsvpUndecided);
+      if (btn) btn.classList.add('selected');
     }
 
     function setError(msg) {
@@ -1526,9 +1530,13 @@
 
     function getDeviceType() {
       var ua = navigator.userAgent || '';
-      if (/tablet|ipad|playbook|silk|(android(?!.*mobile))/i.test(ua)) return 'tablet';
-      if (/mobile|iphone|ipod|android.*mobile|blackberry|opera mini|iemobile/i.test(ua)) return 'mobile';
-      return 'desktop';
+      if (/ipad/i.test(ua)) return 'iPad (iOS)';
+      if (/iphone|ipod/i.test(ua)) return 'iPhone (iOS)';
+      if (/android.*mobile|mobile.*android/i.test(ua)) return 'Android Phone';
+      if (/android/i.test(ua)) return 'Android Tablet';
+      if (/tablet|playbook|silk|kindle/i.test(ua)) return 'Tablet';
+      if (/mobile|blackberry|opera mini|iemobile/i.test(ua)) return 'Mobile';
+      return 'Desktop';
     }
 
     function submitRsvp(status) {
@@ -1550,8 +1558,8 @@
           rsvpConfirm.disabled = false;
           rsvpDecline.disabled = false;
           if (rsvpUndecided) rsvpUndecided.disabled = false;
-          if (res.ok && res.data.ok) setSubmitted(status, false);
-          else if (res.status === 409) setSubmitted(currentStatus || status, false);
+          if (res.ok && res.data.ok) setSubmitted(status, msg);
+          else if (res.status === 409) setSubmitted(currentStatus || status, rsvpMessage ? rsvpMessage.value : '');
           else setError(res.data.error || 'Failed');
         })
         .catch(function() {
@@ -1570,7 +1578,9 @@
     fetch(window.location.origin + '/api/rsvp?g=' + encodeURIComponent(token))
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(data) {
-        if (data && data.submitted && data.status) setSubmitted(data.status, false);
+        if (data && data.submitted && data.status) {
+          setSubmitted(data.status, data.message || '');
+        }
       })
       .catch(function() {});
   })();
