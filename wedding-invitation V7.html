@@ -2,7 +2,7 @@
 <html lang="km">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-visual">
 <title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V7 — VONG Sovanthoeun & ROENG Vila</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -777,7 +777,8 @@
   }
   body.ticket-opened #detail-page {
     display: block;
-    position: fixed; inset: 0;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%; min-height: 100vh;
     overflow-y: auto; overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
@@ -1338,6 +1339,26 @@
 </div><!-- #detail-page -->
 
 <script>
+  // Mobile keyboard: sync #detail-page height with visual viewport (fixes layout after focus/blur)
+  (function() {
+    function syncViewportHeight() {
+      var vv = window.visualViewport;
+      var h = (vv && vv.height) ? vv.height : window.innerHeight;
+      document.documentElement.style.setProperty('--vvh', Math.round(h) + 'px');
+      var dp = document.getElementById('detail-page');
+      if (dp && document.body.classList.contains('ticket-opened')) {
+        dp.style.height = Math.round(h) + 'px';
+      }
+    }
+    syncViewportHeight();
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', syncViewportHeight);
+      window.visualViewport.addEventListener('scroll', syncViewportHeight);
+    }
+    window.addEventListener('resize', syncViewportHeight);
+    window.syncViewportHeight = syncViewportHeight;
+  })();
+
   // Sanitize guest name — prevent XSS, limit length
   function sanitizeGuestName(str) {
     if (typeof str !== 'string') return '';
@@ -1598,18 +1619,17 @@
     if (rsvpDecline) rsvpDecline.addEventListener('click', function() { submitRsvp('decline'); });
     if (rsvpUndecided) rsvpUndecided.addEventListener('click', function() { submitRsvp('undecided'); });
 
-    // Fix layout after keyboard dismiss on mobile (blur) — force reflow
+    // Fix layout after keyboard dismiss on mobile (blur)
     if (rsvpMessage) {
+      rsvpMessage.addEventListener('focus', function() {
+        setTimeout(function() { rsvpMessage.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+      });
       rsvpMessage.addEventListener('blur', function() {
-        setTimeout(function() {
-          var dp = document.getElementById('detail-page');
-          if (dp) {
-            var y = dp.scrollTop;
-            dp.scrollTop = y + 1;
-            dp.scrollTop = y;
-          }
-          void document.body.offsetHeight;
-        }, 150);
+        var sync = window.syncViewportHeight;
+        if (typeof sync !== 'function') return;
+        [150, 350, 600].forEach(function(ms) {
+          setTimeout(function() { sync(); void document.body.offsetHeight; }, ms);
+        });
       });
     }
 
@@ -1816,6 +1836,7 @@
     document.body.classList.add('ticket-opened');
     var dp = document.getElementById('detail-page');
     if (dp) { dp.scrollTop = 0; dp.scrollTo && dp.scrollTo(0, 0); }
+    if (typeof window.syncViewportHeight === 'function') window.syncViewportHeight();
     if (typeof window.applyGuestToDetail === 'function') window.applyGuestToDetail();
     if (typeof window.startWeddingMusic === 'function') window.startWeddingMusic();
     if (typeof window.maybeShowHoldHint === 'function') window.maybeShowHoldHint();
