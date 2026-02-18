@@ -548,7 +548,10 @@
     font-family: 'Noto Serif Khmer', serif; font-size: 14px;
     color: var(--text-light); text-align: center; margin-bottom: 28px;
   }
-  .rsvp-btn-wrap { text-align: center; }
+  .rsvp-btn-wrap {
+    text-align: center; max-width: 400px; margin: 0 auto;
+    width: 100%; box-sizing: border-box;
+  }
   .rsvp-buttons {
     display: flex; flex-wrap: wrap; gap: 14px;
     justify-content: center; align-items: center; margin-bottom: 20px;
@@ -588,8 +591,7 @@
   }
   .rsvp-button:disabled { opacity: 0.6; cursor: not-allowed; }
   .rsvp-message-wrap {
-    max-width: 400px; width: 100%; min-width: 0; margin: 0 auto 20px;
-    padding: 0 4px; box-sizing: border-box;
+    width: 100%; min-width: 0; margin: 0 0 20px; box-sizing: border-box;
   }
   .rsvp-message {
     width: 100%; min-width: 0; max-width: 100%; min-height: 80px; padding: 14px 18px;
@@ -1595,6 +1597,21 @@
     if (rsvpConfirm) rsvpConfirm.addEventListener('click', function() { submitRsvp('confirm'); });
     if (rsvpDecline) rsvpDecline.addEventListener('click', function() { submitRsvp('decline'); });
     if (rsvpUndecided) rsvpUndecided.addEventListener('click', function() { submitRsvp('undecided'); });
+
+    // Fix layout after keyboard dismiss on mobile (blur) — force reflow
+    if (rsvpMessage) {
+      rsvpMessage.addEventListener('blur', function() {
+        setTimeout(function() {
+          var dp = document.getElementById('detail-page');
+          if (dp) {
+            var y = dp.scrollTop;
+            dp.scrollTop = y + 1;
+            dp.scrollTop = y;
+          }
+          void document.body.offsetHeight;
+        }, 150);
+      });
+    }
 
     // On load: check if already submitted (keeps buttons enabled so they can change mind)
     fetch(window.location.origin + '/api/rsvp?g=' + encodeURIComponent(token))
