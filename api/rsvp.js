@@ -1,10 +1,25 @@
 /**
  * Wedding E-Ticket — RSVP API
- * POST /api/rsvp — Saves RSVP (confirm/decline) to Google Sheet "RSVP" tab.
- * Requires: GOOGLE_SHEET_ID + GUEST_SHEET_CREDENTIALS (with spreadsheets scope for write)
+ * GET  /api/rsvp?g=token — Get guest's current RSVP (if any)
+ * POST /api/rsvp — Insert new RSVP (first submission)
+ * PATCH /api/rsvp — Update existing RSVP (change mind)
  *
- * Body: { token: "g001", status: "confirm"|"decline", message?: "optional note" }
+ * Sheet columns: token | guest_name | status | reg_dttm | mod_dttm | message | device_type | location
+ * - device_type: from client (mobile/tablet/desktop)
+ * - location: from Vercel geo headers (city, region, country)
+ *
+ * valueInputOption: RAW — insert values only, no format inheritance
  */
+
+function getLocationFromHeaders(req) {
+  const h = req.headers || {};
+  const get = (k) => h[k] || h[k.toLowerCase()] || '';
+  const city = get('x-vercel-ip-city');
+  const region = get('x-vercel-ip-country-region');
+  const country = get('x-vercel-ip-country');
+  const parts = [city, region, country].filter(Boolean);
+  return parts.length ? parts.join(', ') : '';
+}
 
 async function getGuestList(sheets) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
@@ -31,33 +46,106 @@ async function getGuestList(sheets) {
   return data;
 }
 
-async function appendRsvp(sheets, token, guestName, status, message) {
+async function getRsvpRows(sheets) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
-  const timestamp = new Date().toISOString();
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: sheetId,
+    range: 'RSVP!A2:H'
+  });
+  return res.data.values || [];
+}
+
+function findRsvpRow(rows, token) {
+  const t = token.toLowerCase();
+  for (let i = 0; i < rows.length; i++) {
+    const rowToken = (rows[i][0] || '').toString().toLowerCase().trim();
+    if (rowToken === t) return { index: i, row: rows[i] };
+  }
+  return null;
+}
+
+async function appendRsvp(sheets, token, guestName, status, message, deviceType, location) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  const regDttm = new Date().toISOString();
   await sheets.spreadsheets.values.append({
     spreadsheetId: sheetId,
-    range: 'RSVP!A:E',
-    valueInputOption: 'USER_ENTERED',
+    range: 'RSVP!A2:H',
+    valueInputOption: 'RAW',
     insertDataOption: 'INSERT_ROWS',
     requestBody: {
-      values: [[token, guestName, status, timestamp, message || '']]
+      values: [[token, guestName, status, regDttm, '', message || '', deviceType || '', location || '']]
     }
   });
 }
 
+async function updateRsvpRow(sheets, rowIndex, token, guestName, status, regDttm, message, deviceType, location) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  const modDttm = new Date().toISOString();
+  const range = `RSVP!A${rowIndex + 2}:H${rowIndex + 2}`;
+  await sheets.spreadsheets.values.update({
+    spreadsheetId: sheetId,
+    range,
+    valueInputOption: 'RAW',
+    requestBody: {
+      values: [[token, guestName, status, regDttm, modDttm, message || '', deviceType || '', location || '']]
+    }
+  });
+}
+
+async function getSheets() {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  const credsJson = process.env.GUEST_SHEET_CREDENTIALS || process.env.GOOGLE_SHEET_CREDENTIALS;
+  if (!sheetId || !credsJson) return null;
+  const { google } = await import('googleapis');
+  const creds = JSON.parse(credsJson);
+  const auth = new google.auth.GoogleAuth({
+    credentials: creds,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets']
+  });
+  return google.sheets({ version: 'v4', auth });
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  const sheets = await getSheets();
+  if (!sheets) {
+    return res.status(503).json({ error: 'RSVP requires Google Sheets configuration' });
   }
 
+  // ——— GET: Check if guest has submitted ———
+  if (req.method === 'GET') {
+    const token = (req.query.g || '').toLowerCase().trim();
+    if (!token) {
+      return res.status(400).json({ error: 'Missing token' });
+    }
+    try {
+      const rows = await getRsvpRows(sheets);
+      const found = findRsvpRow(rows, token);
+      if (!found) {
+        return res.status(200).json({ submitted: false });
+      }
+      const row = found.row;
+      return res.status(200).json({
+        submitted: true,
+        status: (row[2] || '').toLowerCase(),
+        reg_dttm: row[3] || null,
+        mod_dttm: row[4] || null,
+        message: row[5] || ''
+      });
+    } catch (e) {
+      console.error('RSVP GET error:', e.message);
+      return res.status(500).json({ error: 'Failed to fetch RSVP' });
+    }
+  }
+
+  // ——— POST / PATCH: Validate body ———
   let body;
   try {
     body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
@@ -68,6 +156,8 @@ module.exports = async function handler(req, res) {
   const token = (body.token || '').toLowerCase().trim();
   const status = (body.status || '').toLowerCase();
   const message = typeof body.message === 'string' ? body.message.slice(0, 500).trim() : '';
+  const deviceType = typeof body.device_type === 'string' ? body.device_type.slice(0, 20).trim() : '';
+  const location = getLocationFromHeaders(req);
 
   if (!token) {
     return res.status(400).json({ error: 'Missing token' });
@@ -76,30 +166,32 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Status must be confirm, decline, or undecided' });
   }
 
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-  const credsJson = process.env.GUEST_SHEET_CREDENTIALS || process.env.GOOGLE_SHEET_CREDENTIALS;
-
-  if (!sheetId || !credsJson) {
-    return res.status(503).json({ error: 'RSVP requires Google Sheets configuration' });
-  }
-
   try {
-    const { google } = await import('googleapis');
-    const creds = JSON.parse(credsJson);
-    const auth = new google.auth.GoogleAuth({
-      credentials: creds,
-      scopes: ['https://www.googleapis.com/auth/spreadsheets']
-    });
-    const sheets = google.sheets({ version: 'v4', auth });
-
     const guestList = await getGuestList(sheets);
     const guestName = guestList[token];
-
     if (!guestName) {
       return res.status(404).json({ error: 'Guest not found' });
     }
 
-    await appendRsvp(sheets, token, guestName, status, message);
+    const rows = await getRsvpRows(sheets);
+    const found = findRsvpRow(rows, token);
+
+    // ——— PATCH: Update existing ———
+    if (req.method === 'PATCH') {
+      if (!found) {
+        return res.status(404).json({ error: 'No RSVP found. Submit first.' });
+      }
+      const row = found.row;
+      const regDttm = row[3] || new Date().toISOString();
+      await updateRsvpRow(sheets, found.index, token, guestName, status, regDttm, message, deviceType, location);
+      return res.status(200).json({ ok: true, status, updated: true });
+    }
+
+    // ——— POST: Insert new ———
+    if (found) {
+      return res.status(409).json({ error: 'Already submitted. Use update to change.' });
+    }
+    await appendRsvp(sheets, token, guestName, status, message, deviceType, location);
     return res.status(200).json({ ok: true, status });
   } catch (e) {
     console.error('RSVP error:', e.message);

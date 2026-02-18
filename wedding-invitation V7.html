@@ -1481,7 +1481,7 @@
     });
   });
 
-  // RSVP — Confirm/Decline with API
+  // RSVP — Confirm/Decline/Undecided with API (GET=check, POST=new, PATCH=update)
   (function() {
     var params = new URLSearchParams(window.location.search);
     var token = (params.get('g') || '').toLowerCase().trim();
@@ -1492,20 +1492,24 @@
     var rsvpMessage = document.getElementById('rsvpMessage');
     var rsvpStatus = document.getElementById('rsvpStatus');
     var rsvpNeedsToken = document.getElementById('rsvpNeedsToken');
+    var currentStatus = null;
 
     function getText(key) {
       var lang = localStorage.getItem('wedding-lang') || 'km';
       return (typeof translations !== 'undefined' && translations[lang] && translations[lang][key]) ? translations[lang][key] : key;
     }
 
-    function setSent(status) {
-      rsvpConfirm.disabled = true;
-      rsvpDecline.disabled = true;
-      if (rsvpUndecided) rsvpUndecided.disabled = true;
-      rsvpMessage.disabled = true;
+    function setSubmitted(status, disableForm) {
+      currentStatus = status;
       var msg = status === 'confirm' ? getText('rsvpSuccessConfirm') : (status === 'decline' ? getText('rsvpSuccessDecline') : getText('rsvpSuccessUndecided'));
       rsvpStatus.textContent = msg;
       rsvpStatus.style.color = 'var(--sky-deep)';
+      if (disableForm) {
+        rsvpConfirm.disabled = true;
+        rsvpDecline.disabled = true;
+        if (rsvpUndecided) rsvpUndecided.disabled = true;
+        rsvpMessage.disabled = true;
+      }
     }
 
     function setError(msg) {
@@ -1520,26 +1524,55 @@
       return;
     }
 
+    function getDeviceType() {
+      var ua = navigator.userAgent || '';
+      if (/tablet|ipad|playbook|silk|(android(?!.*mobile))/i.test(ua)) return 'tablet';
+      if (/mobile|iphone|ipod|android.*mobile|blackberry|opera mini|iemobile/i.test(ua)) return 'mobile';
+      return 'desktop';
+    }
+
     function submitRsvp(status) {
       if (rsvpConfirm.disabled) return;
       var msg = rsvpMessage ? sanitizeGuestName(rsvpMessage.value) : '';
       rsvpStatus.textContent = '...';
+      rsvpConfirm.disabled = true;
+      rsvpDecline.disabled = true;
+      if (rsvpUndecided) rsvpUndecided.disabled = true;
+      var method = currentStatus === null ? 'POST' : 'PATCH';
+      var payload = { token: token, status: status, message: msg, device_type: getDeviceType() };
       fetch(window.location.origin + '/api/rsvp', {
-        method: 'POST',
+        method: method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: token, status: status, message: msg })
+        body: JSON.stringify(payload)
       })
-        .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+        .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; }); })
         .then(function(res) {
-          if (res.ok && res.data.ok) setSent(status);
+          rsvpConfirm.disabled = false;
+          rsvpDecline.disabled = false;
+          if (rsvpUndecided) rsvpUndecided.disabled = false;
+          if (res.ok && res.data.ok) setSubmitted(status, false);
+          else if (res.status === 409) setSubmitted(currentStatus || status, false);
           else setError(res.data.error || 'Failed');
         })
-        .catch(function() { setError('Failed to send'); });
+        .catch(function() {
+          rsvpConfirm.disabled = false;
+          rsvpDecline.disabled = false;
+          if (rsvpUndecided) rsvpUndecided.disabled = false;
+          setError('Failed to send');
+        });
     }
 
     if (rsvpConfirm) rsvpConfirm.addEventListener('click', function() { submitRsvp('confirm'); });
     if (rsvpDecline) rsvpDecline.addEventListener('click', function() { submitRsvp('decline'); });
     if (rsvpUndecided) rsvpUndecided.addEventListener('click', function() { submitRsvp('undecided'); });
+
+    // On load: check if already submitted (keeps buttons enabled so they can change mind)
+    fetch(window.location.origin + '/api/rsvp?g=' + encodeURIComponent(token))
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) {
+        if (data && data.submitted && data.status) setSubmitted(data.status, false);
+      })
+      .catch(function() {});
   })();
 
   // Background music — 3-track playlist with custom start/stop, fade-in when opening ticket
