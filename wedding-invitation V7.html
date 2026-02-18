@@ -590,6 +590,17 @@
     color: white; border-color: transparent; cursor: default;
   }
   .rsvp-button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .rsvp-location-wrap {
+    width: 100%; min-width: 0; margin: 0 0 12px; box-sizing: border-box;
+  }
+  .rsvp-location {
+    width: 100%; min-width: 0; max-width: 100%; padding: 12px 18px;
+    font-family: 'Poppins', 'Noto Serif Khmer', sans-serif; font-size: 14px;
+    border: 1px solid var(--silver-pale); border-radius: 12px;
+    outline: none; transition: border-color 0.25s; box-sizing: border-box;
+  }
+  .rsvp-location:focus { border-color: var(--sky-light); }
+  .rsvp-location::placeholder { color: var(--text-muted); }
   .rsvp-message-wrap {
     width: 100%; min-width: 0; margin: 0 0 20px; box-sizing: border-box;
   }
@@ -1314,6 +1325,9 @@
         <button type="button" class="rsvp-button decline" id="rsvpDecline" data-i18n="rsvpDecline">មិនអាចចូលរួម</button>
         <button type="button" class="rsvp-button undecided" id="rsvpUndecided" data-i18n="rsvpUndecided">មិនទាន់សម្រេចចិត្ត</button>
       </div>
+      <div class="rsvp-location-wrap">
+        <input type="text" class="rsvp-location" id="rsvpLocation" placeholder="ភូមិ, ឃុំ, ស្រុក, ខេត្ត (ជម្រើស)" data-i18n-placeholder="rsvpLocationPlaceholder" maxlength="300" autocomplete="off">
+      </div>
       <div class="rsvp-message-wrap">
         <textarea class="rsvp-message" id="rsvpMessage" placeholder="សារ (ជម្រើស)" data-i18n-placeholder="rsvpMessagePlaceholder" maxlength="500"></textarea>
       </div>
@@ -1518,6 +1532,7 @@
     var rsvpConfirm = document.getElementById('rsvpConfirm');
     var rsvpDecline = document.getElementById('rsvpDecline');
     var rsvpUndecided = document.getElementById('rsvpUndecided');
+    var rsvpLocation = document.getElementById('rsvpLocation');
     var rsvpMessage = document.getElementById('rsvpMessage');
     var rsvpStatus = document.getElementById('rsvpStatus');
     var rsvpNeedsToken = document.getElementById('rsvpNeedsToken');
@@ -1548,6 +1563,8 @@
 
     if (!token) {
       if (rsvpButtons) rsvpButtons.style.display = 'none';
+      var locWrap = rsvpLocation && rsvpLocation.closest('.rsvp-location-wrap');
+      if (locWrap) locWrap.style.display = 'none';
       if (rsvpMessage) rsvpMessage.style.display = 'none';
       if (rsvpNeedsToken) rsvpNeedsToken.style.display = 'block';
       return;
@@ -1567,6 +1584,7 @@
     function submitRsvp(status) {
       if (rsvpConfirm.disabled) return;
       var msg = rsvpMessage ? sanitizeGuestName(rsvpMessage.value) : '';
+      var loc = rsvpLocation ? sanitizeGuestName(rsvpLocation.value) : '';
       var prevStatus = currentStatus;
       var method = currentStatus === null ? 'POST' : 'PATCH';  // Must compute before optimistic update
       // Optimistic UI: show selected state immediately
@@ -1576,7 +1594,7 @@
       rsvpConfirm.disabled = true;
       rsvpDecline.disabled = true;
       if (rsvpUndecided) rsvpUndecided.disabled = true;
-      var payload = { token: token, status: status, message: msg, device_type: getDeviceType() };
+      var payload = { token: token, status: status, message: msg, device_type: getDeviceType(), location: loc };
       fetch(window.location.origin + '/api/rsvp', {
         method: method,
         headers: { 'Content-Type': 'application/json' },
@@ -1620,11 +1638,12 @@
     if (rsvpUndecided) rsvpUndecided.addEventListener('click', function() { submitRsvp('undecided'); });
 
     // Fix layout after keyboard dismiss on mobile (blur)
-    if (rsvpMessage) {
-      rsvpMessage.addEventListener('focus', function() {
-        setTimeout(function() { rsvpMessage.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+    function addMobileInputHandlers(el) {
+      if (!el) return;
+      el.addEventListener('focus', function() {
+        setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
       });
-      rsvpMessage.addEventListener('blur', function() {
+      el.addEventListener('blur', function() {
         var sync = window.syncViewportHeight;
         if (typeof sync !== 'function') return;
         [150, 350, 600].forEach(function(ms) {
@@ -1632,6 +1651,8 @@
         });
       });
     }
+    addMobileInputHandlers(rsvpLocation);
+    addMobileInputHandlers(rsvpMessage);
 
     // On load: check if already submitted (keeps buttons enabled so they can change mind)
     fetch(window.location.origin + '/api/rsvp?g=' + encodeURIComponent(token))

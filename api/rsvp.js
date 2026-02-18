@@ -6,7 +6,7 @@
  *
  * Sheet columns: token | guest_name | status | reg_dttm | mod_dttm | message | device_type | location
  * - device_type: from client (mobile/tablet/desktop)
- * - location: from Vercel geo headers (city, region, country)
+ * - location: guest-provided (village, commune, district, province) or Vercel geo (city, region, country, postal, lat/lng)
  *
  * valueInputOption: RAW — insert values only, no format inheritance
  */
@@ -14,11 +14,18 @@
 function getLocationFromHeaders(req) {
   const h = req.headers || {};
   const get = (k) => h[k] || h[k.toLowerCase()] || '';
-  const city = get('x-vercel-ip-city');
+  let city = get('x-vercel-ip-city');
+  try { if (city) city = decodeURIComponent(city); } catch (_) {}
   const region = get('x-vercel-ip-country-region');
   const country = get('x-vercel-ip-country');
+  const postal = get('x-vercel-ip-postal-code');
+  const lat = get('x-vercel-ip-latitude');
+  const lng = get('x-vercel-ip-longitude');
   const parts = [city, region, country].filter(Boolean);
-  return parts.length ? parts.join(', ') : '';
+  let loc = parts.length ? parts.join(', ') : '';
+  if (postal) loc += (loc ? ' ' : '') + '(' + postal + ')';
+  if (lat && lng) loc += (loc ? ' ' : '') + '[' + lat + ',' + lng + ']';
+  return loc.trim() || '';
 }
 
 async function getGuestList(sheets) {
@@ -157,7 +164,8 @@ module.exports = async function handler(req, res) {
   const status = (body.status || '').toLowerCase();
   const message = typeof body.message === 'string' ? body.message.slice(0, 500).trim() : '';
   const device_type = typeof body.device_type === 'string' ? body.device_type.slice(0, 50).trim() : '';
-  const location = getLocationFromHeaders(req);
+  let location = typeof body.location === 'string' ? body.location.slice(0, 300).trim() : '';
+  if (!location) location = getLocationFromHeaders(req);
 
   if (!token) {
     return res.status(400).json({ error: 'Missing token' });
