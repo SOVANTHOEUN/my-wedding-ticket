@@ -1581,6 +1581,9 @@
 
     function submitRsvp(status) {
       if (rsvpConfirm.disabled) return;
+      if (typeof gtag === 'function') {
+        gtag('event', 'rsvp_click', { rsvp_status: status });
+      }
       var msg = rsvpMessage ? sanitizeGuestName(rsvpMessage.value) : '';
       var prevStatus = currentStatus;
       var method = currentStatus === null ? 'POST' : 'PATCH';  // Must compute before optimistic update

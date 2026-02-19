@@ -94,5 +94,14 @@ You can also use [Tag Assistant](https://tagassistant.google.com/) to verify the
 - **Page views** — Each visit to index.html and wedding-invitation V7.html
 - **Session data** — Duration, device type, location (country-level)
 - **Traffic sources** — Where visitors came from (direct, referral, etc.)
+- **RSVP clicks** — Custom event `rsvp_click` with `rsvp_status` (confirm / decline / undecided)
 
 Data typically appears in standard reports within 24–48 hours. Realtime reports show activity within seconds.
+
+## Viewing RSVP Clicks in GA4
+
+1. Go to **Reports** → **Engagement** → **Events**
+2. Find the `rsvp_click` event in the table
+3. Click it to see the `rsvp_status` breakdown (confirm, decline, undecided)
+
+You can also create a custom exploration or add `rsvp_click` as a key event in **Admin** → **Events** → **Mark as key event**.
