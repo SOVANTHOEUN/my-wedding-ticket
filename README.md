@@ -93,6 +93,12 @@ Vercel is free for personal projects and works well for static sites.
 - **Netlify**: Drag-and-drop the project folder at [app.netlify.com/drop](https://app.netlify.com/drop), or connect a Git repo for auto-deploys.
 - **GitHub Pages**: Push to GitHub, then in the repo go to **Settings** → **Pages** → Source: **main** branch, folder **/ (root)**. Site will be at `https://USERNAME.github.io/REPO_NAME/`.
 
+## Analytics
+
+**Vercel Web Analytics** is enabled on `index.html` and `wedding-invitation V7.html`. Ensure it's turned on in the Vercel dashboard (Project → Analytics → Enable). Data appears after deployment and visits.
+
+To add **Google Analytics** later, insert your gtag script in the `<head>` of the same HTML files.
+
 ## Security testing
 
 Run RSVP security tests against your deployment:
