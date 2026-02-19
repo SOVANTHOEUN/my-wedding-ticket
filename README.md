@@ -9,7 +9,8 @@ my-wedding-ticket/
 ├── index.html          # Version selector (main entry)
 ├── wedding-invitation V7.html   # Primary invitation (ticket cover + detail)
 ├── js/
-│   └── translations.js # Multi-language (KM, EN, KR)
+│   ├── analytics-config.js  # Google Analytics Measurement ID (edit after GA4 setup)
+│   └── translations.js      # Multi-language (KM, EN, KR)
 ├── api/
 │   ├── guest.js        # Guest lookup from Google Sheets (serverless)
 │   └── rsvp.js         # RSVP submit to Google Sheets (serverless)
@@ -95,9 +96,8 @@ Vercel is free for personal projects and works well for static sites.
 
 ## Analytics
 
-**Vercel Web Analytics** is enabled on `index.html` and `wedding-invitation V7.html`. Ensure it's turned on in the Vercel dashboard (Project → Analytics → Enable). Data appears after deployment and visits.
-
-To add **Google Analytics** later, insert your gtag script in the `<head>` of the same HTML files.
+- **Vercel Web Analytics** — Enabled on `index.html` and `wedding-invitation V7.html`. Turn on in Vercel dashboard (Project → Analytics → Enable).
+- **Google Analytics 4** — See **[ANALYTICS-SETUP.md](ANALYTICS-SETUP.md)** for setup from scratch. After creating a GA4 property, add your Measurement ID to `js/analytics-config.js`.
 
 ## Security testing
 
