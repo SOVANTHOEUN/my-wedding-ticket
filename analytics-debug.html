@@ -4,37 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GA4 Debug — Wedding E-Ticket</title>
-  <script src="js/analytics-config.js"></script>
+  <!-- Standard GA4 snippet (replace G-XXX with your Measurement ID from js/analytics-config.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G1W8K6T3PL"></script>
   <script>
-    var id = window.GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
-    document.head.appendChild(s);
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    window.gtag = gtag;
     gtag('js', new Date());
-    gtag('config', id);
+    gtag('config', 'G-G1W8K6T3PL');
   </script>
 </head>
 <body style="font-family:sans-serif; padding:40px; max-width:600px; margin:0 auto;">
   <h1>GA4 Debug Page</h1>
-  <p>Use this page to verify Google Analytics is working.</p>
-  <p><strong>Measurement ID:</strong> <code id="mid"></code></p>
+  <p>If you see "1 user" in GA4 Realtime after opening this page, the base setup works.</p>
+  <p><strong>Measurement ID:</strong> <code>G-G1W8K6T3PL</code></p>
   <button onclick="fireTest()" style="padding:12px 24px; font-size:16px; cursor:pointer;">Fire rsvp_click (test)</button>
   <p style="margin-top:20px; color:#666; font-size:14px;">
-    After clicking, open GA4 → Reports → Realtime. You should see the event within ~30 seconds.
+    <strong>Where to look:</strong> GA4 → <strong>Reports</strong> → <strong>Realtime</strong> (in the left menu under "Realtime overview").<br>
+    NOT "Pages and screens". Events appear in Realtime or in Reports → Engagement → Events.
   </p>
+  <p id="status" style="margin-top:12px; font-size:13px;"></p>
   <script>
-    document.getElementById('mid').textContent = window.GA_MEASUREMENT_ID || 'Not set';
     function fireTest() {
-      if (window.gtag) {
-        window.gtag('event', 'rsvp_click', { rsvp_status: 'confirm' });
-        alert('Event sent! Check GA4 Realtime.');
-      } else {
-        alert('gtag not loaded. Check analytics-config.js and Measurement ID.');
-      }
+      gtag('event', 'rsvp_click', { rsvp_status: 'confirm' });
+      document.getElementById('status').textContent = 'Event sent! Open GA4 → Realtime (left menu) and look for "Event count by Event name" — rsvp_click should appear within ~30 sec.';
+      document.getElementById('status').style.color = '#0a0';
     }
   </script>
 </body>
