@@ -105,3 +105,17 @@ Data typically appears in standard reports within 24–48 hours. Realtime report
 3. Click it to see the `rsvp_status` breakdown (confirm, decline, undecided)
 
 You can also create a custom exploration or add `rsvp_click` as a key event in **Admin** → **Events** → **Mark as key event**.
+
+---
+
+## Troubleshooting: "No data" for rsvp_click
+
+1. **Verify GA is working** — Open `analytics-debug.html` on your live site (e.g. `https://yoursite.vercel.app/analytics-debug.html`). Click "Fire rsvp_click (test)". Check GA4 Realtime. If you see the event there, GA is working but the RSVP flow might not be reached.
+
+2. **Use a link with a token** — RSVP buttons only appear when the URL has `?g=g001` (or a valid guest token). Use `wedding-invitation%20V7.html?g=g001` or similar.
+
+3. **Open the ticket first** — Click the ticket cover to open it, then scroll down to the RSVP section before clicking.
+
+4. **Check deployment** — Ensure your latest code is deployed and you're testing the live URL, not a local file.
+
+5. **Browser extensions** — Ad blockers or privacy extensions can block GA. Try in an incognito window with extensions disabled.

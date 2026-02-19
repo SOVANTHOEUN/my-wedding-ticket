@@ -1582,8 +1582,12 @@
 
     function submitRsvp(status) {
       if (rsvpConfirm.disabled) return;
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'rsvp_click', rsvp_status: status });
+      if (window.gtag) {
+        window.gtag('event', 'rsvp_click', { rsvp_status: status });
+      } else {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'rsvp_click', rsvp_status: status });
+      }
       var msg = rsvpMessage ? sanitizeGuestName(rsvpMessage.value) : '';
       var prevStatus = currentStatus;
       var method = currentStatus === null ? 'POST' : 'PATCH';  // Must compute before optimistic update

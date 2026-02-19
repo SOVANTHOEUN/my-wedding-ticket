@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GA4 Debug — Wedding E-Ticket</title>
+  <script src="js/analytics-config.js"></script>
+  <script>
+    var id = window.GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', id);
+  </script>
+</head>
+<body style="font-family:sans-serif; padding:40px; max-width:600px; margin:0 auto;">
+  <h1>GA4 Debug Page</h1>
+  <p>Use this page to verify Google Analytics is working.</p>
+  <p><strong>Measurement ID:</strong> <code id="mid"></code></p>
+  <button onclick="fireTest()" style="padding:12px 24px; font-size:16px; cursor:pointer;">Fire rsvp_click (test)</button>
+  <p style="margin-top:20px; color:#666; font-size:14px;">
+    After clicking, open GA4 → Reports → Realtime. You should see the event within ~30 seconds.
+  </p>
+  <script>
+    document.getElementById('mid').textContent = window.GA_MEASUREMENT_ID || 'Not set';
+    function fireTest() {
+      if (window.gtag) {
+        window.gtag('event', 'rsvp_click', { rsvp_status: 'confirm' });
+        alert('Event sent! Check GA4 Realtime.');
+      } else {
+        alert('gtag not loaded. Check analytics-config.js and Measurement ID.');
+      }
+    }
+  </script>
+</body>
+</html>
