@@ -541,6 +541,16 @@
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     font-weight: 600; color: var(--text); letter-spacing: 1.5px; text-transform: uppercase;
   }
+  .gift-account-info {
+    font-family: 'Montserrat', monospace; font-size: 15px; font-weight: 700;
+    color: var(--dark); letter-spacing: 2px; padding: 16px;
+    background: var(--ice); border-radius: 12px; margin: 16px 0 12px;
+    border: 1.5px solid var(--sky-pale); word-break: break-all;
+  }
+  .gift-account-copy { cursor: pointer; user-select: none; transition: background 0.2s, border-color 0.2s; }
+  .gift-account-copy:hover { background: var(--sky-pale); border-color: var(--sky-light); }
+  .gift-card-no-qr .gift-scan { margin-bottom: 0; }
+  .gift-card-no-qr .gift-account-name { margin-top: 8px; }
 
   .gift-download-btn { margin-top: 16px; width: 100%; justify-content: center; }
   @media (min-width: 561px) {
@@ -1313,6 +1323,12 @@
         <div class="gift-account-name">Sovanthoeun 💞 Vila</div>
         <a class="btn-outline-sky gift-download-btn" href="images/QR/aba-pay-qr-khr.png" download="aba-pay-qr-khr.png" data-i18n="giftQrKhr">ទាយយក QR Code KHR</a>
       </div>
+      <div class="gift-card gift-card-no-qr fade-scale" style="grid-column: 1 / -1; max-width: 320px; justify-self: center;">
+        <div class="gift-currency">KRW</div>
+        <div class="gift-bank-strip"><span class="gift-bank-text">IBK 기업은행</span></div>
+        <div class="gift-account-info gift-account-copy" title="Click to copy">089-085104-01-013</div>
+        <div class="gift-account-name">VONG SOVANTHOEUN</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1511,6 +1527,25 @@
     lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
   })();
+
+  // IBK account number — click to copy
+  document.querySelectorAll('.gift-account-copy').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var text = this.textContent.trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          var orig = el.textContent; el.textContent = 'Copied!'; el.style.color = 'var(--sky-deep)';
+          setTimeout(function() { el.textContent = orig; el.style.color = ''; }, 1200);
+        });
+      } else {
+        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); var orig = el.textContent; el.textContent = 'Copied!'; el.style.color = 'var(--sky-deep)';
+          setTimeout(function() { el.textContent = orig; el.style.color = ''; }, 1200); } catch (err) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
 
   // Gift QR download — when served over HTTP: native download works
   // When opened from file://: opens in new tab (right-click or long-press to save)
