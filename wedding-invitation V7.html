@@ -493,6 +493,13 @@
     gap: 24px; max-width: 620px; margin: 0 auto 32px;
   }
   @media (max-width: 560px) { .gift-cards { grid-template-columns: 1fr; max-width: 320px; } }
+  .gift-card-ibk {
+    grid-column: 1 / -1; justify-self: center;
+    width: 100%; max-width: calc((min(620px, 100%) - 24px) / 2);
+  }
+  @media (max-width: 560px) {
+    .gift-card-ibk { max-width: 320px; }
+  }
 
   .gift-card {
     background: var(--white); border-radius: 18px;
@@ -542,17 +549,23 @@
     font-weight: 600; color: var(--text); letter-spacing: 1.5px; text-transform: uppercase;
   }
   .gift-account-info {
-    font-family: 'Montserrat', monospace; font-size: 15px; font-weight: 700;
-    color: var(--dark); letter-spacing: 2px; padding: 16px;
-    background: var(--ice); border-radius: 12px; margin: 16px 0 12px;
-    border: 1.5px solid var(--sky-pale); word-break: break-all;
+    width: 120px; height: 120px; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', monospace; font-size: 11px; font-weight: 700;
+    color: var(--sky-deep); letter-spacing: 1.5px;
+    background: var(--ice); border-radius: 12px;
+    border: 1.5px solid var(--sky-pale);
+    word-break: break-all; text-align: center; line-height: 1.4;
+    overflow: hidden; padding: 8px;
   }
-  .gift-account-copy { cursor: pointer; user-select: none; transition: background 0.2s, border-color 0.2s; }
+  .gift-account-copy { cursor: pointer; user-select: none; transition: background 0.2s, border-color 0.2s, color 0.2s; }
   .gift-account-copy:hover { background: var(--sky-pale); border-color: var(--sky-light); }
-  .gift-card-no-qr .gift-scan { margin-bottom: 0; }
-  .gift-card-no-qr .gift-account-name { margin-top: 8px; }
 
   .gift-download-btn { margin-top: 16px; width: 100%; justify-content: center; }
+  .gift-copy-btn { margin-top: 16px; width: 100%; justify-content: center; display: inline-flex; cursor: pointer; }
+  @media (min-width: 561px) {
+    .gift-copy-btn { width: auto; }
+  }
   @media (min-width: 561px) {
     .gift-download-btn { width: auto; }
   }
@@ -1323,11 +1336,13 @@
         <div class="gift-account-name">Sovanthoeun 💞 Vila</div>
         <a class="btn-outline-sky gift-download-btn" href="images/QR/aba-pay-qr-khr.png" download="aba-pay-qr-khr.png" data-i18n="giftQrKhr">ទាយយក QR Code KHR</a>
       </div>
-      <div class="gift-card gift-card-no-qr fade-scale" style="grid-column: 1 / -1; max-width: 320px; justify-self: center;">
+      <div class="gift-card gift-card-ibk fade-scale">
         <div class="gift-currency">KRW</div>
         <div class="gift-bank-strip"><span class="gift-bank-text">IBK 기업은행</span></div>
-        <div class="gift-account-info gift-account-copy" title="Click to copy">089-085104-01-013</div>
-        <div class="gift-account-name">VONG SOVANTHOEUN</div>
+        <div class="gift-account-name" style="margin-bottom: 14px;">VONG SOVANTHOEUN</div>
+        <!-- <div class="gift-scan" data-i18n="giftCopyTap">Tap to copy</div> -->
+        <div class="gift-account-info gift-account-copy" data-i18n-title="giftCopyTap" title="Click to copy">089-085104-01-013</div>
+        <span class="btn-outline-sky gift-copy-btn" data-i18n="giftCopyTap" title="Click to copy">Tap to copy</span>
       </div>
     </div>
   </div>
@@ -1528,22 +1543,30 @@
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
   })();
 
-  // IBK account number — click to copy
+  // IBK account number — click to copy (account box or Tap to copy button)
+  function copyAccountAndFeedback(el, text) {
+    if (!text) text = el.textContent.trim();
+    function showCopied(target) {
+      var orig = target.textContent; target.textContent = 'Copied!'; target.style.color = 'var(--sky-deep)';
+      setTimeout(function() { target.textContent = orig; target.style.color = ''; }, 1200);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() { showCopied(el); });
+    } else {
+      var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); showCopied(el); } catch (err) {}
+      document.body.removeChild(ta);
+    }
+  }
   document.querySelectorAll('.gift-account-copy').forEach(function(el) {
-    el.addEventListener('click', function() {
-      var text = this.textContent.trim();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function() {
-          var orig = el.textContent; el.textContent = 'Copied!'; el.style.color = 'var(--sky-deep)';
-          setTimeout(function() { el.textContent = orig; el.style.color = ''; }, 1200);
-        });
-      } else {
-        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-        document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); var orig = el.textContent; el.textContent = 'Copied!'; el.style.color = 'var(--sky-deep)';
-          setTimeout(function() { el.textContent = orig; el.style.color = ''; }, 1200); } catch (err) {}
-        document.body.removeChild(ta);
-      }
+    el.addEventListener('click', function() { copyAccountAndFeedback(this, this.textContent.trim()); });
+  });
+  document.querySelectorAll('.gift-copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var info = this.closest('.gift-card').querySelector('.gift-account-copy');
+      var text = info ? info.textContent.trim() : '';
+      if (text) copyAccountAndFeedback(this, text);
     });
   });
 
