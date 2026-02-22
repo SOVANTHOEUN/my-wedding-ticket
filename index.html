@@ -1540,7 +1540,7 @@
   // Sanitize guest name — prevent XSS, limit length
   function sanitizeGuestName(str) {
     if (typeof str !== 'string') return '';
-    return str.slice(0, 100).replace(/[<>\"'&]/g, '');
+    return str.slice(0, 100).replace(/[<>\"']/g, '');
   }
 
   // Guest from URL (?g=token or ?b=token) — fetch from API (guest list hidden server-side)
