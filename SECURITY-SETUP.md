@@ -57,6 +57,8 @@ If you use the RSVP feature, create an **RSVP** tab with columns: `token` | `gue
 
 **GUEST_LIST_SHEET (optional):** If your guest list (columns A:B and D:E) is on a named sheet/tab (e.g. "Invite online guest") rather than the first sheet, set this env var to the exact sheet name. Example: `GUEST_LIST_SHEET=Invite online guest`. This ensures the guest lookup and RSVP read from the correct tab.
 
+**RSVP_TIMEZONE (optional):** Timezone for reg_dttm and mod_dttm (default: `Asia/Phnom_Penh`). Format: `YYYY-MM-DD HH:mm:ss` in local time.
+
 ## 4. HTTPS
 
 Vercel serves over HTTPS by default. Your site at `https://my-wedding-ticket.vercel.app` is already secure.

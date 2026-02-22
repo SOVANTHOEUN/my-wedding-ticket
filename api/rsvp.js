@@ -13,6 +13,21 @@
  * valueInputOption: RAW — insert values only, no format inheritance
  */
 
+const TIMEZONE = process.env.RSVP_TIMEZONE || 'Asia/Phnom_Penh';
+
+function nowLocal() {
+  return new Date().toLocaleString('en-CA', {
+    timeZone: TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).replace(', ', ' ');
+}
+
 function getLocationFromHeaders(req) {
   const h = req.headers || {};
   const get = (k) => h[k] || h[k.toLowerCase()] || '';
@@ -114,7 +129,7 @@ function parseRsvpRow(row) {
 
 async function appendRsvp(sheets, token, guestName, status, message, device_type, location) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
-  const regDttm = new Date().toISOString();
+  const regDttm = nowLocal();
   const guestSide = getGuestSide(token);
   await sheets.spreadsheets.values.append({
     spreadsheetId: sheetId,
@@ -129,7 +144,7 @@ async function appendRsvp(sheets, token, guestName, status, message, device_type
 
 async function updateRsvpRow(sheets, rowIndex, token, guestName, status, regDttm, message, device_type, location) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
-  const modDttm = new Date().toISOString();
+  const modDttm = nowLocal();
   const guestSide = getGuestSide(token);
   const range = `RSVP!A${rowIndex + 2}:I${rowIndex + 2}`;
   await sheets.spreadsheets.values.update({
