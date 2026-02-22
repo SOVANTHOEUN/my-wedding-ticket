@@ -59,7 +59,7 @@ async function getGuestList() {
   return null;
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'private, max-age=300'); // 5 min cache
 
@@ -76,3 +76,6 @@ module.exports = async function handler(req, res) {
   const name = list[token] || null;
   return res.status(200).json({ name });
 }
+
+export default handler;
+export { getGuestList };
