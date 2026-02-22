@@ -2,10 +2,19 @@
  * Wedding E-Ticket — Secure guest lookup API
  * Returns only the requested guest name (never exposes full list).
  *
- * Data source: Google Sheets
+ * Data source (in order):
+ * 1. api/guests.json — static file from build (instant, no cold start)
+ * 2. Google Sheets — fallback when guests.json is empty
  * Env: GOOGLE_SHEET_ID + GUEST_SHEET_CREDENTIALS (service account JSON)
  * Sheet format: Col A = token (g001) or names; Col B = name if Col A is token.
  */
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+let staticGuests = {};
+try {
+  staticGuests = require('./guests.json');
+} catch (_) {}
 
 // In-memory cache for Google Sheets (persists across warm invocations)
 if (!global.guestListCache) global.guestListCache = { data: null, expires: 0 };
@@ -13,10 +22,15 @@ const cache = global.guestListCache;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 async function getGuestList() {
+  // Use static data first — instant, no network call
+  if (staticGuests && typeof staticGuests === 'object' && Object.keys(staticGuests).length > 0) {
+    return staticGuests;
+  }
+
   const now = Date.now();
   if (cache.data && cache.expires > now) return cache.data;
 
-  // Google Sheets
+  // Google Sheets fallback
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const credsJson = process.env.GUEST_SHEET_CREDENTIALS || process.env.GOOGLE_SHEET_CREDENTIALS;
   if (sheetId && credsJson) {

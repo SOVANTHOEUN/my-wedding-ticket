@@ -5,7 +5,9 @@
   "description": "Wedding e-ticket invitation",
   "scripts": {
     "serve": "npx serve . -l 3000",
-    "start": "npx serve . -l 3000"
+    "start": "npx serve . -l 3000",
+    "build": "node scripts/generate-guests.js",
+    "build:guests": "node scripts/generate-guests.js"
   },
   "dependencies": {
     "googleapis": "^144.0.0",

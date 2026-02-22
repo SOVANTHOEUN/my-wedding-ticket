@@ -14,3 +14,6 @@ Thumbs.db
 
 # Optional: keep original single-file version out of git if you prefer
 # wedding-invitation.html
+
+# Generated at build (contains guest names)
+api/guests.json

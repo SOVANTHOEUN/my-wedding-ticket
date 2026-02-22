@@ -45,7 +45,7 @@ my-wedding-ticket/
    - Gallery: Add images in `images/` and update the gallery in `index.html` to use `<img src="images/photo1.jpg" alt="...">` inside each `.gallery-item`.  
    - Maps/QR: Replace `#` in “Open in Google Maps” and QR links with your real Google Maps URL and QR image paths (e.g. `images/qr-usd.png`).
 
-No build step or database is required; the site is plain HTML, CSS, and JavaScript.
+No build step is required for local development; the site is plain HTML, CSS, and JavaScript. For deployment, `npm run build` pre-generates the guest list from Google Sheets so invite links load guest names almost instantly.
 
 ## Deployment (Vercel – recommended)
 
@@ -70,7 +70,7 @@ Vercel is free for personal projects and works well for static sites.
 1. Go to [vercel.com](https://vercel.com) and sign in (e.g. with GitHub).
 2. Click **Add New…** → **Project**.
 3. Import your GitHub repository (e.g. `my-wedding-ticket`).
-4. Leave **Root Directory** as `.` and **Build Command** empty (static site).
+4. Leave **Root Directory** as `.` and **Build Command** as `npm run build` (generates static guest list for fast lookup).
 5. Click **Deploy**. Vercel will build and give you a URL like `https://my-wedding-ticket-xxx.vercel.app`.
 
 ### 3. Your live URL

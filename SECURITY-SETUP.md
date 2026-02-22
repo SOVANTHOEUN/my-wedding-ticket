@@ -41,7 +41,9 @@ The guest list is **never exposed** in the client. The API returns only the requ
    - `GOOGLE_SHEET_ID` — Your sheet ID: `1ANpuNf9J1Q1yk8q2oxcIfP0H8R_klsPIAwhz7A3-O3A`
    - `GUEST_SHEET_CREDENTIALS` or `GOOGLE_SHEET_CREDENTIALS` — Paste the **entire** JSON key file content (minified, single line works best)
 
-4. Redeploy.
+4. **Build Command:** Set to `npm run build` in Vercel project settings. This pre-generates `api/guests.json` from your sheet at deploy time so guest names load almost instantly (no 5–6 second wait).
+
+5. Redeploy. When the build runs, it fetches your guest list from Google Sheets and writes it to `api/guests.json`. The API uses this file for instant lookup instead of calling Sheets on each request.
 
 ### RSVP Feature (optional)
 
