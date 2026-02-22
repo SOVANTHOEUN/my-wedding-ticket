@@ -49,6 +49,8 @@ Invite links: `?g=g001` (groom's) or `?b=b001` (bride's).
 
 5. Redeploy. When the build runs, it fetches your guest list from Google Sheets and writes it to `api/guests.json`. The API uses this file for instant lookup instead of calling Sheets on each request.
 
+**Adding guests without redeploying:** If you add new guests to the Google Sheet after your last deploy, they will still work. The API checks `guests.json` first (instant), and if the requested token is not found, it fetches from Google Sheets. So new guests appear within a few seconds (first request) or instantly (5‑min cache). No redeploy needed.
+
 ### RSVP Feature (optional)
 
 If you use the RSVP feature, create an **RSVP** tab with columns: `token` | `guest_name` | `status` | `reg_dttm` | `mod_dttm` | `message` | `device_type` | `location`. Status: `confirm`, `decline`, or `undecided`. `reg_dttm` = first submit time; `mod_dttm` = last update time (empty on first submit). `device_type` = mobile/tablet/desktop (from client). `location` = city, region, country, postal code, lat/lng from Vercel geo headers. The API uses `valueInputOption: RAW` to insert values only. To avoid new rows inheriting header formatting, add a blank row 2 with default (no) formatting — data rows will then inherit from row 2.

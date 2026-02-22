@@ -6,7 +6,7 @@
  * Uses vercel.json rewrite: / -> /api/root (middleware doesn't run on static sites).
  */
 
-import { getGuestList } from './guest.js';
+import { getGuestName } from './guest.js';
 
 const CRAWLER_UA = [
   'facebookexternalhit',
@@ -99,9 +99,7 @@ export default async function handler(req, res) {
 
   // Crawler with ?g=token or ?b=token -> serve dynamic OG HTML
   if (isCrawler(ua) && token && param && /^(g|b)\d+$/.test(token)) {
-    let guestName = null;
-    const list = await getGuestList();
-    if (list) guestName = list[token] || null;
+    const guestName = await getGuestName(token);
 
     const title = guestName
       ? `${DEFAULT_TITLE} — សូមគោរពអញ្ជើញ ${guestName}`

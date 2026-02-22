@@ -5,7 +5,7 @@
  * Invoked by middleware when a crawler (Facebook, Telegram, etc.) requests /?g=token or /?b=token.
  */
 
-import { getGuestList } from './guest.js';
+import { getGuestName } from './guest.js';
 
 const DEFAULT_TITLE = 'សិរីមង្គលអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila';
 const DEFAULT_DESC = 'សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍';
@@ -78,8 +78,7 @@ export default async function handler(req, res) {
 
   let guestName = null;
   if (token) {
-    const list = await getGuestList();
-    if (list) guestName = list[token] || null;
+    guestName = await getGuestName(token);
   }
 
   const title = guestName

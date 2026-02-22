@@ -1826,7 +1826,8 @@
   // RSVP — Confirm/Decline/Undecided with API (GET=check, POST=new, PATCH=update)
   (function() {
     var params = new URLSearchParams(window.location.search);
-    var token = (params.get('g') || '').toLowerCase().trim();
+    var token = (params.get('g') || params.get('b') || '').toLowerCase().trim();
+    var rsvpParam = params.get('g') ? 'g' : (params.get('b') ? 'b' : null);
     var rsvpButtons = document.getElementById('rsvpButtons');
     var rsvpConfirm = document.getElementById('rsvpConfirm');
     var rsvpDecline = document.getElementById('rsvpDecline');
@@ -1859,7 +1860,7 @@
       rsvpStatus.style.color = 'var(--text-muted)';
     }
 
-    if (!token) {
+    if (!token || !rsvpParam) {
       if (rsvpButtons) rsvpButtons.style.display = 'none';
       if (rsvpMessage) rsvpMessage.style.display = 'none';
       if (rsvpNeedsToken) rsvpNeedsToken.style.display = 'block';
@@ -1955,7 +1956,7 @@
     addMobileInputHandlers(rsvpMessage);
 
     // On load: check if already submitted (keeps buttons enabled so they can change mind)
-    fetch(window.location.origin + '/api/rsvp?g=' + encodeURIComponent(token))
+    fetch(window.location.origin + '/api/rsvp?' + rsvpParam + '=' + encodeURIComponent(token))
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(data) {
         if (data && data.submitted && data.status) {

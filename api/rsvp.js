@@ -1,6 +1,6 @@
 /**
  * Wedding E-Ticket — RSVP API
- * GET  /api/rsvp?g=token — Get guest's current RSVP (if any)
+ * GET  /api/rsvp?g=token or ?b=token — Get guest's current RSVP (if any)
  * POST /api/rsvp — Insert new RSVP (first submission)
  * PATCH /api/rsvp — Update existing RSVP (change mind)
  *
@@ -30,23 +30,40 @@ function getLocationFromHeaders(req) {
 
 async function getGuestList(sheets) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
-  const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: sheetId,
-    range: 'A:B'
-  });
-  const rows = res.data.values || [];
+  const [groomRes, brideRes] = await Promise.all([
+    sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'A:B' }),
+    sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'D:E' })
+  ]);
   const data = {};
-  const tokenPattern = /^g\d+$/;
-  rows.forEach((row, i) => {
+  const gPattern = /^g\d+$/;
+  const bPattern = /^b\d+$/;
+
+  (groomRes.data.values || []).forEach((row, i) => {
     const colA = (row[0] || '').toString().trim();
     const colB = (row[1] || '').toString().trim();
     let token, name;
-    if (colB && tokenPattern.test(colA.toLowerCase())) {
+    const colBIsName = colB && !/^https?:\/\//i.test(colB);
+    if (colBIsName && gPattern.test(colA.toLowerCase())) {
       token = colA.toLowerCase();
       name = colB;
     } else if (colA) {
       token = 'g' + String(i + 1).padStart(3, '0');
       name = colA;
+    }
+    if (token && name) data[token] = name;
+  });
+
+  (brideRes.data.values || []).forEach((row, i) => {
+    const colD = (row[0] || '').toString().trim();
+    const colE = (row[1] || '').toString().trim();
+    let token, name;
+    const colEIsName = colE && !/^https?:\/\//i.test(colE);
+    if (colEIsName && bPattern.test(colD.toLowerCase())) {
+      token = colD.toLowerCase();
+      name = colE;
+    } else if (colD) {
+      token = 'b' + String(i + 1).padStart(3, '0');
+      name = colD;
     }
     if (token && name) data[token] = name;
   });
@@ -128,7 +145,7 @@ module.exports = async function handler(req, res) {
 
   // ——— GET: Check if guest has submitted ———
   if (req.method === 'GET') {
-    const token = (req.query.g || '').toLowerCase().trim();
+    const token = (req.query.g || req.query.b || '').toLowerCase().trim();
     if (!token) {
       return res.status(400).json({ error: 'Missing token' });
     }
