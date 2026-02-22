@@ -88,13 +88,22 @@ function getQueryParam(req, key) {
 export default async function handler(req, res) {
   const ua = req.headers['user-agent'] || '';
   const token = getQueryParam(req, 'g').toLowerCase();
+  const isShortPath = !!getQueryParam(req, 'short');
   const host = req.headers['x-forwarded-host'] || req.headers.host || 'my-wedding-ticket.vercel.app';
   const proto = req.headers['x-forwarded-proto'] === 'https' || req.headers['x-forwarded-proto'] === 'http'
     ? req.headers['x-forwarded-proto']
     : 'https';
   const baseUrl = `${proto}://${host}`;
 
-  // Crawler with ?g=token -> serve dynamic OG HTML
+  // Short path /g/g060: non-crawler -> redirect to /?g=g060
+  if (isShortPath && !isCrawler(ua) && token && /^g\d+$/.test(token)) {
+    const redirectUrl = `${baseUrl}/?g=${encodeURIComponent(token)}`;
+    res.setHeader('Location', redirectUrl);
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    return res.status(302).redirect(redirectUrl);
+  }
+
+  // Crawler with ?g=token (from /?g= or /g/) -> serve dynamic OG HTML
   if (isCrawler(ua) && token && /^g\d+$/.test(token)) {
     let guestName = null;
     const list = await getGuestList();
@@ -106,7 +115,7 @@ export default async function handler(req, res) {
     const description = guestName
       ? `${DEFAULT_DESC} — ${guestName}`
       : `${DEFAULT_DESC} — ${COUPLE_NAMES}`;
-    const pageUrl = `${baseUrl}/?g=${encodeURIComponent(token)}`;
+    const pageUrl = isShortPath ? `${baseUrl}/g/${token}` : `${baseUrl}/?g=${encodeURIComponent(token)}`;
     const imageUrl = `${baseUrl}/images/physical-ticket-cover.png`;
     const appId = process.env.META_APP_ID || process.env.FB_APP_ID || '';
 
