@@ -26,5 +26,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/api/root"
+    }
   ]
 }
