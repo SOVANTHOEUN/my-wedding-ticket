@@ -21,6 +21,12 @@ if (!global.guestListCache) global.guestListCache = { data: null, expires: 0 };
 const cache = global.guestListCache;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
+function getGuestListRanges() {
+  const sheetName = process.env.GUEST_LIST_SHEET || '';
+  const prefix = sheetName ? `'${sheetName.replace(/'/g, "''")}'!` : '';
+  return { groom: prefix + 'A:B', bride: prefix + 'D:E' };
+}
+
 async function fetchFromSheets() {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const credsJson = process.env.GUEST_SHEET_CREDENTIALS || process.env.GOOGLE_SHEET_CREDENTIALS;
@@ -37,9 +43,10 @@ async function fetchFromSheets() {
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
     });
     const sheets = google.sheets({ version: 'v4', auth });
+    const ranges = getGuestListRanges();
     const [groomRes, brideRes] = await Promise.all([
-      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'A:B' }),
-      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'D:E' })
+      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: ranges.groom }),
+      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: ranges.bride })
     ]);
     const data = {};
     const gPattern = /^g\d+$/;

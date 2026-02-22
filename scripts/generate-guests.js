@@ -26,6 +26,11 @@ async function generate() {
   }
 
   try {
+    const sheetName = process.env.GUEST_LIST_SHEET || '';
+    const prefix = sheetName ? `'${sheetName.replace(/'/g, "''")}'!` : '';
+    const groomRange = prefix + 'A:B';
+    const brideRange = prefix + 'D:E';
+
     const { google } = await import('googleapis');
     const creds = JSON.parse(credsJson);
     const auth = new google.auth.GoogleAuth({
@@ -34,8 +39,8 @@ async function generate() {
     });
     const sheets = google.sheets({ version: 'v4', auth });
     const [groomRes, brideRes] = await Promise.all([
-      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'A:B' }),
-      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'D:E' }),
+      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: groomRange }),
+      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: brideRange }),
     ]);
     const data = {};
     const gPattern = /^g\d+$/;

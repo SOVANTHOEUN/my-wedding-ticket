@@ -1917,10 +1917,10 @@
               if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
               currentStatus = null;
             }
-            setError(res.data.error || 'Failed');
+            setError((res.data && res.data.error) || 'Failed');
           }
         })
-        .catch(function() {
+        .catch(function(err) {
           rsvpConfirm.disabled = false;
           rsvpDecline.disabled = false;
           if (rsvpUndecided) rsvpUndecided.disabled = false;
@@ -1931,7 +1931,7 @@
             if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
             currentStatus = null;
           }
-          setError('Failed to send');
+          setError('Failed to send. Check your invite link.');
         });
     }
 

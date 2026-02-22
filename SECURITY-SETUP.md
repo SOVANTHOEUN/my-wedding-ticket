@@ -53,7 +53,9 @@ Invite links: `?g=g001` (groom's) or `?b=b001` (bride's).
 
 ### RSVP Feature (optional)
 
-If you use the RSVP feature, create an **RSVP** tab with columns: `token` | `guest_name` | `status` | `reg_dttm` | `mod_dttm` | `message` | `device_type` | `location`. Status: `confirm`, `decline`, or `undecided`. `reg_dttm` = first submit time; `mod_dttm` = last update time (empty on first submit). `device_type` = mobile/tablet/desktop (from client). `location` = city, region, country, postal code, lat/lng from Vercel geo headers. The API uses `valueInputOption: RAW` to insert values only. To avoid new rows inheriting header formatting, add a blank row 2 with default (no) formatting — data rows will then inherit from row 2.
+If you use the RSVP feature, create an **RSVP** tab with columns: `token` | `guest_name` | `guest_side` | `status` | `reg_dttm` | `mod_dttm` | `message` | `device_type` | `location`. The API auto-fills `guest_side` as "groom" or "bride" from the token. Status: `confirm`, `decline`, or `undecided`. `reg_dttm` = first submit time; `mod_dttm` = last update time (empty on first submit). `device_type` = mobile/tablet/desktop (from client). `location` = city, region, country, postal code, lat/lng from Vercel geo headers. The API uses `valueInputOption: RAW` to insert values only. To avoid new rows inheriting header formatting, add a blank row 2 with default (no) formatting — data rows will then inherit from row 2.
+
+**GUEST_LIST_SHEET (optional):** If your guest list (columns A:B and D:E) is on a named sheet/tab (e.g. "Invite online guest") rather than the first sheet, set this env var to the exact sheet name. Example: `GUEST_LIST_SHEET=Invite online guest`. This ensures the guest lookup and RSVP read from the correct tab.
 
 ## 4. HTTPS
 

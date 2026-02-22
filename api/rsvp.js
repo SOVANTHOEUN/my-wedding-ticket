@@ -4,10 +4,12 @@
  * POST /api/rsvp — Insert new RSVP (first submission)
  * PATCH /api/rsvp — Update existing RSVP (change mind)
  *
- * Sheet columns: token | guest_name | status | reg_dttm | mod_dttm | message | device_type | location
+ * Sheet columns: token | guest_name | guest_side | status | reg_dttm | mod_dttm | message | device_type | location
+ * - guest_side: "groom" or "bride" (derived from token)
  * - device_type: from client (mobile/tablet/desktop)
  * - location: from Vercel geo headers (city, region, country, postal, lat/lng)
  *
+ * Env: GUEST_LIST_SHEET — sheet name for guest list (default: first sheet). Use if guest list is on a named tab.
  * valueInputOption: RAW — insert values only, no format inheritance
  */
 
@@ -28,11 +30,18 @@ function getLocationFromHeaders(req) {
   return loc.trim() || '';
 }
 
+function getGuestListRanges() {
+  const sheetName = process.env.GUEST_LIST_SHEET || '';
+  const prefix = sheetName ? `'${sheetName.replace(/'/g, "''")}'!` : '';
+  return { groom: prefix + 'A:B', bride: prefix + 'D:E' };
+}
+
 async function getGuestList(sheets) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
+  const ranges = getGuestListRanges();
   const [groomRes, brideRes] = await Promise.all([
-    sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'A:B' }),
-    sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'D:E' })
+    sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: ranges.groom }),
+    sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: ranges.bride })
   ]);
   const data = {};
   const gPattern = /^g\d+$/;
@@ -74,9 +83,13 @@ async function getRsvpRows(sheets) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: sheetId,
-    range: 'RSVP!A2:H'
+    range: 'RSVP!A2:I'
   });
   return res.data.values || [];
+}
+
+function getGuestSide(token) {
+  return /^b\d+$/i.test(token) ? 'bride' : 'groom';
 }
 
 function findRsvpRow(rows, token) {
@@ -88,16 +101,28 @@ function findRsvpRow(rows, token) {
   return null;
 }
 
+function parseRsvpRow(row) {
+  if (!row || row.length < 6) return null;
+  const hasGuestSide = row.length >= 9 && (row[2] === 'groom' || row[2] === 'bride');
+  return {
+    status: (hasGuestSide ? row[3] : row[2] || '').toLowerCase(),
+    reg_dttm: hasGuestSide ? row[4] : row[3],
+    mod_dttm: hasGuestSide ? row[5] : row[4],
+    message: hasGuestSide ? row[6] : row[5] || ''
+  };
+}
+
 async function appendRsvp(sheets, token, guestName, status, message, device_type, location) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const regDttm = new Date().toISOString();
+  const guestSide = getGuestSide(token);
   await sheets.spreadsheets.values.append({
     spreadsheetId: sheetId,
-    range: 'RSVP!A2:H',
+    range: 'RSVP!A2:I',
     valueInputOption: 'RAW',
     insertDataOption: 'INSERT_ROWS',
     requestBody: {
-      values: [[token, guestName, status, regDttm, '', message || '', device_type || '', location || '']]
+      values: [[token, guestName, guestSide, status, regDttm, '', message || '', device_type || '', location || '']]
     }
   });
 }
@@ -105,13 +130,14 @@ async function appendRsvp(sheets, token, guestName, status, message, device_type
 async function updateRsvpRow(sheets, rowIndex, token, guestName, status, regDttm, message, device_type, location) {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const modDttm = new Date().toISOString();
-  const range = `RSVP!A${rowIndex + 2}:H${rowIndex + 2}`;
+  const guestSide = getGuestSide(token);
+  const range = `RSVP!A${rowIndex + 2}:I${rowIndex + 2}`;
   await sheets.spreadsheets.values.update({
     spreadsheetId: sheetId,
     range,
     valueInputOption: 'RAW',
     requestBody: {
-      values: [[token, guestName, status, regDttm, modDttm, message || '', device_type || '', location || '']]
+      values: [[token, guestName, guestSide, status, regDttm, modDttm, message || '', device_type || '', location || '']]
     }
   });
 }
@@ -155,13 +181,14 @@ module.exports = async function handler(req, res) {
       if (!found) {
         return res.status(200).json({ submitted: false });
       }
-      const row = found.row;
+      const parsed = parseRsvpRow(found.row);
+      if (!parsed) return res.status(200).json({ submitted: false });
       return res.status(200).json({
         submitted: true,
-        status: (row[2] || '').toLowerCase(),
-        reg_dttm: row[3] || null,
-        mod_dttm: row[4] || null,
-        message: row[5] || ''
+        status: parsed.status,
+        reg_dttm: parsed.reg_dttm || null,
+        mod_dttm: parsed.mod_dttm || null,
+        message: parsed.message || ''
       });
     } catch (e) {
       console.error('RSVP GET error:', e.message);
