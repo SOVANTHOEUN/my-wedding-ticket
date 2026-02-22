@@ -19,7 +19,7 @@
     gtag('config', id);
   })();
 </script>
-<title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V7 — VONG Sovanthoeun & ROENG Vila</title>
+<title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V10 — VONG Sovanthoeun & ROENG Vila</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;600;700&display=swap" as="style">
@@ -467,6 +467,39 @@
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     color: var(--text-muted); position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; letter-spacing: 1px; z-index: 1;
   }
+
+  /* PHYSICAL INVITATION (V9) */
+  .physical-invitation-carousel {
+    display: flex; gap: 20px; overflow-x: auto;
+    padding: 16px 8px 24px; margin: 0 -8px;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .physical-invitation-carousel::-webkit-scrollbar { height: 6px; }
+  .physical-invitation-carousel::-webkit-scrollbar-thumb { background: var(--sky-light); border-radius: 3px; }
+  .physical-invitation-item {
+    flex: 0 0 min(280px, 85vw); scroll-snap-align: center;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--silver-pale);
+    box-shadow: 0 4px 20px rgba(135,206,235,0.1);
+    cursor: pointer; transition: all 0.35s ease;
+    background: var(--white);
+  }
+  .physical-invitation-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(135,206,235,0.18);
+    border-color: var(--sky-light);
+  }
+  .physical-invitation-item img {
+    display: block; width: 100%; height: auto;
+    aspect-ratio: 3/4; object-fit: cover;
+  }
+  .physical-invitation-label {
+    font-family: 'Montserrat', sans-serif; font-size: 11px;
+    color: var(--text-muted); text-align: center; padding: 10px 8px;
+    letter-spacing: 1px;
+  }
+
   .lightbox-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 1000;
     display: none; align-items: center; justify-content: center; padding: 20px;
@@ -1308,6 +1341,34 @@
   </div>
 </section>
 
+<!-- ===== PHYSICAL INVITATION (V9) ===== -->
+<section class="section-white">
+  <div class="section-inner">
+    <div class="fade-section">
+      <div class="section-title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+      <div class="section-subtitle">Our physical invitation</div>
+    </div>
+    <div class="physical-invitation-carousel fade-section" id="physicalInvitationGrid">
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-cover.png" alt="Wedding invitation cover">
+        <div class="physical-invitation-label">Cover</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-inside.png" alt="Wedding invitation inside">
+        <div class="physical-invitation-label">Inside</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-details.png" alt="Wedding invitation details">
+        <div class="physical-invitation-label">Details</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-back.png" alt="Wedding invitation back">
+        <div class="physical-invitation-label">Back</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== GIFT ===== -->
 <section class="section-white">
   <div class="blob-left" style="bottom:5%;"></div>
@@ -1538,6 +1599,15 @@
       var img = item.querySelector('img');
       if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
     });
+    var physGrid = document.getElementById('physicalInvitationGrid');
+    if (physGrid) {
+      physGrid.addEventListener('click', function(e) {
+        var item = e.target.closest('.physical-invitation-item');
+        if (!item) return;
+        var img = item.querySelector('img');
+        if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
+      });
+    }
     lbClose.addEventListener('click', closeLightbox);
     lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });

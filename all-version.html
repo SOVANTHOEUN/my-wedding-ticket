@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Analytics 4 -->
+  <script src="js/analytics-config.js"></script>
+  <script>
+    (function() {
+      var id = window.GA_MEASUREMENT_ID || 'G-G1W8K6T3PL';
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', id);
+    })();
+  </script>
+  <meta name="description" content="Wedding E-Ticket - Choose your invitation version. VONG Sovanthoeun & ROENG Vila.">
+  <title>Wedding E-Ticket — Choose Version</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&family=Noto+Serif+Khmer:wght@400;500;600&display=swap">
+  <style>
+    :root {
+      --sky: #87CEEB;
+      --sky-light: #B8E2F4;
+      --sky-pale: #D6EFF9;
+      --sky-deep: #5BAFD4;
+      --silver: #C0C0C0;
+      --silver-pale: #E8E8E8;
+      --white: #FFFFFF;
+      --off-white: #F8FBFD;
+      --ice: #F0F7FB;
+      --dark: #2C3E50;
+      --text: #34495E;
+      --text-light: #7F8C9B;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', 'Noto Serif Khmer', sans-serif;
+      background: var(--off-white);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .bg-blur {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 20%, var(--sky-pale) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(192,192,192,0.15) 0%, transparent 50%),
+        var(--off-white);
+      z-index: -1;
+    }
+    .card {
+      background: var(--white);
+      border-radius: 24px;
+      border: 1px solid var(--silver-pale);
+      box-shadow: 0 12px 48px rgba(135,206,235,0.08), 0 4px 16px rgba(0,0,0,0.04);
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    .header-block {
+      margin-bottom: 36px;
+    }
+    .title-khmer {
+      font-family: 'Noto Serif Khmer', serif;
+      font-size: clamp(18px, 3.5vw, 22px);
+      font-weight: 600;
+      color: var(--sky-deep);
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+    }
+    .couple-names-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(10px, 2vw, 20px);
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .couple-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 4.2vw, 28px);
+      font-weight: 600;
+      color: var(--dark);
+      letter-spacing: 0.03em;
+      line-height: 1.2;
+    }
+    .couple-amp {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(18px, 3.5vw, 24px);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--sky);
+      line-height: 1;
+      opacity: 0.95;
+    }
+    .subtitle-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      color: var(--text-light);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 0 0 28px;
+    }
+    .divider-line {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--sky-light), var(--sky), var(--sky-light), transparent);
+    }
+    .divider-icon {
+      color: var(--sky);
+      font-size: 14px;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 8px rgba(135,206,235,0.3));
+    }
+    .subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      color: var(--text-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .version-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .version-btn {
+      display: block;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--dark);
+      background: var(--ice);
+      border: 1.5px solid var(--sky-pale);
+      border-radius: 16px;
+      padding: 18px 24px;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(135,206,235,0.06);
+    }
+    .version-btn:hover {
+      background: linear-gradient(135deg, var(--sky) 0%, var(--sky-deep) 100%);
+      color: var(--white);
+      border-color: var(--sky-deep);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(135,206,235,0.25);
+    }
+    .version-btn strong { display: block; margin-bottom: 4px; font-weight: 600; }
+    .version-btn span { font-size: 12px; color: var(--text-light); }
+    .version-btn:hover span { color: rgba(255,255,255,0.9); }
+    .footer-note {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      color: var(--text-light);
+      letter-spacing: 1px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--silver-pale);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blur" aria-hidden="true"></div>
+
+  <main class="card">
+    <header class="header-block">
+      <p class="subtitle-tag">Wedding Invitation</p>
+      <h1 class="title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</h1>
+      <div class="couple-names-wrap">
+        <span class="couple-name">VONG Sovanthoeun</span>
+        <span class="couple-amp">♥</span>
+        <span class="couple-name">ROENG Vila</span>
+      </div>
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-icon">💍</span>
+        <span class="divider-line"></span>
+      </div>
+    </header>
+
+    <p class="subtitle" style="margin-bottom: 16px;">Choose invitation version</p>
+
+    <nav class="version-list" aria-label="Invitation versions">
+      <a class="version-btn" target="_blank" href="wedding-invitation.html">
+        <strong>Version 1.0</strong>
+        <span>wedding-invitation.html</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V2.html">
+        <strong>Version 2.0</strong>
+        <span>wedding-invitation V2.html</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V3.html">
+        <strong>Version 3.0</strong>
+        <span>wedding-invitation V3.html (Custom design)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V4.html">
+        <strong>Version 4.0</strong>
+        <span>wedding-invitation V4.html (Teal &amp; purple)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V5.html">
+        <strong>Version 5.0</strong>
+        <span>wedding-invitation V5.html (V1 theme, bottom-to-up + hearts &amp; celebrate)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V6.html">
+        <strong>Version 6.0</strong>
+        <span>wedding-invitation V6.html (same as V5, blush rose + sage green)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V7.html?g=g050">
+        <strong>Version 7.0</strong>
+        <span>wedding-invitation V7.html</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V8.html">
+        <strong>Version 8.0</strong>
+        <span>wedding-invitation V8.html (interactive card-opening, tap to open)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V9.html?g=g050">
+        <strong>Version 9.0</strong>
+        <span>wedding-invitation V9.html (Option A: physical ticket as cover)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V10.html?g=g050">
+        <strong>Version 10.0</strong>
+        <span>wedding-invitation V10.html (Option B: physical invitation section)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V11.html?g=g050">
+        <strong>Version 11.0</strong>
+        <span>wedding-invitation V11.html (Option C: physical ticket in gallery)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation%20V12.html?g=g050">
+        <strong>Version 12.0</strong>
+        <span>wedding-invitation V12.html (Option D: hybrid cover background)</span>
+      </a>
+      <a class="version-btn" target="_blank" href="wedding-invitation-photo-design.html">
+        <strong>Photo Design Version</strong>
+        <span>wedding-invitation-photo-design.html (exact replica from photos with V1 content)</span>
+      </a>
+    </nav>
+
+    <p class="footer-note">Select a version above to open the invitation</p>
+  </main>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

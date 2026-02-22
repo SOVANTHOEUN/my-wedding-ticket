@@ -19,7 +19,7 @@
     gtag('config', id);
   })();
 </script>
-<title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V7 — VONG Sovanthoeun & ROENG Vila</title>
+<title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V9 — VONG Sovanthoeun & ROENG Vila</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;600;700&display=swap" as="style">
@@ -467,6 +467,7 @@
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     color: var(--text-muted); position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; letter-spacing: 1px; z-index: 1;
   }
+
   .lightbox-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 1000;
     display: none; align-items: center; justify-content: center; padding: 20px;
@@ -795,11 +796,11 @@
     100% { transform: translateY(110vh) rotate(400deg) translateX(-30px); opacity: 0; }
   }
 
-  /* ===== V7: TICKET COVER & DETAIL PAGE ===== */
+  /* ===== V9 OPTION A: PHYSICAL TICKET AS COVER ===== */
   #ticket-cover {
     position: fixed; inset: 0; z-index: 500;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(180deg, var(--white) 0%, var(--ice) 30%, var(--sky-pale) 70%, var(--ice) 100%);
+    background: linear-gradient(180deg, #2d3a2a 0%, #1a2318 50%, #0f1410 100%);
     padding: 0; cursor: pointer;
     transition: opacity 0.6s ease, visibility 0.6s ease;
     overflow: hidden;
@@ -827,8 +828,16 @@
   .ticket-container {
     position: relative; width: 100%; max-width: 400px; min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 48px 28px 36px; text-align: center;
+    padding: 24px 16px; text-align: center;
     animation: ticketReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .ticket-physical-cover-img {
+    width: 100%; max-width: 340px; border-radius: 12px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+    display: block; margin-bottom: 20px;
+  }
+  .ticket-physical-overlay {
+    position: relative; width: 100%; max-width: 340px;
   }
   @keyframes ticketReveal {
     from { opacity: 0; transform: scale(0.96) translateY(60px); }
@@ -1040,71 +1049,26 @@
 </div>
 <audio id="bgMusic" preload="metadata"></audio>
 
-<!-- ===== V7: TICKET COVER (first view) ===== -->
+<!-- ===== V9 OPTION A: PHYSICAL TICKET AS COVER ===== -->
 <div id="ticket-cover" role="button" tabindex="0" aria-label="Open invitation">
   <div class="ticket-container" onclick="event.stopPropagation()">
-    <!-- Floral decorations -->
-    <svg class="ticket-floral-top-left" viewBox="0 0 90 100" fill="none">
-      <g opacity="0.35">
-        <path d="M0,20 Q15,5 28,25 Q18,15 22,38 Q12,25 5,32Z" fill="#87CEEB"/>
-        <ellipse cx="35" cy="18" rx="8" ry="5" fill="#5BAFD4" opacity="0.5"/>
-      </g>
-    </svg>
-    <svg class="ticket-floral-bottom-right" viewBox="0 0 90 100" fill="none">
-      <g opacity="0.35">
-        <path d="M70,0 Q85,12 90,30 Q80,22 85,45 Q75,32 68,38Z" fill="#87CEEB"/>
-        <ellipse cx="75" cy="22" rx="8" ry="5" fill="#5BAFD4" opacity="0.5"/>
-      </g>
-    </svg>
-
-    <!-- Butterflies - bottom -->
-    <div class="ticket-butterfly ticket-butterfly-1">🦋</div>
-    <div class="ticket-butterfly ticket-butterfly-2">🦋</div>
-    <div class="ticket-butterfly ticket-butterfly-3">🦋</div>
-
-    <!-- Butterflies - top (above main section) -->
-    <div class="ticket-butterfly ticket-butterfly-top-1">🦋</div>
-    <div class="ticket-butterfly ticket-butterfly-top-2">🦋</div>
-    <div class="ticket-butterfly ticket-butterfly-top-3">🦋</div>
-
-    <!-- Main content -->
-    <div class="ticket-content">
-      <div class="ticket-header">
-        <div class="ticket-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
-        <div class="ticket-names-row">
-          <div class="ticket-name-block ticket-groom-block">
-            <span class="ticket-name-khmer">វង សុវណ្ណធឿន</span>
-            <span class="ticket-name-english">Vong Sovanthoeun</span>
-          </div>
-          <div class="ticket-names-heart">💕</div>
-          <div class="ticket-name-block ticket-bride-block">
-            <span class="ticket-name-khmer">រ៉ឹង វិឡា</span>
-            <span class="ticket-name-english">Roeng Vila</span>
-          </div>
-        </div>
-      </div>
-      <div class="ticket-invite" data-i18n="guestLabel">សូមគោរពអញ្ជើញ</div>
-
-      <!-- Guest name section -->
-      <div class="ticket-guest-section">
-        <div class="ticket-name-input-wrapper">
-          <input type="text" class="ticket-name-input" id="guestNameInput" value="ឯកឧត្តម និង លោកជំទាវ" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <div class="ticket-cta-wrapper" id="ticketOpenBtn">
-        <button type="button" class="ticket-cta-btn">
-          <span class="ticket-cta-btn-icon">👆</span>
-          <span data-i18n="clickToOpen">សូមចុចដើម្បីបើកធៀប</span>
-        </button>
-        <div class="ticket-cta-hint">Click to Open</div>
+    <!-- Physical ticket cover image (Option A) -->
+    <div class="ticket-physical-overlay">
+      <img class="ticket-physical-cover-img" src="images/physical-ticket-cover.png" alt="Wedding invitation">
+    </div>
+    <!-- Guest name section -->
+    <div class="ticket-guest-section">
+      <div class="ticket-name-input-wrapper">
+        <input type="text" class="ticket-name-input" id="guestNameInput" value="ឯកឧត្តម និង លោកជំទាវ" placeholder="ឈ្មោះភ្ញៀវ" autocomplete="off" data-i18n-placeholder="guestNamePlaceholder">
       </div>
     </div>
-
-    <!-- Couple illustration -->
-    <div class="ticket-couple-illus">
-      <img src="images/cover-couple-nobg.png" alt="Bride and Groom" onerror="this.src='images/cover-couple.png';">
+    <!-- CTA -->
+    <div class="ticket-cta-wrapper" id="ticketOpenBtn">
+      <button type="button" class="ticket-cta-btn">
+        <span class="ticket-cta-btn-icon">👆</span>
+        <span data-i18n="clickToOpen">សូមចុចដើម្បីបើកធៀប</span>
+      </button>
+      <div class="ticket-cta-hint">Click to Open</div>
     </div>
   </div>
 </div>
