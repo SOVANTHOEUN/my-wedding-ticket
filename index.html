@@ -1902,12 +1902,18 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-        .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; }); })
+        .then(function(r) {
+          return r.text().then(function(text) {
+            var d = {};
+            try { d = JSON.parse(text); } catch (_) {}
+            return { ok: r.ok, status: r.status, data: d };
+          });
+        })
         .then(function(res) {
           rsvpConfirm.disabled = false;
           rsvpDecline.disabled = false;
           if (rsvpUndecided) rsvpUndecided.disabled = false;
-          if (res.ok && res.data.ok) setSubmitted(status, msg);
+          if (res.ok && res.data && res.data.ok) setSubmitted(status, msg);
           else if (res.status === 409) setSubmitted(currentStatus || status, rsvpMessage ? rsvpMessage.value : '');
           else {
             if (prevStatus) setSubmitted(prevStatus, rsvpMessage ? rsvpMessage.value : '');
@@ -1917,10 +1923,14 @@
               if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
               currentStatus = null;
             }
-            setError((res.data && res.data.error) || 'Failed');
+            var errMsg = (res.data && res.data.error) || 'Failed';
+            if (res.status === 404 && errMsg.indexOf('Guest not found') >= 0) {
+              errMsg = 'Guest not found: ' + token + '. Add GUEST_LIST_SHEET in Vercel if your guest list is on a named tab.';
+            }
+            setError(errMsg);
           }
         })
-        .catch(function(err) {
+        .catch(function() {
           rsvpConfirm.disabled = false;
           rsvpDecline.disabled = false;
           if (rsvpUndecided) rsvpUndecided.disabled = false;
@@ -1931,7 +1941,7 @@
             if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
             currentStatus = null;
           }
-          setError('Failed to send. Check your invite link.');
+          setError('Failed to send. Check network or try again.');
         });
     }
 

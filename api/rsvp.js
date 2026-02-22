@@ -222,7 +222,10 @@ module.exports = async function handler(req, res) {
     const [guestList, rows] = await Promise.all([getGuestList(sheets), getRsvpRows(sheets)]);
     const guestName = guestList[token];
     if (!guestName) {
-      return res.status(404).json({ error: 'Guest not found' });
+      const hint = process.env.GUEST_LIST_SHEET
+        ? 'Token not in guest list. Check GUEST_LIST_SHEET and sheet columns A:B (groom), D:E (bride).'
+        : 'Token not in guest list. If guest list is on a named sheet (not first tab), set GUEST_LIST_SHEET env var.';
+      return res.status(404).json({ error: 'Guest not found', hint });
     }
 
     const found = findRsvpRow(rows, token);
