@@ -10,6 +10,7 @@ import { getGuestList } from './guest.js';
 
 const CRAWLER_UA = [
   'facebookexternalhit',
+  'facebookcatalog',
   'Facebot',
   'TelegramBot',
   'Telegram',
@@ -54,6 +55,8 @@ function buildOgHtml(opts) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:image" content="${escapeHtml(imageUrl)}">
+<meta property="og:image:width" content="1022">
+<meta property="og:image:height" content="1024">
 <meta property="og:url" content="${escapeHtml(pageUrl)}">
 <meta property="og:site_name" content="Wedding Invitation">
 <meta property="og:locale" content="km_KH">
@@ -61,7 +64,6 @@ function buildOgHtml(opts) {
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
 <meta name="twitter:image" content="${escapeHtml(imageUrl)}">
-<meta http-equiv="refresh" content="0;url=${escapeHtml(pageUrl)}">
 </head>
 <body>
 <p>សូមចុចដើម្បីបើកធៀប — <a href="${escapeHtml(pageUrl)}">Click to Open Invitation</a></p>

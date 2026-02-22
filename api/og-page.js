@@ -45,7 +45,6 @@ function buildHtml(opts) {
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
 <meta name="twitter:image" content="${escapeHtml(imageUrl)}">
-<meta http-equiv="refresh" content="0;url=${escapeHtml(pageUrl)}">
 </head>
 <body>
 <p>សូមចុចដើម្បីបើកធៀប — <a href="${escapeHtml(pageUrl)}">Click to Open Invitation</a></p>
