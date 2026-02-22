@@ -32,6 +32,19 @@
   })();
 </script>
 <title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V7 — VONG Sovanthoeun & ROENG Vila</title>
+<!-- Early guest API preload: start fetch as soon as ?g= is in URL -->
+<script>
+(function(){
+  var m = /[?&]g=([^&]+)/.exec(location.search);
+  if (m && m[1]) {
+    var token = m[1].toLowerCase().trim();
+    window.__guestFetchPromise = fetch(window.location.origin + '/api/guest?g=' + encodeURIComponent(token))
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ return (d && d.name) ? d.name : null; })
+      .catch(function(){ return null; });
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;600;700&display=swap" as="style">
@@ -271,9 +284,13 @@
     font-family: 'Battambang', 'Khmer OS Battambang', 'Noto Serif Khmer', serif;
     font-size: clamp(18px, 4.5vw, 22px);
     font-weight: 700; color: var(--dark);
-    letter-spacing: 0.8px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  }
+  .guest-name-text.guest-loading {
+    animation: guestLoadingPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes guestLoadingPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
   }
 
   .invitation-text {
@@ -1040,6 +1057,9 @@
   .ticket-name-input::placeholder {
     color: var(--text-muted); font-size: 14px;
   }
+  .ticket-name-input.guest-loading {
+    animation: guestLoadingPulse 1.2s ease-in-out infinite;
+  }
 
   /* CTA Button */
   .ticket-cta-wrapper {
@@ -1522,31 +1542,46 @@
   // Guest from URL (?g=token) — fetch from API (guest list hidden server-side)
   (function() {
     var DEFAULT_GUEST = 'ឯកឧត្តម និង លោកជំទាវ';
+    var LOADING_GUEST = '...';
     var params = new URLSearchParams(window.location.search);
     var token = (params.get('g') || '').toLowerCase().trim();
 
     function applyGuest(guestName) {
       var safe = sanitizeGuestName(guestName) || DEFAULT_GUEST;
+      var isLoading = (guestName === LOADING_GUEST);
       var input = document.getElementById('guestNameInput');
       var detailSpan = document.querySelector('.guest-name-text');
-      if (input) input.value = safe;
-      if (detailSpan) detailSpan.textContent = safe;
+      if (input) {
+        input.value = safe;
+        input.classList.toggle('guest-loading', isLoading);
+      }
+      if (detailSpan) {
+        detailSpan.textContent = safe;
+        detailSpan.classList.toggle('guest-loading', isLoading);
+      }
     }
 
     function applyGuestFromInput() {
       var input = document.getElementById('guestNameInput');
       var detailSpan = document.querySelector('.guest-name-text');
-      if (input && detailSpan) detailSpan.textContent = sanitizeGuestName(input.value) || DEFAULT_GUEST;
+      if (input && detailSpan) {
+        var text = sanitizeGuestName(input.value) || DEFAULT_GUEST;
+        detailSpan.textContent = text;
+        detailSpan.classList.toggle('guest-loading', text === LOADING_GUEST);
+      }
     }
 
     if (token) {
-      fetch(window.location.origin + '/api/guest?g=' + encodeURIComponent(token))
+      // Show loading state immediately so user doesn't see default for 5–6 sec
+      applyGuest(LOADING_GUEST);
+      // Use preloaded promise from head (started earlier) or start our own fetch
+      var p = window.__guestFetchPromise || fetch(window.location.origin + '/api/guest?g=' + encodeURIComponent(token))
         .then(function(r) { return r.ok ? r.json() : null; })
-        .then(function(data) {
-          if (data && data.name) applyGuest(data.name);
-          else applyGuest(DEFAULT_GUEST);
-        })
-        .catch(function() { applyGuest(DEFAULT_GUEST); });
+        .then(function(d) { return (d && d.name) ? d.name : null; })
+        .catch(function() { return null; });
+      Promise.resolve(p).then(function(name) {
+        applyGuest(name || DEFAULT_GUEST);
+      });
     } else {
       applyGuest(DEFAULT_GUEST);
     }
