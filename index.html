@@ -467,6 +467,58 @@
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     color: var(--text-muted); position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; letter-spacing: 1px; z-index: 1;
   }
+
+  /* PHYSICAL INVITATION */
+  .physical-invitation-carousel {
+    display: flex; gap: 20px; overflow-x: auto;
+    padding: 16px 8px 24px; margin: 0 -8px;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .physical-invitation-carousel::-webkit-scrollbar { height: 6px; }
+  .physical-invitation-carousel::-webkit-scrollbar-thumb { background: var(--sky-light); border-radius: 3px; }
+  .physical-invitation-item {
+    flex: 0 0 min(280px, 85vw); scroll-snap-align: center;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--silver-pale);
+    box-shadow: 0 4px 20px rgba(135,206,235,0.1);
+    cursor: pointer; transition: all 0.35s ease;
+    background: var(--white);
+  }
+  .physical-invitation-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(135,206,235,0.18);
+    border-color: var(--sky-light);
+  }
+  .physical-invitation-item img {
+    display: block; width: 100%; height: auto;
+    aspect-ratio: 3/4; object-fit: cover;
+  }
+  .physical-invitation-label {
+    font-family: 'Montserrat', sans-serif; font-size: 11px;
+    color: var(--text-muted); text-align: center; padding: 10px 8px;
+    letter-spacing: 1px;
+  }
+
+  /* Lightbox prev/next nav */
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.9); border: none;
+    color: var(--dark); font-size: 24px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1001; transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .lightbox-nav:hover { background: var(--white); transform: translateY(-50%) scale(1.05); }
+  .lightbox-prev { left: 16px; }
+  .lightbox-next { right: 16px; }
+  @media (max-width: 480px) {
+    .lightbox-nav { width: 40px; height: 40px; font-size: 20px; }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+  }
+
   .lightbox-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 1000;
     display: none; align-items: center; justify-content: center; padding: 20px;
@@ -553,10 +605,12 @@
     display: flex; align-items: center; justify-content: center;
     font-family: 'Montserrat', monospace; font-size: 11px; font-weight: 700;
     color: var(--sky-deep); letter-spacing: 1.5px;
+    text-decoration: none;
     background: var(--ice); border-radius: 12px;
     border: 1.5px solid var(--sky-pale);
     word-break: break-all; text-align: center; line-height: 1.4;
     overflow: hidden; padding: 8px;
+    -webkit-tap-highlight-color: transparent;
   }
   .gift-account-copy { cursor: pointer; user-select: none; transition: background 0.2s, border-color 0.2s, color 0.2s; }
   .gift-account-copy:hover { background: var(--sky-pale); border-color: var(--sky-light); }
@@ -1119,10 +1173,12 @@
 <div class="petal-layer" id="petalLayer"></div>
 <button class="scroll-top" id="scrollTopBtn" onclick="document.getElementById('detail-page').scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="lightbox-overlay" id="lightbox" aria-hidden="true">
+  <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous">‹</button>
   <div class="lightbox-inner">
     <img id="lightboxImg" src="" alt="">
     <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
   </div>
+  <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next">›</button>
 </div>
 
 <!-- ===== HERO ===== -->
@@ -1304,6 +1360,34 @@
       <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Engagement 2"><span class="gallery-item-label">Engagement 2</span></div>
       <div class="gallery-item fade-item"><img src="images/engagement3.jpeg" alt="Engagement 3"><span class="gallery-item-label">Engagement 3</span></div>
       <div class="gallery-item fade-item"><img src="images/engagement4.jpeg" alt="Engagement 4"><span class="gallery-item-label">Engagement 4</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PHYSICAL INVITATION ===== -->
+<section class="section-white">
+  <div class="section-inner">
+    <div class="fade-section">
+      <div class="section-title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+      <div class="section-subtitle">Our physical invitation</div>
+    </div>
+    <div class="physical-invitation-carousel fade-section" id="physicalInvitationGrid">
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-cover.png" alt="Wedding invitation cover">
+        <div class="physical-invitation-label">Cover</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-inside.png" alt="Wedding invitation inside">
+        <div class="physical-invitation-label">Inside</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-details.png" alt="Wedding invitation details">
+        <div class="physical-invitation-label">Details</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-back.png" alt="Wedding invitation back">
+        <div class="physical-invitation-label">Back</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1525,30 +1609,122 @@
   window.addEventListener('scroll', updateScrollBtn, true);
   document.getElementById('detail-page').addEventListener('scroll', updateScrollBtn);
 
-  // Gallery lightbox
+  // Gallery + Physical invitation lightbox with prev/next swipe
   (function() {
     var lb = document.getElementById('lightbox');
     var lbImg = document.getElementById('lightboxImg');
     var lbClose = document.getElementById('lightboxClose');
-    function openLightbox(src, alt) { lbImg.src = src; lbImg.alt = alt || ''; lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
-    function closeLightbox() { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+    var lbPrev = document.getElementById('lightboxPrev');
+    var lbNext = document.getElementById('lightboxNext');
+    var lightboxImages = [];
+    var currentIndex = 0;
+
+    function collectImages() {
+      var list = [];
+      var pGrid = document.getElementById('physicalInvitationGrid');
+      var gGrid = document.getElementById('galleryGrid');
+      if (pGrid) {
+        pGrid.querySelectorAll('.physical-invitation-item img').forEach(function(img) {
+          if (img.src) list.push({ src: img.src, alt: img.alt || '' });
+        });
+      }
+      if (gGrid) {
+        gGrid.querySelectorAll('.gallery-item img').forEach(function(img) {
+          if (img.src) list.push({ src: img.src, alt: img.alt || '' });
+        });
+      }
+      return list;
+    }
+
+    function openLightbox(src, alt) {
+      lightboxImages = collectImages();
+      var idx = lightboxImages.findIndex(function(item) { return item.src === src; });
+      currentIndex = idx >= 0 ? idx : 0;
+      lbImg.src = lightboxImages[currentIndex].src;
+      lbImg.alt = lightboxImages[currentIndex].alt || '';
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      updateNavVisibility();
+    }
+
+    function closeLightbox() {
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function goPrev() {
+      if (lightboxImages.length <= 1) return;
+      currentIndex = (currentIndex - 1 + lightboxImages.length) % lightboxImages.length;
+      lbImg.src = lightboxImages[currentIndex].src;
+      lbImg.alt = lightboxImages[currentIndex].alt || '';
+      updateNavVisibility();
+    }
+
+    function goNext() {
+      if (lightboxImages.length <= 1) return;
+      currentIndex = (currentIndex + 1) % lightboxImages.length;
+      lbImg.src = lightboxImages[currentIndex].src;
+      lbImg.alt = lightboxImages[currentIndex].alt || '';
+      updateNavVisibility();
+    }
+
+    function updateNavVisibility() {
+      var showNav = lightboxImages.length > 1;
+      if (lbPrev) lbPrev.style.display = showNav ? 'flex' : 'none';
+      if (lbNext) lbNext.style.display = showNav ? 'flex' : 'none';
+    }
+
     document.getElementById('galleryGrid').addEventListener('click', function(e) {
       var item = e.target.closest('.gallery-item');
       if (!item) return;
       var img = item.querySelector('img');
       if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
     });
+    var pGrid = document.getElementById('physicalInvitationGrid');
+    if (pGrid) {
+      pGrid.addEventListener('click', function(e) {
+        var item = e.target.closest('.physical-invitation-item');
+        if (!item) return;
+        var img = item.querySelector('img');
+        if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
+      });
+    }
     lbClose.addEventListener('click', closeLightbox);
-    lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
+    lb.addEventListener('click', function(e) {
+      if (e.target === lb) closeLightbox();
+    });
+    if (lbPrev) lbPrev.addEventListener('click', function(e) { e.stopPropagation(); goPrev(); });
+    if (lbNext) lbNext.addEventListener('click', function(e) { e.stopPropagation(); goNext(); });
+    document.addEventListener('keydown', function(e) {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+    });
+    // Touch swipe
+    var touchStartX = 0;
+    lb.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    }, { passive: true });
+    lb.addEventListener('touchend', function(e) {
+      var touchEndX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+      var diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) goNext();
+        else goPrev();
+      }
+    }, { passive: true });
   })();
 
   // IBK account number — click to copy (account box or Tap to copy button)
   function copyAccountAndFeedback(el, text) {
     if (!text) text = el.textContent.trim();
     function showCopied(target) {
-      var orig = target.textContent; target.textContent = 'Copied!'; target.style.color = 'var(--sky-deep)';
-      setTimeout(function() { target.textContent = orig; target.style.color = ''; }, 1200);
+      var orig = target.textContent; target.textContent = 'Copied!';
+      target.style.color = 'var(--sky-deep)'; target.style.textDecoration = 'none';
+      setTimeout(function() { target.textContent = orig; target.style.color = ''; target.style.textDecoration = ''; }, 1200);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function() { showCopied(el); });
