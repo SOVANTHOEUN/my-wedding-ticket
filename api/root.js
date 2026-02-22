@@ -22,6 +22,7 @@ const CRAWLER_UA = [
   'Pinterest',
   'meta-externalagent',
   'meta-externalfetcher',
+  'meta-webindexer',
 ];
 
 const DEFAULT_TITLE = 'សិរីមង្គលអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila';
@@ -56,13 +57,15 @@ function buildOgHtml(opts) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:image" content="${escapeHtml(imageUrl)}">
+<meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:width" content="1022">
 <meta property="og:image:height" content="1024">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="${escapeHtml('Wedding Invitation - VONG Sovanthoeun & ROENG Vila')}">
 <meta property="og:url" content="${escapeHtml(pageUrl)}">
 <meta property="og:site_name" content="Wedding Invitation">
 <meta property="og:locale" content="km_KH">
 ${fbAppId}
-<meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
