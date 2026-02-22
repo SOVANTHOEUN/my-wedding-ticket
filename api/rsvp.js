@@ -146,13 +146,18 @@ async function getSheets() {
   const sheetId = process.env.GOOGLE_SHEET_ID;
   const credsJson = process.env.GUEST_SHEET_CREDENTIALS || process.env.GOOGLE_SHEET_CREDENTIALS;
   if (!sheetId || !credsJson) return null;
-  const { google } = await import('googleapis');
-  const creds = JSON.parse(credsJson);
-  const auth = new google.auth.GoogleAuth({
-    credentials: creds,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets']
-  });
-  return google.sheets({ version: 'v4', auth });
+  try {
+    const { google } = await import('googleapis');
+    const creds = typeof credsJson === 'string' ? JSON.parse(credsJson.trim()) : credsJson;
+    const auth = new google.auth.GoogleAuth({
+      credentials: creds,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets']
+    });
+    return google.sheets({ version: 'v4', auth });
+  } catch (e) {
+    console.error('Sheets auth error:', e.message);
+    throw new Error('Invalid GUEST_SHEET_CREDENTIALS. Check JSON format.');
+  }
 }
 
 module.exports = async function handler(req, res) {
@@ -164,9 +169,15 @@ module.exports = async function handler(req, res) {
     return res.status(204).end();
   }
 
-  const sheets = await getSheets();
+  let sheets;
+  try {
+    sheets = await getSheets();
+  } catch (e) {
+    console.error('RSVP init error:', e.message);
+    return res.status(503).json({ error: e.message || 'Sheets configuration error' });
+  }
   if (!sheets) {
-    return res.status(503).json({ error: 'RSVP requires Google Sheets configuration' });
+    return res.status(503).json({ error: 'RSVP requires GOOGLE_SHEET_ID and GUEST_SHEET_CREDENTIALS' });
   }
 
   // ——— GET: Check if guest has submitted ———
@@ -235,8 +246,8 @@ module.exports = async function handler(req, res) {
       if (!found) {
         return res.status(404).json({ error: 'No RSVP found. Submit first.' });
       }
-      const row = found.row;
-      const regDttm = row[3] || new Date().toISOString();
+      const parsed = parseRsvpRow(found.row);
+      const regDttm = (parsed && parsed.reg_dttm) || new Date().toISOString();
       await updateRsvpRow(sheets, found.index, token, guestName, status, regDttm, message, device_type, location);
       return res.status(200).json({ ok: true, status, updated: true });
     }
@@ -248,7 +259,14 @@ module.exports = async function handler(req, res) {
     await appendRsvp(sheets, token, guestName, status, message, device_type, location);
     return res.status(200).json({ ok: true, status });
   } catch (e) {
-    console.error('RSVP error:', e.message);
-    return res.status(500).json({ error: 'Failed to save RSVP' });
+    console.error('RSVP error:', e.message, e.stack);
+    const msg = e.message || String(e);
+    const isPermission = /permission|forbidden|403/i.test(msg);
+    const isNotFound = /not found|404|Unable to parse range/i.test(msg);
+    let errMsg = 'Failed to save RSVP';
+    if (isPermission) errMsg = 'Sheet permission denied. Share the spreadsheet with the service account email (Editor).';
+    else if (isNotFound) errMsg = 'Sheet or range not found. Check GUEST_LIST_SHEET and RSVP tab names.';
+    else if (msg) errMsg += ': ' + msg.slice(0, 100);
+    return res.status(500).json({ error: errMsg });
   }
 };
