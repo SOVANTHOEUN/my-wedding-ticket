@@ -44,7 +44,8 @@ function escapeHtml(s) {
 }
 
 function buildOgHtml(opts) {
-  const { title, description, imageUrl, pageUrl } = opts;
+  const { title, description, imageUrl, pageUrl, appId } = opts;
+  const fbAppId = appId ? `<meta property="fb:app_id" content="${escapeHtml(appId)}">` : '';
   return `<!DOCTYPE html>
 <html lang="km">
 <head>
@@ -60,6 +61,8 @@ function buildOgHtml(opts) {
 <meta property="og:url" content="${escapeHtml(pageUrl)}">
 <meta property="og:site_name" content="Wedding Invitation">
 <meta property="og:locale" content="km_KH">
+${fbAppId}
+<meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
@@ -102,10 +105,11 @@ export default async function handler(req, res) {
       : `${DEFAULT_DESC} — ${COUPLE_NAMES}`;
     const pageUrl = `${baseUrl}/?g=${encodeURIComponent(token)}`;
     const imageUrl = `${baseUrl}/images/physical-ticket-cover.png`;
+    const appId = process.env.META_APP_ID || process.env.FB_APP_ID || '';
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'public, max-age=300');
-    return res.status(200).send(buildOgHtml({ title, description, imageUrl, pageUrl }));
+    return res.status(200).send(buildOgHtml({ title, description, imageUrl, pageUrl, appId }));
   }
 
   // Regular user -> serve index.html
