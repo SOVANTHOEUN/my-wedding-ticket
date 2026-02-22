@@ -1,6 +1,6 @@
 /**
  * Wedding E-Ticket — Edge middleware for SNS link previews
- * When a crawler (Facebook, Messenger, Telegram, etc.) requests /?g=token,
+ * When a crawler (Facebook, Messenger, Telegram, etc.) requests /?g=token or /?b=token,
  * rewrite to /api/og-page to serve HTML with dynamic Open Graph meta tags.
  */
 
@@ -35,8 +35,11 @@ export default function middleware(request) {
   if (!isCrawler(ua)) return next();
 
   const url = new URL(request.url);
-  const token = url.searchParams.get('g');
-  if (!token || !/^g\d+$/i.test(token)) return next();
+  const g = url.searchParams.get('g');
+  const b = url.searchParams.get('b');
+  const token = g || b;
+  const param = g ? 'g' : (b ? 'b' : null);
+  if (!token || !param || !/^(g|b)\d+$/i.test(token)) return next();
 
-  return rewrite(new URL(`/api/og-page?g=${encodeURIComponent(token)}`, request.url));
+  return rewrite(new URL(`/api/og-page?${param}=${encodeURIComponent(token)}`, request.url));
 }

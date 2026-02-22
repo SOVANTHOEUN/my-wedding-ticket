@@ -6,7 +6,7 @@
  * 1. api/guests.json — static file from build (instant, no cold start)
  * 2. Google Sheets — fallback when guests.json is empty
  * Env: GOOGLE_SHEET_ID + GUEST_SHEET_CREDENTIALS (service account JSON)
- * Sheet format: Col A = token (g001) or names; Col B = name if Col A is token.
+ * Sheet format: Col A:B = groom's guests (g001, g002...); Col D:E = bride's guests (b001, b002...).
  */
 
 import { createRequire } from 'module';
@@ -42,23 +42,40 @@ async function getGuestList() {
         scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly']
       });
       const sheets = google.sheets({ version: 'v4', auth });
-      const res = await sheets.spreadsheets.values.get({
-        spreadsheetId: sheetId,
-        range: 'A:B' // Col A = names (or token); Col B = name if Col A is token
-      });
-      const rows = res.data.values || [];
+      const [groomRes, brideRes] = await Promise.all([
+        sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'A:B' }),
+        sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'D:E' })
+      ]);
       const data = {};
-      const tokenPattern = /^g\d+$/;
-      rows.forEach((row, i) => {
+      const gPattern = /^g\d+$/;
+      const bPattern = /^b\d+$/;
+
+      (groomRes.data.values || []).forEach((row, i) => {
         const colA = (row[0] || '').toString().trim();
         const colB = (row[1] || '').toString().trim();
         let token, name;
-        if (colB && tokenPattern.test(colA.toLowerCase())) {
+        const colBIsName = colB && !/^https?:\/\//i.test(colB);
+        if (colBIsName && gPattern.test(colA.toLowerCase())) {
           token = colA.toLowerCase();
           name = colB;
         } else if (colA) {
           token = 'g' + String(i + 1).padStart(3, '0');
           name = colA;
+        }
+        if (token && name) data[token] = name;
+      });
+
+      (brideRes.data.values || []).forEach((row, i) => {
+        const colD = (row[0] || '').toString().trim();
+        const colE = (row[1] || '').toString().trim();
+        let token, name;
+        const colEIsName = colE && !/^https?:\/\//i.test(colE);
+        if (colEIsName && bPattern.test(colD.toLowerCase())) {
+          token = colD.toLowerCase();
+          name = colE;
+        } else if (colD) {
+          token = 'b' + String(i + 1).padStart(3, '0');
+          name = colD;
         }
         if (token && name) data[token] = name;
       });
@@ -77,7 +94,7 @@ async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'private, max-age=300'); // 5 min cache
 
-  const token = (req.query.g || '').toLowerCase().trim();
+  const token = (req.query.g || req.query.b || '').toLowerCase().trim();
   if (!token) {
     return res.status(400).json({ error: 'Missing token' });
   }

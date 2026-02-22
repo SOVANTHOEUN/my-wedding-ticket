@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-visual">
-<!-- Open Graph / SNS link preview (default; dynamic guest name via /api/og-page for crawlers with ?g=) -->
+<!-- Open Graph / SNS link preview (default; dynamic guest name via /api/og-page for crawlers with ?g= or ?b=) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="សិរីមង្គលអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila">
 <meta property="og:description" content="សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila">
@@ -33,13 +33,16 @@
   })();
 </script>
 <title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V7 — VONG Sovanthoeun & ROENG Vila</title>
-<!-- Early guest API preload: start fetch as soon as ?g= is in URL -->
+<!-- Early guest API preload: start fetch as soon as ?g= or ?b= is in URL -->
 <script>
 (function(){
-  var m = /[?&]g=([^&]+)/.exec(location.search);
-  if (m && m[1]) {
-    var token = m[1].toLowerCase().trim();
-    window.__guestFetchPromise = fetch(window.location.origin + '/api/guest?g=' + encodeURIComponent(token))
+  var mg = /[?&]g=([^&]+)/.exec(location.search);
+  var mb = /[?&]b=([^&]+)/.exec(location.search);
+  var param = mg ? 'g' : (mb ? 'b' : null);
+  var token = (mg && mg[1]) || (mb && mb[1]);
+  if (param && token) {
+    token = token.toLowerCase().trim();
+    window.__guestFetchPromise = fetch(window.location.origin + '/api/guest?' + param + '=' + encodeURIComponent(token))
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(d){ return (d && d.name) ? d.name : null; })
       .catch(function(){ return null; });
@@ -1540,12 +1543,13 @@
     return str.slice(0, 100).replace(/[<>\"'&]/g, '');
   }
 
-  // Guest from URL (?g=token) — fetch from API (guest list hidden server-side)
+  // Guest from URL (?g=token or ?b=token) — fetch from API (guest list hidden server-side)
   (function() {
     var DEFAULT_GUEST = 'ឯកឧត្តម និង លោកជំទាវ';
     var LOADING_GUEST = '...';
     var params = new URLSearchParams(window.location.search);
-    var token = (params.get('g') || '').toLowerCase().trim();
+    var token = (params.get('g') || params.get('b') || '').toLowerCase().trim();
+    var param = params.get('g') ? 'g' : (params.get('b') ? 'b' : null);
 
     function applyGuest(guestName) {
       var safe = sanitizeGuestName(guestName) || DEFAULT_GUEST;
@@ -1572,11 +1576,11 @@
       }
     }
 
-    if (token) {
+    if (token && param) {
       // Show loading state immediately so user doesn't see default for 5–6 sec
       applyGuest(LOADING_GUEST);
       // Use preloaded promise from head (started earlier) or start our own fetch
-      var p = window.__guestFetchPromise || fetch(window.location.origin + '/api/guest?g=' + encodeURIComponent(token))
+      var p = window.__guestFetchPromise || fetch(window.location.origin + '/api/guest?' + param + '=' + encodeURIComponent(token))
         .then(function(r) { return r.ok ? r.json() : null; })
         .then(function(d) { return (d && d.name) ? d.name : null; })
         .catch(function() { return null; });

@@ -1,6 +1,6 @@
 /**
  * Wedding E-Ticket — Root path handler for SNS link previews
- * Serves dynamic OG HTML to crawlers (Messenger, Telegram, etc.) when ?g=token is present.
+ * Serves dynamic OG HTML to crawlers (Messenger, Telegram, etc.) when ?g=token or ?b=token is present.
  * Serves normal index.html to regular users.
  *
  * Uses vercel.json rewrite: / -> /api/root (middleware doesn't run on static sites).
@@ -87,15 +87,18 @@ function getQueryParam(req, key) {
 
 export default async function handler(req, res) {
   const ua = req.headers['user-agent'] || '';
-  const token = getQueryParam(req, 'g').toLowerCase();
+  const g = getQueryParam(req, 'g').toLowerCase();
+  const b = getQueryParam(req, 'b').toLowerCase();
+  const token = g || b;
+  const param = g ? 'g' : (b ? 'b' : null);
   const host = req.headers['x-forwarded-host'] || req.headers.host || 'my-wedding-ticket.vercel.app';
   const proto = req.headers['x-forwarded-proto'] === 'https' || req.headers['x-forwarded-proto'] === 'http'
     ? req.headers['x-forwarded-proto']
     : 'https';
   const baseUrl = `${proto}://${host}`;
 
-  // Crawler with ?g=token -> serve dynamic OG HTML
-  if (isCrawler(ua) && token && /^g\d+$/.test(token)) {
+  // Crawler with ?g=token or ?b=token -> serve dynamic OG HTML
+  if (isCrawler(ua) && token && param && /^(g|b)\d+$/.test(token)) {
     let guestName = null;
     const list = await getGuestList();
     if (list) guestName = list[token] || null;
@@ -106,7 +109,7 @@ export default async function handler(req, res) {
     const description = guestName
       ? `${DEFAULT_DESC} — ${guestName}`
       : `${DEFAULT_DESC} — ${COUPLE_NAMES}`;
-    const pageUrl = `${baseUrl}/?g=${encodeURIComponent(token)}`;
+    const pageUrl = `${baseUrl}/?${param}=${encodeURIComponent(token)}`;
     const imageUrl = `${baseUrl}/images/physical-ticket-cover.png`;
     const appId = process.env.META_APP_ID || process.env.FB_APP_ID || '';
 

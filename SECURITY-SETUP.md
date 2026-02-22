@@ -21,11 +21,15 @@ Guest names are sanitized to prevent XSS:
 
 The guest list is **never exposed** in the client. The API returns only the requested name.
 
-**Format A — Names only (auto-generated tokens):**
-- Column A = guest names. Row 1 = g001, Row 2 = g002, etc.
+**Groom's guests (Columns A:B):**
+- Format A — Names only: Column A = guest names. Row 1 = g001, Row 2 = g002, etc.
+- Format B — Token + Name: Column A = token (g001, g002), Column B = guest name. Row 1 = header optional.
 
-**Format B — Token + Name:**
-- Column A = token (g001, g002), Column B = guest name. Row 1 = header optional.
+**Bride's guests (Columns D:E):**
+- Format A — Names only: Column D = guest names. Row 1 = b001, Row 2 = b002, etc.
+- Format B — Token + Name: Column D = token (b001, b002), Column E = guest name. Row 1 = header optional.
+
+Invite links: `?g=g001` (groom's) or `?b=b001` (bride's).
 
 2. **Google Cloud setup:**
    - Go to [Google Cloud Console](https://console.cloud.google.com)

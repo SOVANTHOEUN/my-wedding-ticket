@@ -2,7 +2,7 @@
  * Wedding E-Ticket — Dynamic Open Graph page for SNS crawlers
  * Returns HTML with meta tags so shared links show rich previews with guest name.
  *
- * Invoked by middleware when a crawler (Facebook, Telegram, etc.) requests /?g=token.
+ * Invoked by middleware when a crawler (Facebook, Telegram, etc.) requests /?g=token or /?b=token.
  */
 
 import { getGuestList } from './guest.js';
@@ -64,13 +64,16 @@ export default async function handler(req, res) {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=300'); // 5 min
 
-  const token = getQueryParam(req, 'g').toLowerCase();
+  const g = getQueryParam(req, 'g').toLowerCase();
+  const b = getQueryParam(req, 'b').toLowerCase();
+  const token = g || b;
+  const param = g ? 'g' : (b ? 'b' : null);
   const host = req.headers['x-forwarded-host'] || req.headers.host || 'my-wedding-ticket.vercel.app';
   const proto = req.headers['x-forwarded-proto'] === 'https' || req.headers['x-forwarded-proto'] === 'http'
     ? req.headers['x-forwarded-proto']
     : 'https';
   const baseUrl = `${proto}://${host}`;
-  const pageUrl = token ? `${baseUrl}/?g=${encodeURIComponent(token)}` : baseUrl + '/';
+  const pageUrl = token && param ? `${baseUrl}/?${param}=${encodeURIComponent(token)}` : baseUrl + '/';
   const imageUrl = `${baseUrl}/images/physical-ticket-cover.png`;
 
   let guestName = null;

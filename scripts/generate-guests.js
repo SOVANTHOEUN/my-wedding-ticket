@@ -33,23 +33,40 @@ async function generate() {
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
     });
     const sheets = google.sheets({ version: 'v4', auth });
-    const res = await sheets.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      range: 'A:B',
-    });
-    const rows = res.data.values || [];
+    const [groomRes, brideRes] = await Promise.all([
+      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'A:B' }),
+      sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'D:E' }),
+    ]);
     const data = {};
-    const tokenPattern = /^g\d+$/;
-    rows.forEach((row, i) => {
+    const gPattern = /^g\d+$/;
+    const bPattern = /^b\d+$/;
+
+    (groomRes.data.values || []).forEach((row, i) => {
       const colA = (row[0] || '').toString().trim();
       const colB = (row[1] || '').toString().trim();
       let token, name;
-      if (colB && tokenPattern.test(colA.toLowerCase())) {
+      const colBIsName = colB && !/^https?:\/\//i.test(colB);
+      if (colBIsName && gPattern.test(colA.toLowerCase())) {
         token = colA.toLowerCase();
         name = colB;
       } else if (colA) {
         token = 'g' + String(i + 1).padStart(3, '0');
         name = colA;
+      }
+      if (token && name) data[token] = name;
+    });
+
+    (brideRes.data.values || []).forEach((row, i) => {
+      const colD = (row[0] || '').toString().trim();
+      const colE = (row[1] || '').toString().trim();
+      let token, name;
+      const colEIsName = colE && !/^https?:\/\//i.test(colE);
+      if (colEIsName && bPattern.test(colD.toLowerCase())) {
+        token = colD.toLowerCase();
+        name = colE;
+      } else if (colD) {
+        token = 'b' + String(i + 1).padStart(3, '0');
+        name = colD;
       }
       if (token && name) data[token] = name;
     });
