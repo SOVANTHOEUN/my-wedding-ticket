@@ -26,6 +26,7 @@ function buildHtml(opts) {
     description,
     imageUrl,
     pageUrl,
+    fbAppId = '',
   } = opts;
 
   return `<!DOCTYPE html>
@@ -38,8 +39,8 @@ function buildHtml(opts) {
 <meta property="og:image" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:url" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image:width" content="1022">
+<meta property="og:image:height" content="1024">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:alt" content="${escapeHtml('Wedding Invitation - VONG Sovanthoeun & ROENG Vila')}">
 <meta property="og:title" content="${escapeHtml(title)}">
@@ -47,6 +48,7 @@ function buildHtml(opts) {
 <meta property="og:url" content="${escapeHtml(pageUrl)}">
 <meta property="og:site_name" content="Wedding Invitation">
 <meta property="og:locale" content="km_KH">
+${(fbAppId && fbAppId.trim()) ? `<meta property="fb:app_id" content="${escapeHtml(fbAppId.trim())}">` : ''}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
@@ -80,7 +82,7 @@ export default async function handler(req, res) {
     : 'https';
   const baseUrl = `${proto}://${host}`;
   const pageUrl = token && param ? `${baseUrl}/?${param}=${encodeURIComponent(token)}` : baseUrl + '/';
-  const imageUrl = `${baseUrl}/api/og-image`;
+  const imageUrl = `${baseUrl}/images/physical-ticket-cover.png`;
 
   let guestName = null;
   if (token) {
@@ -96,6 +98,7 @@ export default async function handler(req, res) {
     ? `${INVITE_LINE}\n${guestName}`
     : `សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila`;
 
-  const html = buildHtml({ title, description, imageUrl, pageUrl });
+  const fbAppId = (process.env.META_APP_ID || process.env.FB_APP_ID || '').trim();
+  const html = buildHtml({ title, description, imageUrl, pageUrl, fbAppId });
   res.status(200).send(html);
 };
