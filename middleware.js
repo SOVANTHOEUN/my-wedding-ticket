@@ -6,14 +6,12 @@
 
 import { rewrite, next } from '@vercel/functions';
 
+// Only actual crawler bots — NOT Messenger in-app browser (which uses FBAN/FBAV/FB_IAB)
 const CRAWLER_UA = [
   'facebookexternalhit',
   'facebookcatalog',
   'Facebot',
-  'FBAN',           // Facebook App
-  'FBAV',           // Facebook App Version
   'TelegramBot',
-  'Telegram',
   'Twitterbot',
   'LinkedInBot',
   'WhatsApp',
