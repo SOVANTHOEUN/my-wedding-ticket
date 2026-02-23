@@ -8,8 +8,10 @@ import { rewrite, next } from '@vercel/functions';
 
 const CRAWLER_UA = [
   'facebookexternalhit',
+  'facebookcatalog',
   'Facebot',
   'TelegramBot',
+  'Telegram',
   'Twitterbot',
   'LinkedInBot',
   'WhatsApp',
@@ -18,6 +20,7 @@ const CRAWLER_UA = [
   'Pinterest',
   'meta-externalagent',
   'meta-externalfetcher',
+  'meta-webindexer',
 ];
 
 function isCrawler(userAgent) {

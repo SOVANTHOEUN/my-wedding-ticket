@@ -7,9 +7,9 @@
 
 import { getGuestName } from './guest.js';
 
+const SHORT_TITLE = 'សិរីមង្គលអាពាហ៍ពិពាហ៍ — Sovanthoeun & Vila';
 const DEFAULT_TITLE = 'សិរីមង្គលអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila';
-const DEFAULT_DESC = 'សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍';
-const COUPLE_NAMES = 'VONG Sovanthoeun & ROENG Vila';
+const INVITE_LINE = 'សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ —';
 
 function escapeHtml(s) {
   if (!s || typeof s !== 'string') return '';
@@ -38,6 +38,11 @@ function buildHtml(opts) {
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:image" content="${escapeHtml(imageUrl)}">
+<meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
+<meta property="og:image:width" content="1022">
+<meta property="og:image:height" content="1024">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="${escapeHtml('Wedding Invitation - VONG Sovanthoeun & ROENG Vila')}">
 <meta property="og:url" content="${escapeHtml(pageUrl)}">
 <meta property="og:site_name" content="Wedding Invitation">
 <meta property="og:locale" content="km_KH">
@@ -81,12 +86,12 @@ export default async function handler(req, res) {
     guestName = await getGuestName(token);
   }
 
-  const title = guestName
-    ? `${DEFAULT_TITLE} — សូមគោរពអញ្ជើញ ${guestName}`
-    : DEFAULT_TITLE;
+  // Shorter title for guest links so description has room for full guest name
+  const title = guestName ? SHORT_TITLE : DEFAULT_TITLE;
+  // Put full guest name first so it displays without truncation in Messenger/Facebook
   const description = guestName
-    ? `${DEFAULT_DESC} — ${guestName}`
-    : `${DEFAULT_DESC} — ${COUPLE_NAMES}`;
+    ? `សូមគោរពអញ្ជើញ ${guestName}\n${INVITE_LINE}\n${guestName}`
+    : `សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila`;
 
   const html = buildHtml({ title, description, imageUrl, pageUrl });
   res.status(200).send(html);
