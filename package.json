@@ -10,7 +10,8 @@
     "build:guests": "node scripts/generate-guests.js"
   },
   "dependencies": {
-    "googleapis": "^144.0.0",
-    "@vercel/functions": "^3.0.0"
+    "@vercel/functions": "^3.0.0",
+    "@vercel/og": "^0.8.6",
+    "googleapis": "^144.0.0"
   }
 }

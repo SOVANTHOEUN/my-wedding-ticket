@@ -38,8 +38,8 @@ function buildHtml(opts) {
 <meta property="og:image" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:url" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
-<meta property="og:image:width" content="1022">
-<meta property="og:image:height" content="1024">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:alt" content="${escapeHtml('Wedding Invitation - VONG Sovanthoeun & ROENG Vila')}">
 <meta property="og:title" content="${escapeHtml(title)}">
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
     : 'https';
   const baseUrl = `${proto}://${host}`;
   const pageUrl = token && param ? `${baseUrl}/?${param}=${encodeURIComponent(token)}` : baseUrl + '/';
-  const imageUrl = `${baseUrl}/images/physical-ticket-cover.png`;
+  const imageUrl = `${baseUrl}/api/og-image`;
 
   let guestName = null;
   if (token) {

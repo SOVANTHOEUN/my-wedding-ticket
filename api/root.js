@@ -58,8 +58,8 @@ function buildOgHtml(opts) {
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:image" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
-<meta property="og:image:width" content="1022">
-<meta property="og:image:height" content="1024">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:alt" content="${escapeHtml('Wedding Invitation - VONG Sovanthoeun & ROENG Vila')}">
 <meta property="og:url" content="${escapeHtml(pageUrl)}">
@@ -108,7 +108,7 @@ export default async function handler(req, res) {
       ? `${DEFAULT_DESC} — ${guestName}`
       : `${DEFAULT_DESC} — ${COUPLE_NAMES}`;
     const pageUrl = `${baseUrl}/?${param}=${encodeURIComponent(token)}`;
-    const imageUrl = `${baseUrl}/images/physical-ticket-cover.png`;
+    const imageUrl = `${baseUrl}/api/og-image`;
     const appId = process.env.META_APP_ID || process.env.FB_APP_ID || '';
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');

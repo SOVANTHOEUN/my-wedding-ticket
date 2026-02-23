@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Ensure Facebook/Messenger can fetch OG image
+User-agent: facebookexternalhit
+Allow: /api/og-image
