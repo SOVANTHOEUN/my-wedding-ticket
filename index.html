@@ -294,6 +294,8 @@
     font-family: 'Battambang', 'Khmer OS Battambang', 'Noto Serif Khmer', serif;
     font-size: clamp(18px, 4.5vw, 22px);
     font-weight: 700; color: var(--dark);
+    letter-spacing: 0;
+    word-spacing: -0.02em;
   }
   .guest-name-text.guest-loading {
     animation: guestLoadingPulse 1.2s ease-in-out infinite;
@@ -1029,6 +1031,19 @@
     object-fit: contain;
     object-position: bottom right;
   }
+  /* Web/desktop: smaller size so couple sits below button, centered for full visibility */
+  @media (min-width: 481px) {
+    .ticket-content {
+      padding-bottom: 260px;
+    }
+    .ticket-couple-illus {
+      width: 200px;
+      height: 250px;
+    }
+    .ticket-couple-illus img {
+      object-position: center center;
+    }
+  }
 
   /* Invitation line */
   .ticket-invite {
@@ -1057,6 +1072,7 @@
     font-weight: 700;
     font-size: clamp(14px, 3.5vw, 16px); color: var(--dark);
     text-align: center; outline: none;
+    letter-spacing: 0; word-spacing: -0.02em;
     box-shadow: 0 2px 12px rgba(135,206,235,0.08);
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
   }
@@ -1118,7 +1134,7 @@
     .ticket-name-input { padding: 14px 16px; font-size: clamp(13px, 3.2vw, 15px); }
     .ticket-name-input-wrapper { max-width: min(92vw, 340px); }
     .guest-name-card { padding: 16px 32px; }
-    .guest-name-text { font-size: 20px; letter-spacing: 1px; }
+    .guest-name-text { font-size: 20px; letter-spacing: 0; word-spacing: -0.02em; }
     .ticket-butterfly { width: 18px; height: 18px; }
     .ticket-couple-illus { width: 220px; height: 280px; }
     .name-row { gap: 12px 16px; }
