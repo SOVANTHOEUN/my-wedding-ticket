@@ -10,6 +10,8 @@ const CRAWLER_UA = [
   'facebookexternalhit',
   'facebookcatalog',
   'Facebot',
+  'FBAN',           // Facebook App
+  'FBAV',           // Facebook App Version
   'TelegramBot',
   'Telegram',
   'Twitterbot',

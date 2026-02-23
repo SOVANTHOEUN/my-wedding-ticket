@@ -35,14 +35,15 @@ function buildHtml(opts) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(title)}</title>
 <meta property="og:type" content="website">
-<meta property="og:title" content="${escapeHtml(title)}">
-<meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:image" content="${escapeHtml(imageUrl)}">
+<meta property="og:image:url" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}">
 <meta property="og:image:width" content="1022">
 <meta property="og:image:height" content="1024">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:alt" content="${escapeHtml('Wedding Invitation - VONG Sovanthoeun & ROENG Vila')}">
+<meta property="og:title" content="${escapeHtml(title)}">
+<meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${escapeHtml(pageUrl)}">
 <meta property="og:site_name" content="Wedding Invitation">
 <meta property="og:locale" content="km_KH">
@@ -86,11 +87,11 @@ export default async function handler(req, res) {
     guestName = await getGuestName(token);
   }
 
-  // Title: wedding + guest invite line (both show same size in preview)
+  // Title: wedding + guest invite line (all in og:title so it shows same size)
   const title = guestName
-    ? `${SHORT_TITLE}\nសូមគោរពអញ្ជើញ ${guestName}`
+    ? `${SHORT_TITLE} — សូមគោរពអញ្ជើញ ${guestName}`
     : DEFAULT_TITLE;
-  // Description: invitation line + guest name
+  // Description: invitation line + guest name only (no duplicate of guest invite)
   const description = guestName
     ? `${INVITE_LINE}\n${guestName}`
     : `សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila`;
