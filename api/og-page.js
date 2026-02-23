@@ -86,11 +86,13 @@ export default async function handler(req, res) {
     guestName = await getGuestName(token);
   }
 
-  // Shorter title for guest links so description has room for full guest name
-  const title = guestName ? SHORT_TITLE : DEFAULT_TITLE;
-  // Put full guest name first so it displays without truncation in Messenger/Facebook
+  // Title: wedding + guest invite line (both show same size in preview)
+  const title = guestName
+    ? `${SHORT_TITLE}\nសូមគោរពអញ្ជើញ ${guestName}`
+    : DEFAULT_TITLE;
+  // Description: invitation line + guest name
   const description = guestName
-    ? `សូមគោរពអញ្ជើញ ${guestName}\n${INVITE_LINE}\n${guestName}`
+    ? `${INVITE_LINE}\n${guestName}`
     : `សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila`;
 
   const html = buildHtml({ title, description, imageUrl, pageUrl });
