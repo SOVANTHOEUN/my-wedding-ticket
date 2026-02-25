@@ -148,7 +148,7 @@
   .elegant-divider .icon { color: var(--sky-muted); font-size: 14px; opacity: 0.7; }
 
   /* FLORAL CORNERS */
-  .floral-corner-svg { position: absolute; pointer-events: none; z-index: 2; }
+  .floral-corner-svg { position: absolute; pointer-events: none; z-index: 2; will-change: transform; }
   .floral-tl { top: 0; left: 0; }
   .floral-tr { top: 0; right: 0; transform: scaleX(-1); }
   .floral-bl { bottom: 0; left: 0; transform: scaleY(-1); }
@@ -166,24 +166,28 @@
     width: 500px; height: 500px;
     background: radial-gradient(ellipse, var(--sky-pale) 0%, transparent 70%);
     opacity: 0.4; pointer-events: none; border-radius: 50%;
+    will-change: transform;
   }
   .hero-wash-2 {
     position: absolute; bottom: -80px; left: -120px;
     width: 450px; height: 450px;
     background: radial-gradient(ellipse, var(--sky-pale) 0%, transparent 70%);
     opacity: 0.3; pointer-events: none; border-radius: 50%;
+    will-change: transform;
   }
   .hero-wash-3 {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
     width: 600px; height: 600px;
     background: radial-gradient(ellipse, rgba(135,206,235,0.06) 0%, transparent 70%);
     pointer-events: none; border-radius: 50%;
+    will-change: transform;
   }
 
   .hero-frame {
     position: absolute; top: 30px; left: 30px; right: 30px; bottom: 30px;
     border: 1px solid var(--silver-pale); border-radius: 24px;
     pointer-events: none; z-index: 1;
+    will-change: transform;
   }
   .hero-frame::before {
     content: ''; position: absolute;
@@ -191,7 +195,7 @@
     border: 1px solid rgba(135,206,235,0.2); border-radius: 20px;
   }
 
-  .hero-content { position: relative; z-index: 5; text-align: center; max-width: 620px; }
+  .hero-content { position: relative; z-index: 5; text-align: center; max-width: 620px; will-change: transform; }
 
   .hero-topline {
     font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
@@ -332,12 +336,14 @@
     width: 300px; height: 300px;
     background: radial-gradient(ellipse, var(--sky-pale) 0%, transparent 70%);
     border-radius: 50%; opacity: 0.25; pointer-events: none;
+    will-change: transform;
   }
   .blob-left {
     position: absolute; left: -120px; bottom: 10%;
     width: 350px; height: 350px;
     background: radial-gradient(ellipse, rgba(192,192,192,0.15) 0%, transparent 70%);
     border-radius: 50%; pointer-events: none;
+    will-change: transform;
   }
 
   /* SCHEDULE */
@@ -1136,12 +1142,12 @@
 
 <!-- ===== HERO ===== -->
 <section class="hero-section" id="hero">
-  <div class="hero-wash-1"></div>
-  <div class="hero-wash-2"></div>
-  <div class="hero-wash-3"></div>
-  <div class="hero-frame"></div>
+  <div class="hero-wash-1" data-parallax="0.25"></div>
+  <div class="hero-wash-2" data-parallax="0.2"></div>
+  <div class="hero-wash-3" data-parallax="0.15"></div>
+  <div class="hero-frame" data-parallax="0.1"></div>
 
-  <svg class="floral-corner-svg floral-tl" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-tl" data-parallax="0.12" width="200" height="200" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <path d="M15,0 Q50,15 65,58 Q45,40 36,65 Q28,42 10,32Z" fill="#ADD8E6" opacity="0.6"/>
@@ -1161,7 +1167,7 @@
       <ellipse cx="44" cy="100" rx="10" ry="6" fill="#D3D3D3" opacity="0.15" transform="rotate(80 44 100)"/>
     </g>
   </svg>
-  <svg class="floral-corner-svg floral-tr" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-tr" width="200" height="200" data-parallax="0.12" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <path d="M15,0 Q50,15 65,58 Q45,40 36,65 Q28,42 10,32Z" fill="#ADD8E6" opacity="0.6"/>
@@ -1173,7 +1179,7 @@
       <circle cx="18" cy="78" r="6" fill="#D3D3D3" opacity="0.3"/>
     </g>
   </svg>
-  <svg class="floral-corner-svg floral-bl" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-bl" width="200" height="200" data-parallax="0.12" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <ellipse cx="42" cy="32" rx="14" ry="8" fill="#B8E2F4" opacity="0.5" transform="rotate(-25 42 32)"/>
@@ -1182,7 +1188,7 @@
       <circle cx="78" cy="18" r="6" fill="#B8E2F4" opacity="0.3"/>
     </g>
   </svg>
-  <svg class="floral-corner-svg floral-br" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-br" width="200" height="200" data-parallax="0.12" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <ellipse cx="42" cy="32" rx="14" ry="8" fill="#B8E2F4" opacity="0.5" transform="rotate(-25 42 32)"/>
@@ -1192,7 +1198,7 @@
     </g>
   </svg>
 
-  <div class="hero-content">
+  <div class="hero-content" data-parallax="-0.04">
     <div class="hero-topline" data-i18n="heroTopline">W E D D I N G   I N V I T A T I O N</div>
     <div class="hero-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
     <div class="elegant-divider" style="animation: hFadeIn 1s ease-out 0.5s both;">
@@ -1250,8 +1256,8 @@
 
 <!-- ===== SCHEDULE ===== -->
 <section class="section-alt">
-  <div class="blob-right"></div>
-  <div class="blob-left"></div>
+  <div class="blob-right" data-parallax="0.35"></div>
+  <div class="blob-left" data-parallax="0.3"></div>
   <div class="section-inner">
     <div class="fade-section">
       <div class="section-title-khmer" data-i18n="sectionSchedule">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</div>
@@ -1301,7 +1307,7 @@
 
 <!-- ===== GALLERY ===== -->
 <section class="section-alt">
-  <div class="blob-right" style="top:10%;"></div>
+  <div class="blob-right" style="top:10%;" data-parallax="0.3"></div>
   <div class="section-inner">
     <div class="fade-section">
       <div class="section-title-khmer" data-i18n="sectionGallery">រូបភាព</div>
@@ -1319,7 +1325,7 @@
 
 <!-- ===== GIFT ===== -->
 <section class="section-white">
-  <div class="blob-left" style="bottom:5%;"></div>
+  <div class="blob-left" style="bottom:5%;" data-parallax="0.25"></div>
   <div class="section-inner">
     <div class="fade-section">
       <div class="section-title-khmer" data-i18n="sectionGift">អំណោយអាពាហ៍ពិពាហ៍</div>
@@ -1474,6 +1480,34 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { rootMargin: '0px 0px -60px 0px', threshold: 0.08 });
   document.querySelectorAll('.fade-section,.fade-left,.fade-right,.fade-scale,.stagger-children').forEach(el => obs.observe(el));
+
+  // Parallax scrolling — elements move slower than scroll for depth effect
+  (function() {
+    var dp = document.getElementById('detail-page');
+    var parallaxEls = document.querySelectorAll('[data-parallax]');
+    if (!dp || !parallaxEls.length) return;
+
+    function getBaseTransform(el) {
+      if (el.classList.contains('hero-wash-3')) return 'translate(-50%,-50%)';
+      if (el.classList.contains('floral-tr')) return 'scaleX(-1)';
+      if (el.classList.contains('floral-bl')) return 'scaleY(-1)';
+      if (el.classList.contains('floral-br')) return 'scale(-1,-1)';
+      return '';
+    }
+
+    function updateParallax() {
+      var scrollY = dp.scrollTop || 0;
+      parallaxEls.forEach(function(el) {
+        var factor = parseFloat(el.getAttribute('data-parallax')) || 0.2;
+        var offset = scrollY * factor * 0.5;
+        var base = getBaseTransform(el);
+        el.style.transform = (base ? base + ' ' : '') + 'translateY(' + offset + 'px)';
+      });
+    }
+
+    dp.addEventListener('scroll', updateParallax, { passive: true });
+    updateParallax();
+  })();
 
   // Countdown
   const wd = new Date('2026-03-25T17:00:00+07:00');
