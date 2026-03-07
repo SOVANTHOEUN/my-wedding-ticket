@@ -3,8 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-visual">
+<!-- Open Graph / SNS link preview (default; dynamic guest name via /api/og-page for crawlers with ?g= or ?b=) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="សិរីមង្គលអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila">
+<meta property="og:description" content="សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila">
+<meta property="og:image" content="https://my-wedding-ticket.vercel.app/images/og-1200x630.jpg">
+<meta property="og:image:secure_url" content="https://my-wedding-ticket.vercel.app/images/og-1200x630.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="Wedding Invitation - VONG Sovanthoeun & ROENG Vila">
+<meta property="og:url" content="https://my-wedding-ticket.vercel.app/">
+<meta property="og:site_name" content="Wedding Invitation">
+<meta property="og:locale" content="km_KH">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="សិរីមង្គលអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila">
+<meta name="twitter:description" content="សូមគោរពអញ្ជើញមកចូលរួមអាពាហ៍ពិពាហ៍ — VONG Sovanthoeun & ROENG Vila">
+<meta name="twitter:image" content="https://my-wedding-ticket.vercel.app/images/og-1200x630.jpg">
+
 <!-- Google Analytics 4 -->
 <script src="js/analytics-config.js"></script>
+
 <script>
   (function() {
     var id = window.GA_MEASUREMENT_ID || 'G-G1W8K6T3PL';
@@ -21,11 +40,29 @@
 </script>
 
 
+
+
 <title>សិរីមង្គលអាពាហ៍ពិពាហ៍ — V7 — VONG Sovanthoeun & ROENG Vila</title>
+<!-- Early guest API preload: start fetch as soon as ?g= or ?b= is in URL -->
+<script>
+(function(){
+  var mg = /[?&]g=([^&]+)/.exec(location.search);
+  var mb = /[?&]b=([^&]+)/.exec(location.search);
+  var param = mg ? 'g' : (mb ? 'b' : null);
+  var token = (mg && mg[1]) || (mb && mb[1]);
+  if (param && token) {
+    token = token.toLowerCase().trim();
+    window.__guestFetchPromise = fetch(window.location.origin + '/api/guest?' + param + '=' + encodeURIComponent(token))
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ return (d && d.name) ? d.name : null; })
+      .catch(function(){ return null; });
+  }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;600;700&display=swap" as="style">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,700&family=Noto+Serif+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Battambang:wght@700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500;1,700&family=Noto+Serif+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --sky: #87CEEB;
@@ -48,6 +85,24 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* Skip link — accessibility */
+  .skip-link {
+    position: absolute; top: -100px; left: 16px; z-index: 1000;
+    padding: 12px 20px; background: var(--sky-deep); color: var(--white);
+    font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600;
+    border-radius: 8px; text-decoration: none; transition: top 0.2s ease;
+    box-shadow: 0 4px 12px rgba(91,175,212,0.4);
+  }
+  .skip-link:focus { top: 16px; outline: 2px solid var(--white); outline-offset: 2px; }
+  .skip-link-detail { display: none; }
+  body.ticket-opened .skip-link-cover { display: none; }
+  body.ticket-opened .skip-link-detail { display: inline-block; top: -100px; left: 16px; }
+  body.ticket-opened .skip-link-detail:focus { top: 16px; }
 
   body {
     font-family: 'Poppins', 'Noto Serif Khmer', sans-serif;
@@ -150,7 +205,7 @@
   .elegant-divider .icon { color: var(--sky-muted); font-size: 14px; opacity: 0.7; }
 
   /* FLORAL CORNERS */
-  .floral-corner-svg { position: absolute; pointer-events: none; z-index: 2; will-change: transform; }
+  .floral-corner-svg { position: absolute; pointer-events: none; z-index: 2; }
   .floral-tl { top: 0; left: 0; }
   .floral-tr { top: 0; right: 0; transform: scaleX(-1); }
   .floral-bl { bottom: 0; left: 0; transform: scaleY(-1); }
@@ -168,28 +223,24 @@
     width: 500px; height: 500px;
     background: radial-gradient(ellipse, var(--sky-pale) 0%, transparent 70%);
     opacity: 0.4; pointer-events: none; border-radius: 50%;
-    will-change: transform;
   }
   .hero-wash-2 {
     position: absolute; bottom: -80px; left: -120px;
     width: 450px; height: 450px;
     background: radial-gradient(ellipse, var(--sky-pale) 0%, transparent 70%);
     opacity: 0.3; pointer-events: none; border-radius: 50%;
-    will-change: transform;
   }
   .hero-wash-3 {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
     width: 600px; height: 600px;
     background: radial-gradient(ellipse, rgba(135,206,235,0.06) 0%, transparent 70%);
     pointer-events: none; border-radius: 50%;
-    will-change: transform;
   }
 
   .hero-frame {
     position: absolute; top: 30px; left: 30px; right: 30px; bottom: 30px;
     border: 1px solid var(--silver-pale); border-radius: 24px;
     pointer-events: none; z-index: 1;
-    will-change: transform;
   }
   .hero-frame::before {
     content: ''; position: absolute;
@@ -197,7 +248,7 @@
     border: 1px solid rgba(135,206,235,0.2); border-radius: 20px;
   }
 
-  .hero-content { position: relative; z-index: 5; text-align: center; max-width: 620px; will-change: transform; }
+  .hero-content { position: relative; z-index: 5; text-align: center; max-width: 620px; }
 
   .hero-topline {
     font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600;
@@ -260,14 +311,22 @@
     display: inline-block; background: var(--white);
     border: 1.5px solid var(--sky-light); border-radius: 14px;
     padding: 14px 44px; box-shadow: 0 4px 20px rgba(135,206,235,0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
+  .guest-name-card:hover { box-shadow: 0 8px 28px rgba(135,206,235,0.18); }
   .guest-name-text {
-    font-family: 'Playfair Display', 'Georgia', serif;
+    font-family: 'Battambang', 'Khmer OS Battambang', 'Noto Serif Khmer', serif;
     font-size: clamp(18px, 4.5vw, 22px);
-    font-weight: 600; color: var(--dark);
-    letter-spacing: 0.8px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-weight: 700; color: var(--dark);
+    letter-spacing: 0;
+    word-spacing: -0.02em;
+  }
+  .guest-name-text.guest-loading {
+    animation: guestLoadingPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes guestLoadingPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
   }
 
   .invitation-text {
@@ -310,9 +369,10 @@
   }
   .hero-venue-text a {
     color: var(--sky-deep); text-decoration: none;
-    border-bottom: 1px dotted var(--sky-light); transition: color 0.3s;
+    border-bottom: 1px dotted var(--sky-light); transition: color 0.3s, border-color 0.3s;
   }
-  .hero-venue-text a:hover { color: var(--dark); }
+  .hero-venue-text a:hover { color: var(--dark); border-bottom-color: var(--sky-deep); }
+  .hero-venue-text a:focus-visible { border-bottom-style: solid; }
 
   /* SECTION COMMON */
   .section-alt { background: var(--off-white); }
@@ -332,20 +392,20 @@
     font-family: 'Noto Serif Khmer', serif; font-size: 13px;
     color: var(--text-light); text-align: center; margin-bottom: 40px;
   }
+  /* WCAG: improve contrast for secondary text (min 4.5:1 for normal text) */
+  .section-subtitle, .hero-venue-text span { color: #5C6B7A; }
 
   .blob-right {
     position: absolute; right: -120px; top: 20%;
     width: 300px; height: 300px;
     background: radial-gradient(ellipse, var(--sky-pale) 0%, transparent 70%);
     border-radius: 50%; opacity: 0.25; pointer-events: none;
-    will-change: transform;
   }
   .blob-left {
     position: absolute; left: -120px; bottom: 10%;
     width: 350px; height: 350px;
     background: radial-gradient(ellipse, rgba(192,192,192,0.15) 0%, transparent 70%);
     border-radius: 50%; pointer-events: none;
-    will-change: transform;
   }
 
   /* SCHEDULE */
@@ -417,6 +477,8 @@
   }
   .venue-nav-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(135,206,235,0.45); }
   .venue-nav-btn .nav-icon { font-size: 20px; }
+  /* Touch target min 44px height (WCAG 2.5.5) */
+  .venue-nav-btn, .btn-sky, .btn-outline-sky, .rsvp-button, .ticket-cta-btn { min-height: 44px; }
 
   .venue-actions {
     display: flex; align-items: center; justify-content: center;
@@ -475,6 +537,58 @@
     font-family: 'Montserrat', sans-serif; font-size: 11px;
     color: var(--text-muted); position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; letter-spacing: 1px; z-index: 1;
   }
+
+  /* PHYSICAL INVITATION */
+  .physical-invitation-carousel {
+    display: flex; gap: 20px; overflow-x: auto;
+    padding: 16px 8px 24px; margin: 0 -8px;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .physical-invitation-carousel::-webkit-scrollbar { height: 6px; }
+  .physical-invitation-carousel::-webkit-scrollbar-thumb { background: var(--sky-light); border-radius: 3px; }
+  .physical-invitation-item {
+    flex: 0 0 min(280px, 85vw); scroll-snap-align: center;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--silver-pale);
+    box-shadow: 0 4px 20px rgba(135,206,235,0.1);
+    cursor: pointer; transition: all 0.35s ease;
+    background: var(--white);
+  }
+  .physical-invitation-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(135,206,235,0.18);
+    border-color: var(--sky-light);
+  }
+  .physical-invitation-item img {
+    display: block; width: 100%; height: auto;
+    aspect-ratio: 3/4; object-fit: cover;
+  }
+  .physical-invitation-label {
+    font-family: 'Montserrat', sans-serif; font-size: 11px;
+    color: var(--text-muted); text-align: center; padding: 10px 8px;
+    letter-spacing: 1px;
+  }
+
+  /* Lightbox prev/next nav */
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.9); border: none;
+    color: var(--dark); font-size: 24px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1001; transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .lightbox-nav:hover { background: var(--white); transform: translateY(-50%) scale(1.05); }
+  .lightbox-prev { left: 16px; }
+  .lightbox-next { right: 16px; }
+  @media (max-width: 480px) {
+    .lightbox-nav { width: 40px; height: 40px; font-size: 20px; }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+  }
+
   .lightbox-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 1000;
     display: none; align-items: center; justify-content: center; padding: 20px;
@@ -563,11 +677,14 @@
     color: var(--dark);
     text-decoration: none !important;
     -webkit-text-decoration: none !important;
+    -webkit-text-decoration-skip: none;
     background: var(--ice); border-radius: 12px;
     border: 1.5px solid var(--sky-pale);
     word-break: keep-all; text-align: center; line-height: 1.5;
     overflow: hidden; padding: 10px 8px;
     -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
   }
   @media (max-width: 480px) {
     .gift-account-info {
@@ -656,7 +773,14 @@
     resize: vertical; outline: none; transition: border-color 0.25s;
     box-sizing: border-box; overflow-wrap: break-word; word-wrap: break-word;
   }
-  .rsvp-message:focus { border-color: var(--sky-light); }
+  .rsvp-message:focus { border-color: var(--sky-light); outline: none; }
+  /* Focus visible — WCAG 2.4.7, keyboard users */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--sky-deep); outline-offset: 2px;
+  }
+  .ticket-cta-btn:focus-visible, .venue-nav-btn:focus-visible, .btn-sky:focus-visible, .btn-outline-sky:focus-visible {
+    outline: 2px solid var(--white); outline-offset: 2px;
+  }
   .rsvp-message::placeholder { color: var(--text-muted); }
   .rsvp-status { font-family: 'Noto Serif Khmer', serif; font-size: 14px; color: var(--sky-deep); margin-top: 12px; min-height: 22px; }
   .rsvp-needs-token { color: var(--text-muted); font-size: 13px; margin-top: 12px; }
@@ -943,6 +1067,19 @@
     object-fit: contain;
     object-position: bottom right;
   }
+  /* Web/desktop: smaller size so couple sits below button, centered for full visibility */
+  @media (min-width: 481px) {
+    .ticket-content {
+      padding-bottom: 20px;
+    }
+    .ticket-couple-illus {
+      width: 200px;
+      height: 250px;
+    }
+    .ticket-couple-illus img {
+      object-position: center center;
+    }
+  }
 
   /* Invitation line */
   .ticket-invite {
@@ -967,18 +1104,24 @@
     background: var(--white);
     border: 1px solid var(--silver-pale);
     border-radius: 12px;
-    font-family: 'Noto Serif Khmer', 'Poppins', sans-serif;
+    font-family: 'Battambang', 'Khmer OS Battambang', 'Noto Serif Khmer', sans-serif;
+    font-weight: 700;
     font-size: clamp(14px, 3.5vw, 16px); color: var(--dark);
     text-align: center; outline: none;
+    letter-spacing: 0; word-spacing: -0.02em;
     box-shadow: 0 2px 12px rgba(135,206,235,0.08);
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
   }
   .ticket-name-input:focus {
     border-color: var(--sky-light);
     box-shadow: 0 2px 16px rgba(135,206,235,0.15);
+    outline: none;
   }
   .ticket-name-input::placeholder {
     color: var(--text-muted); font-size: 14px;
+  }
+  .ticket-name-input.guest-loading {
+    animation: guestLoadingPulse 1.2s ease-in-out infinite;
   }
 
   /* CTA Button */
@@ -1021,6 +1164,11 @@
     .ticket-container {
       padding: 0vh 20px 12vh 20px;
       justify-content: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    .ticket-content {
+      padding-bottom: 40px;
     }
     .ticket-header { margin-bottom: 24px; }
     .ticket-name-khmer { font-size: clamp(22px, 5.5vw, 28px); }
@@ -1028,7 +1176,7 @@
     .ticket-name-input { padding: 14px 16px; font-size: clamp(13px, 3.2vw, 15px); }
     .ticket-name-input-wrapper { max-width: min(92vw, 340px); }
     .guest-name-card { padding: 16px 32px; }
-    .guest-name-text { font-size: 20px; letter-spacing: 1px; }
+    .guest-name-text { font-size: 20px; letter-spacing: 0; word-spacing: -0.02em; }
     .ticket-butterfly { width: 18px; height: 18px; }
     .ticket-couple-illus { width: 220px; height: 280px; }
     .name-row { gap: 12px 16px; }
@@ -1044,6 +1192,7 @@
 <script src="js/translations.js"></script>
 </head>
 <body>
+<a href="#ticket-cover" class="skip-link skip-link-cover">Skip to main content</a>
 
 <div class="music-controls" id="musicControls">
   <span class="music-hold-hint" id="musicHoldHint">hold me!! 💕</span>
@@ -1121,35 +1270,38 @@
 
     <!-- Couple illustration -->
     <div class="ticket-couple-illus">
-      <img src="images/cover-couple-nobg.png" alt="Bride and Groom" onerror="this.src='images/cover-couple.png';">
+      <img src="images/cover-couple-nobg.png" alt="Bride and Groom - Vong Sovanthoeun and Roeng Vila" width="270" height="340" loading="eager" fetchpriority="high" onerror="this.src='images/cover-couple.png';">
     </div>
   </div>
 </div>
 
-<div id="detail-page">
-<div class="lang-switcher" aria-label="Language">
-  <button type="button" data-lang="ko" title="한국어">KR</button>
-  <button type="button" data-lang="en" title="English">EN</button>
-  <button type="button" data-lang="km" title="ភាសាខ្មែរ">KH</button>
+<div id="detail-page" role="main">
+<a href="#hero" class="skip-link skip-link-detail">Skip to invitation</a>
+<div class="lang-switcher" role="group" aria-label="Language selector">
+  <button type="button" data-lang="ko" aria-label="Switch to Korean">KR</button>
+  <button type="button" data-lang="en" aria-label="Switch to English">EN</button>
+  <button type="button" data-lang="km" aria-label="Switch to Khmer">KH</button>
 </div>
 <div class="shimmer-layer" id="shimmerLayer"></div>
 <div class="petal-layer" id="petalLayer"></div>
-<button class="scroll-top" id="scrollTopBtn" onclick="document.getElementById('detail-page').scrollTo({top:0,behavior:'smooth'})">↑</button>
+<button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top" onclick="document.getElementById('detail-page').scrollTo({top:0,behavior:'smooth'})">↑</button>
 <div class="lightbox-overlay" id="lightbox" aria-hidden="true">
+  <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous">‹</button>
   <div class="lightbox-inner">
     <img id="lightboxImg" src="" alt="">
     <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
   </div>
+  <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next">›</button>
 </div>
 
 <!-- ===== HERO ===== -->
 <section class="hero-section" id="hero">
-  <div class="hero-wash-1" data-parallax="0.25"></div>
-  <div class="hero-wash-2" data-parallax="0.2"></div>
-  <div class="hero-wash-3" data-parallax="0.15"></div>
-  <div class="hero-frame" data-parallax="0.1"></div>
+  <div class="hero-wash-1"></div>
+  <div class="hero-wash-2"></div>
+  <div class="hero-wash-3"></div>
+  <div class="hero-frame"></div>
 
-  <svg class="floral-corner-svg floral-tl" data-parallax="0.12" width="200" height="200" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-tl" width="200" height="200" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <path d="M15,0 Q50,15 65,58 Q45,40 36,65 Q28,42 10,32Z" fill="#ADD8E6" opacity="0.6"/>
@@ -1169,7 +1321,7 @@
       <ellipse cx="44" cy="100" rx="10" ry="6" fill="#D3D3D3" opacity="0.15" transform="rotate(80 44 100)"/>
     </g>
   </svg>
-  <svg class="floral-corner-svg floral-tr" width="200" height="200" data-parallax="0.12" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-tr" width="200" height="200" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <path d="M15,0 Q50,15 65,58 Q45,40 36,65 Q28,42 10,32Z" fill="#ADD8E6" opacity="0.6"/>
@@ -1181,7 +1333,7 @@
       <circle cx="18" cy="78" r="6" fill="#D3D3D3" opacity="0.3"/>
     </g>
   </svg>
-  <svg class="floral-corner-svg floral-bl" width="200" height="200" data-parallax="0.12" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-bl" width="200" height="200" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <ellipse cx="42" cy="32" rx="14" ry="8" fill="#B8E2F4" opacity="0.5" transform="rotate(-25 42 32)"/>
@@ -1190,7 +1342,7 @@
       <circle cx="78" cy="18" r="6" fill="#B8E2F4" opacity="0.3"/>
     </g>
   </svg>
-  <svg class="floral-corner-svg floral-br" width="200" height="200" data-parallax="0.12" viewBox="0 0 200 200" fill="none">
+  <svg class="floral-corner-svg floral-br" width="200" height="200" viewBox="0 0 200 200" fill="none">
     <g opacity="0.22">
       <path d="M0,0 Q40,8 55,45 Q35,35 28,58 Q20,35 0,28Z" fill="#87CEEB"/>
       <ellipse cx="42" cy="32" rx="14" ry="8" fill="#B8E2F4" opacity="0.5" transform="rotate(-25 42 32)"/>
@@ -1200,7 +1352,7 @@
     </g>
   </svg>
 
-  <div class="hero-content" data-parallax="-0.04">
+  <div class="hero-content">
     <div class="hero-topline" data-i18n="heroTopline">W E D D I N G   I N V I T A T I O N</div>
     <div class="hero-title-khmer" data-i18n="heroTitle">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
     <div class="elegant-divider" style="animation: hFadeIn 1s ease-out 0.5s both;">
@@ -1239,7 +1391,7 @@
 
     <div class="hero-date-line" data-i18n="dateLine">ថ្ងៃទី ២៤ - ២៥ ខែ មីនា ឆ្នាំ ២០២៦</div>
 
-    <div class="countdown" id="countdown">
+    <div class="countdown" id="countdown" aria-live="polite" aria-label="Countdown to wedding">
       <div class="cd-box"><span class="cd-value" id="cd-days">0</span><span class="cd-label" data-i18n-countdown="cdDays">ថ្ងៃ</span></div>
       <span class="cd-sep">:</span>
       <div class="cd-box"><span class="cd-value" id="cd-hours">0</span><span class="cd-label" data-i18n-countdown="cdHours">ម៉ោង</span></div>
@@ -1258,8 +1410,8 @@
 
 <!-- ===== SCHEDULE ===== -->
 <section class="section-alt">
-  <div class="blob-right" data-parallax="0.35"></div>
-  <div class="blob-left" data-parallax="0.3"></div>
+  <div class="blob-right"></div>
+  <div class="blob-left"></div>
   <div class="section-inner">
     <div class="fade-section">
       <div class="section-title-khmer" data-i18n="sectionSchedule">កម្មវិធីសិរីមង្គលអាពាហ៍ពិពាហ៍</div>
@@ -1309,25 +1461,53 @@
 
 <!-- ===== GALLERY ===== -->
 <section class="section-alt">
-  <div class="blob-right" style="top:10%;" data-parallax="0.3"></div>
+  <div class="blob-right" style="top:10%;"></div>
   <div class="section-inner">
     <div class="fade-section">
       <div class="section-title-khmer" data-i18n="sectionGallery">រូបភាព</div>
       <div class="section-subtitle" data-i18n="sectionGallerySub">រូបភាពពិធីអាពាហ៍ពិពាហ៍</div>
       <p class="gallery-coming-soon" data-i18n="preWeddingComingSoon">Pre-wedding photo coming soon</p>
     </div>
-    <div class="gallery-grid stagger-children" id="galleryGrid">
-      <div class="gallery-item fade-item"><img src="images/engagement1.jpeg" alt="Engagement 1"><span class="gallery-item-label">Engagement 1</span></div>
-      <div class="gallery-item fade-item"><img src="images/engagement2.jpeg" alt="Engagement 2"><span class="gallery-item-label">Engagement 2</span></div>
-      <div class="gallery-item fade-item"><img src="images/engagement3.jpeg" alt="Engagement 3"><span class="gallery-item-label">Engagement 3</span></div>
-      <div class="gallery-item fade-item"><img src="images/engagement4.jpeg" alt="Engagement 4"><span class="gallery-item-label">Engagement 4</span></div>
+    <div class="gallery-grid stagger-children" id="galleryGrid" role="list">
+      <div class="gallery-item fade-item" role="listitem"><img src="images/engagement1.jpeg" alt="Engagement photo 1 - Wedding couple" width="300" height="225" loading="lazy"><span class="gallery-item-label">Engagement 1</span></div>
+      <div class="gallery-item fade-item" role="listitem"><img src="images/engagement2.jpeg" alt="Engagement photo 2 - Wedding couple" width="300" height="225" loading="lazy"><span class="gallery-item-label">Engagement 2</span></div>
+      <div class="gallery-item fade-item" role="listitem"><img src="images/engagement3.jpeg" alt="Engagement photo 3 - Wedding couple" width="300" height="225" loading="lazy"><span class="gallery-item-label">Engagement 3</span></div>
+      <div class="gallery-item fade-item" role="listitem"><img src="images/engagement4.jpeg" alt="Engagement photo 4 - Wedding couple" width="300" height="225" loading="lazy"><span class="gallery-item-label">Engagement 4</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PHYSICAL INVITATION ===== -->
+<section class="section-white">
+  <div class="section-inner">
+    <div class="fade-section">
+      <div class="section-title-khmer">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
+      <div class="section-subtitle">Our physical invitation</div>
+    </div>
+    <div class="physical-invitation-carousel fade-section" id="physicalInvitationGrid" role="region" aria-label="Physical invitation preview">
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-cover.png" alt="Wedding invitation cover">
+        <div class="physical-invitation-label">Cover</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-inside.png" alt="Wedding invitation inside">
+        <div class="physical-invitation-label">Inside</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-details.png" alt="Wedding invitation details">
+        <div class="physical-invitation-label">Details</div>
+      </div>
+      <div class="physical-invitation-item">
+        <img src="images/physical-ticket-back.png" alt="Wedding invitation back">
+        <div class="physical-invitation-label">Back</div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ===== GIFT ===== -->
 <section class="section-white">
-  <div class="blob-left" style="bottom:5%;" data-parallax="0.25"></div>
+  <div class="blob-left" style="bottom:5%;"></div>
   <div class="section-inner">
     <div class="fade-section">
       <div class="section-title-khmer" data-i18n="sectionGift">អំណោយអាពាហ៍ពិពាហ៍</div>
@@ -1426,37 +1606,53 @@
   // Sanitize guest name — prevent XSS, limit length
   function sanitizeGuestName(str) {
     if (typeof str !== 'string') return '';
-    return str.slice(0, 100).replace(/[<>\"'&]/g, '');
+    return str.slice(0, 100).replace(/[<>\"']/g, '');
   }
 
-  // Guest from URL (?g=token) — fetch from API (guest list hidden server-side)
+  // Guest from URL (?g=token or ?b=token) — fetch from API (guest list hidden server-side)
   (function() {
     var DEFAULT_GUEST = 'ឯកឧត្តម និង លោកជំទាវ';
+    var LOADING_GUEST = '...';
     var params = new URLSearchParams(window.location.search);
-    var token = (params.get('g') || '').toLowerCase().trim();
+    var token = (params.get('g') || params.get('b') || '').toLowerCase().trim();
+    var param = params.get('g') ? 'g' : (params.get('b') ? 'b' : null);
 
     function applyGuest(guestName) {
       var safe = sanitizeGuestName(guestName) || DEFAULT_GUEST;
+      var isLoading = (guestName === LOADING_GUEST);
       var input = document.getElementById('guestNameInput');
       var detailSpan = document.querySelector('.guest-name-text');
-      if (input) input.value = safe;
-      if (detailSpan) detailSpan.textContent = safe;
+      if (input) {
+        input.value = safe;
+        input.classList.toggle('guest-loading', isLoading);
+      }
+      if (detailSpan) {
+        detailSpan.textContent = safe;
+        detailSpan.classList.toggle('guest-loading', isLoading);
+      }
     }
 
     function applyGuestFromInput() {
       var input = document.getElementById('guestNameInput');
       var detailSpan = document.querySelector('.guest-name-text');
-      if (input && detailSpan) detailSpan.textContent = sanitizeGuestName(input.value) || DEFAULT_GUEST;
+      if (input && detailSpan) {
+        var text = sanitizeGuestName(input.value) || DEFAULT_GUEST;
+        detailSpan.textContent = text;
+        detailSpan.classList.toggle('guest-loading', text === LOADING_GUEST);
+      }
     }
 
-    if (token) {
-      fetch(window.location.origin + '/api/guest?g=' + encodeURIComponent(token))
+    if (token && param) {
+      // Show loading state immediately so user doesn't see default for 5–6 sec
+      applyGuest(LOADING_GUEST);
+      // Use preloaded promise from head (started earlier) or start our own fetch
+      var p = window.__guestFetchPromise || fetch(window.location.origin + '/api/guest?' + param + '=' + encodeURIComponent(token))
         .then(function(r) { return r.ok ? r.json() : null; })
-        .then(function(data) {
-          if (data && data.name) applyGuest(data.name);
-          else applyGuest(DEFAULT_GUEST);
-        })
-        .catch(function() { applyGuest(DEFAULT_GUEST); });
+        .then(function(d) { return (d && d.name) ? d.name : null; })
+        .catch(function() { return null; });
+      Promise.resolve(p).then(function(name) {
+        applyGuest(name || DEFAULT_GUEST);
+      });
     } else {
       applyGuest(DEFAULT_GUEST);
     }
@@ -1482,34 +1678,6 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { rootMargin: '0px 0px -60px 0px', threshold: 0.08 });
   document.querySelectorAll('.fade-section,.fade-left,.fade-right,.fade-scale,.stagger-children').forEach(el => obs.observe(el));
-
-  // Parallax scrolling — elements move slower than scroll for depth effect
-  (function() {
-    var dp = document.getElementById('detail-page');
-    var parallaxEls = document.querySelectorAll('[data-parallax]');
-    if (!dp || !parallaxEls.length) return;
-
-    function getBaseTransform(el) {
-      if (el.classList.contains('hero-wash-3')) return 'translate(-50%,-50%)';
-      if (el.classList.contains('floral-tr')) return 'scaleX(-1)';
-      if (el.classList.contains('floral-bl')) return 'scaleY(-1)';
-      if (el.classList.contains('floral-br')) return 'scale(-1,-1)';
-      return '';
-    }
-
-    function updateParallax() {
-      var scrollY = dp.scrollTop || 0;
-      parallaxEls.forEach(function(el) {
-        var factor = parseFloat(el.getAttribute('data-parallax')) || 0.2;
-        var offset = scrollY * factor * 0.5;
-        var base = getBaseTransform(el);
-        el.style.transform = (base ? base + ' ' : '') + 'translateY(' + offset + 'px)';
-      });
-    }
-
-    dp.addEventListener('scroll', updateParallax, { passive: true });
-    updateParallax();
-  })();
 
   // Countdown
   const wd = new Date('2026-03-25T17:00:00+07:00');
@@ -1570,30 +1738,122 @@
   window.addEventListener('scroll', updateScrollBtn, true);
   document.getElementById('detail-page').addEventListener('scroll', updateScrollBtn);
 
-  // Gallery lightbox
+  // Gallery + Physical invitation lightbox with prev/next swipe
   (function() {
     var lb = document.getElementById('lightbox');
     var lbImg = document.getElementById('lightboxImg');
     var lbClose = document.getElementById('lightboxClose');
-    function openLightbox(src, alt) { lbImg.src = src; lbImg.alt = alt || ''; lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
-    function closeLightbox() { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+    var lbPrev = document.getElementById('lightboxPrev');
+    var lbNext = document.getElementById('lightboxNext');
+    var lightboxImages = [];
+    var currentIndex = 0;
+
+    function collectImages() {
+      var list = [];
+      var pGrid = document.getElementById('physicalInvitationGrid');
+      var gGrid = document.getElementById('galleryGrid');
+      if (pGrid) {
+        pGrid.querySelectorAll('.physical-invitation-item img').forEach(function(img) {
+          if (img.src) list.push({ src: img.src, alt: img.alt || '' });
+        });
+      }
+      if (gGrid) {
+        gGrid.querySelectorAll('.gallery-item img').forEach(function(img) {
+          if (img.src) list.push({ src: img.src, alt: img.alt || '' });
+        });
+      }
+      return list;
+    }
+
+    function openLightbox(src, alt) {
+      lightboxImages = collectImages();
+      var idx = lightboxImages.findIndex(function(item) { return item.src === src; });
+      currentIndex = idx >= 0 ? idx : 0;
+      lbImg.src = lightboxImages[currentIndex].src;
+      lbImg.alt = lightboxImages[currentIndex].alt || '';
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      updateNavVisibility();
+    }
+
+    function closeLightbox() {
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function goPrev() {
+      if (lightboxImages.length <= 1) return;
+      currentIndex = (currentIndex - 1 + lightboxImages.length) % lightboxImages.length;
+      lbImg.src = lightboxImages[currentIndex].src;
+      lbImg.alt = lightboxImages[currentIndex].alt || '';
+      updateNavVisibility();
+    }
+
+    function goNext() {
+      if (lightboxImages.length <= 1) return;
+      currentIndex = (currentIndex + 1) % lightboxImages.length;
+      lbImg.src = lightboxImages[currentIndex].src;
+      lbImg.alt = lightboxImages[currentIndex].alt || '';
+      updateNavVisibility();
+    }
+
+    function updateNavVisibility() {
+      var showNav = lightboxImages.length > 1;
+      if (lbPrev) lbPrev.style.display = showNav ? 'flex' : 'none';
+      if (lbNext) lbNext.style.display = showNav ? 'flex' : 'none';
+    }
+
     document.getElementById('galleryGrid').addEventListener('click', function(e) {
       var item = e.target.closest('.gallery-item');
       if (!item) return;
       var img = item.querySelector('img');
       if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
     });
+    var pGrid = document.getElementById('physicalInvitationGrid');
+    if (pGrid) {
+      pGrid.addEventListener('click', function(e) {
+        var item = e.target.closest('.physical-invitation-item');
+        if (!item) return;
+        var img = item.querySelector('img');
+        if (img && img.src) { e.preventDefault(); openLightbox(img.src, img.alt); }
+      });
+    }
     lbClose.addEventListener('click', closeLightbox);
-    lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
-    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox(); });
+    lb.addEventListener('click', function(e) {
+      if (e.target === lb) closeLightbox();
+    });
+    if (lbPrev) lbPrev.addEventListener('click', function(e) { e.stopPropagation(); goPrev(); });
+    if (lbNext) lbNext.addEventListener('click', function(e) { e.stopPropagation(); goNext(); });
+    document.addEventListener('keydown', function(e) {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+    });
+    // Touch swipe
+    var touchStartX = 0;
+    lb.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    }, { passive: true });
+    lb.addEventListener('touchend', function(e) {
+      var touchEndX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+      var diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) goNext();
+        else goPrev();
+      }
+    }, { passive: true });
   })();
 
   // IBK account number — click to copy (account box or Tap to copy button)
   function copyAccountAndFeedback(el, text) {
     if (!text) text = el.textContent.trim();
     function showCopied(target) {
-      var orig = target.textContent; target.textContent = 'Copied!'; target.style.color = 'var(--sky-deep)';
-      setTimeout(function() { target.textContent = orig; target.style.color = ''; }, 1200);
+      var orig = target.textContent; target.textContent = 'Copied!';
+      target.style.color = 'var(--sky-deep)'; target.style.textDecoration = 'none';
+      setTimeout(function() { target.textContent = orig; target.style.color = ''; target.style.textDecoration = ''; }, 1200);
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function() { showCopied(el); });
@@ -1632,7 +1892,8 @@
   // RSVP — Confirm/Decline/Undecided with API (GET=check, POST=new, PATCH=update)
   (function() {
     var params = new URLSearchParams(window.location.search);
-    var token = (params.get('g') || '').toLowerCase().trim();
+    var token = (params.get('g') || params.get('b') || '').toLowerCase().trim();
+    var rsvpParam = params.get('g') ? 'g' : (params.get('b') ? 'b' : null);
     var rsvpButtons = document.getElementById('rsvpButtons');
     var rsvpConfirm = document.getElementById('rsvpConfirm');
     var rsvpDecline = document.getElementById('rsvpDecline');
@@ -1665,7 +1926,7 @@
       rsvpStatus.style.color = 'var(--text-muted)';
     }
 
-    if (!token) {
+    if (!token || !rsvpParam) {
       if (rsvpButtons) rsvpButtons.style.display = 'none';
       if (rsvpMessage) rsvpMessage.style.display = 'none';
       if (rsvpNeedsToken) rsvpNeedsToken.style.display = 'block';
@@ -1707,12 +1968,18 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-        .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, status: r.status, data: d }; }); })
+        .then(function(r) {
+          return r.text().then(function(text) {
+            var d = {};
+            try { d = JSON.parse(text); } catch (_) {}
+            return { ok: r.ok, status: r.status, data: d };
+          });
+        })
         .then(function(res) {
           rsvpConfirm.disabled = false;
           rsvpDecline.disabled = false;
           if (rsvpUndecided) rsvpUndecided.disabled = false;
-          if (res.ok && res.data.ok) setSubmitted(status, msg);
+          if (res.ok && res.data && res.data.ok) setSubmitted(status, msg);
           else if (res.status === 409) setSubmitted(currentStatus || status, rsvpMessage ? rsvpMessage.value : '');
           else {
             if (prevStatus) setSubmitted(prevStatus, rsvpMessage ? rsvpMessage.value : '');
@@ -1722,7 +1989,11 @@
               if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
               currentStatus = null;
             }
-            setError(res.data.error || 'Failed');
+            var errMsg = (res.data && res.data.error) || 'Failed';
+            if (res.status === 404 && errMsg.indexOf('Guest not found') >= 0) {
+              errMsg = 'Guest not found: ' + token + '. Add GUEST_LIST_SHEET in Vercel if your guest list is on a named tab.';
+            }
+            setError(errMsg);
           }
         })
         .catch(function() {
@@ -1736,7 +2007,7 @@
             if (rsvpUndecided) rsvpUndecided.classList.remove('selected');
             currentStatus = null;
           }
-          setError('Failed to send');
+          setError('Failed to send. Check network or try again.');
         });
     }
 
@@ -1761,7 +2032,7 @@
     addMobileInputHandlers(rsvpMessage);
 
     // On load: check if already submitted (keeps buttons enabled so they can change mind)
-    fetch(window.location.origin + '/api/rsvp?g=' + encodeURIComponent(token))
+    fetch(window.location.origin + '/api/rsvp?' + rsvpParam + '=' + encodeURIComponent(token))
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(data) {
         if (data && data.submitted && data.status) {
